@@ -1,0 +1,57 @@
+{
+  "name": "whoami",
+  "version": "1.0.0",
+  "description": "A portfolio game",
+  "type": "module",
+  "author": "Mahdi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m-mdy-m/whoami.git"
+  },
+  "bugs": {
+    "url": "https://github.com/m-mdy-m/whoami/issues"
+  },
+  "keywords": [
+    "web",
+    "whoami",
+    "portfolio",
+    "chess",
+    "maze",
+    "terminal",
+    "game"
+  ],
+  "homepage": "https://m-mdy-m.github.io/whoami",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "start": "astro dev",
+    "lint": "eslint src --ext .ts,.astro",
+    "lint:fix": "eslint src --ext .ts,.astro --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky",
+    "pre-commit": "lint-staged",
+    "tag": ""
+  },
+  "lint-staged": {
+    "*.{js,ts,astro,css}": [
+      "prettier --write"
+    ]
+  },
+  "packageManager": "pnpm@9.15.4",
+  "dependencies": {
+    "astro": "^5.1.8"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "@types/node": "^22.13.14",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^4.0.17",
+    "typescript": "^5.8.2"
+  }
+}
