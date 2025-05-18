@@ -24,9 +24,6 @@ importers:
       lint-staged:
         specifier: ^15.5.0
         version: 15.5.0
-      postcss:
-        specifier: ^8.5.3
-        version: 8.5.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
