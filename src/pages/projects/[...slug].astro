@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/Content.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<ContentLayout
+  title={`${project.data.title} | x0 Terminal`}
+  command={`cat ${project.slug}.md`}
+  content={project.data}
+>
+  <div class="mb-4">
+    {project.data.tags.map((tag: string) => (
+      <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2 mb-2">
+        {tag}
+      </span>
+    ))}
+  </div>
+
+  {project.data.image && (
+    <img
+      src={project.data.image || "/placeholder.svg"}
+      alt={project.data.title}
+      class="w-full h-auto rounded-md border border-terminal-green border-opacity-30 mb-4"
+    />
+  )}
+
+  <div class="flex flex-wrap gap-2 mb-4">
+    {project.data.demoUrl && (
+      <a
+        href={project.data.demoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center bg-terminal-green bg-opacity-20 hover:bg-opacity-30 text-terminal-white px-3 py-1 rounded-md transition-all duration-200"
+      >
+        Live Demo
+      </a>
+    )}
+    {project.data.sourceUrl && (
+      <a
+        href={project.data.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center bg-terminal-green bg-opacity-20 hover:bg-opacity-30 text-terminal-white px-3 py-1 rounded-md transition-all duration-200"
+      >
+        Source Code
+      </a>
+    )}
+  </div>
+
+  <Content />
+</ContentLayout>

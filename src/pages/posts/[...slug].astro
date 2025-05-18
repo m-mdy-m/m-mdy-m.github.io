@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/Content.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<ContentLayout
+  title={`${post.data.title} | x0 Terminal`}
+  command={`cat ${post.slug}.md`}
+  content={post.data}
+>
+  <Content />
+</ContentLayout>

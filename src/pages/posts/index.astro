@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import CommandOutput from '@components/CommandOutput.astro';
+
+const posts = await getCollection('posts');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Posts | x0 Terminal">
+  <TerminalWindow command="ls /posts" title="Posts">
+    <CommandOutput>
+      <h1 class="text-terminal-yellow text-2xl mb-4">Blog Posts</h1>
+
+      <div class="space-y-4">
+        {posts.map((post, index) => (
+          <div class="border-b border-terminal-green border-opacity-20 pb-4 last:border-0 animate-fade-in" style={`animation-delay: ${index * 100}ms`}>
+            <h2 class="text-xl">
+              <a href={`/posts/${post.slug}`} class="text-terminal-yellow hover:underline">
+                {post.data.title}
+              </a>
+            </h2>
+            <div class="flex items-center text-terminal-gray text-sm mt-1">
+              <span>{post.data.date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}</span>
+            </div>
+            <p class="mt-2 text-terminal-green">{post.data.description}</p>
+            <div class="mt-2">
+              <a href={`/posts/${post.slug}`} class="text-terminal-yellow hover:underline text-sm">
+                Read post →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {posts.length === 0 && (
+        <div class="text-center py-8">
+          <p class="text-terminal-gray">No posts found.</p>
+          <p class="mt-2 text-terminal-green">Create a new post in src/content/posts/</p>
+        </div>
+      )}
+    </CommandOutput>
+  </TerminalWindow>
+</BaseLayout>

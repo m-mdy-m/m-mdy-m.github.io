@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import CommandOutput from '@components/CommandOutput.astro';
+
+const projects = await getCollection('projects');
+projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Projects | x0 Terminal">
+  <TerminalWindow command="ls /projects" title="Projects">
+    <CommandOutput>
+      <h1 class="text-terminal-yellow text-2xl mb-4">Projects</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projects.map((project, index) => (
+          <div class="border border-terminal-green border-opacity-30 rounded-md overflow-hidden animate-fade-in" style={`animation-delay: ${index * 100}ms`}>
+            {project.data.image ? (
+              <div class="aspect-video overflow-hidden bg-terminal-black">
+                <img
+                  src={project.data.image || "/placeholder.svg"}
+                  alt={project.data.title}
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div class="aspect-video bg-terminal-green bg-opacity-10 flex items-center justify-center text-terminal-green">
+                No Image
+              </div>
+            )}
+            <div class="p-4">
+              <h2 class="text-xl">
+                <a href={`/projects/${project.slug}`} class="text-terminal-yellow hover:underline">
+                  {project.data.title}
+                </a>
+              </h2>
+              <div class="flex flex-wrap gap-1 mt-2">
+                {project.data.tags.slice(0, 3).map((tag: string) => (
+                  <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded">
+                    {tag}
+                  </span>
+                ))}
+                {project.data.tags.length > 3 && (
+                  <span class="inline-block text-terminal-gray text-xs px-2 py-1">
+                    +{project.data.tags.length - 3} more
+                  </span>
+                )}
+              </div>
+              <p class="mt-2 text-terminal-green text-sm line-clamp-2">{project.data.description}</p>
+              <div class="flex gap-2 mt-3">
+                <a href={`/projects/${project.slug}`} class="text-terminal-yellow hover:underline text-sm">
+                  Details →
+                </a>
+                {project.data.demoUrl && (
+                  <a href={project.data.demoUrl} target="_blank" rel="noopener noreferrer" class="text-terminal-yellow hover:underline text-sm">
+                    Demo →
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {projects.length === 0 && (
+        <div class="text-center py-8">
+          <p class="text-terminal-gray">No projects found.</p>
+        </div>
+      )}
+    </CommandOutput>
+  </TerminalWindow>
+</BaseLayout>

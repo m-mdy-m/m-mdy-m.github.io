@@ -1,0 +1,48 @@
+---
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+
+---
+
+<BaseLayout title="x0 Terminal">
+  <TerminalWindow title="Home Terminal">
+    <div class="terminal-welcome animate-fade-in">
+      <h1 class="text-terminal-yellow text-2xl mb-4">Welcome to x0 Terminal</h1>
+      <p class="mb-4">
+        Type <span class="text-terminal-white font-bold">help</span> to see available commands.
+      </p>
+
+      <p class="mb-2">
+        This is a terminal-style personal website built with Astro, TypeScript, and Tailwind CSS.
+      </p>
+      <p class="mb-4">
+        Try entering commands in the terminal above to navigate and explore the site.
+      </p>
+
+      <div class="border-l-4 border-terminal-yellow pl-4 italic my-6">
+        "The best code is no code at all. Every new line of code you willingly bring into the world is code that has to be debugged, code that has to be read and understood, code that has to be supported."
+        <div class="mt-2 text-right">— Jeff Atwood</div>
+      </div>
+
+      <h2 class="text-terminal-yellow text-xl mb-2">Quick Commands:</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 ml-4">
+        <div class="terminal-command-help">
+          <span class="text-terminal-white">ls</span>
+          <span class="text-terminal-gray"> - List files and directories</span>
+        </div>
+        <div class="terminal-command-help">
+          <span class="text-terminal-white">whoami</span>
+          <span class="text-terminal-gray"> - Display user information</span>
+        </div>
+        <div class="terminal-command-help">
+          <span class="text-terminal-white">cat about.md</span>
+          <span class="text-terminal-gray"> - Read about this site</span>
+        </div>
+        <div class="terminal-command-help">
+          <span class="text-terminal-white">cd projects</span>
+          <span class="text-terminal-gray"> - Browse projects</span>
+        </div>
+      </div>
+    </div>
+  </TerminalWindow>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/Content.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map(article => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+---
+
+<ContentLayout
+  title={`${article.data.title} | x0 Terminal`}
+  command={`cat ${article.slug}.md`}
+  content={article.data}
+>
+  <div class="mb-4">
+    <span class="inline-block bg-terminal-yellow bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2">
+      {article.data.category}
+    </span>
+    {article.data.tags.map((tag: string) => (
+      <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2">
+        {tag}
+      </span>
+    ))}
+  </div>
+
+  <Content />
+</ContentLayout>

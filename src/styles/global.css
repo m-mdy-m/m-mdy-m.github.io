@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-terminal-black text-terminal-green font-mono;
+    font-feature-settings:
+      'ss02' on,
+      'ss01' on;
+  }
+
+  body {
+    @apply min-h-screen p-0 m-0 relative overflow-x-hidden;
+  }
+
+  body::before {
+    content: '';
+    @apply pointer-events-none fixed inset-0 z-50 h-screen w-screen bg-crt-overlay opacity-10;
+  }
+
+  body::after {
+    content: '';
+    @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-terminal-black opacity-5;
+    background-image: radial-gradient(#32cd32 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  a {
+    @apply text-terminal-yellow underline transition-all duration-300 hover:text-terminal-white hover:no-underline;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-terminal-white font-bold my-4;
+  }
+
+  h1 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h2 {
+    @apply text-xl md:text-2xl;
+  }
+
+  p,
+  li {
+    @apply my-3;
+  }
+
+  pre,
+  code {
+    @apply bg-terminal-black bg-opacity-50 border border-terminal-green border-opacity-20 rounded p-1;
+  }
+
+  pre {
+    @apply p-4 my-4 overflow-x-auto;
+  }
+
+  blockquote {
+    @apply border-l-4 border-terminal-yellow pl-4 italic my-4;
+  }
+
+  hr {
+    @apply border-terminal-green border-opacity-20 my-8;
+  }
+
+  table {
+    @apply w-full border-collapse my-4;
+  }
+
+  th,
+  td {
+    @apply border border-terminal-green border-opacity-20 p-2;
+  }
+
+  th {
+    @apply bg-terminal-green bg-opacity-10;
+  }
+
+  /* Terminal specific styles */
+  .terminal-header {
+    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-black bg-opacity-90 backdrop-blur-sm border-b border-terminal-green border-opacity-30;
+  }
+
+  .terminal-prompt {
+    @apply text-terminal-green flex items-start;
+  }
+
+  .terminal-command {
+    @apply text-terminal-white font-bold;
+  }
+
+  .terminal-output {
+    @apply mt-2 pl-4 border-l border-terminal-green border-opacity-30;
+  }
+
+  .blink-cursor::after {
+    content: '█';
+    @apply animate-blink;
+  }
+
+  .typing-effect {
+    @apply inline-block overflow-hidden whitespace-nowrap border-r-2 border-terminal-green animate-cursor-blink;
+    animation:
+      typing 1.5s steps(30, end),
+      cursor-blink 0.75s step-end infinite;
+  }
+
+  .nav-item {
+    @apply px-2 py-1 mx-1 hover:bg-terminal-green hover:bg-opacity-20 rounded transition-all duration-200;
+  }
+
+  .nav-item.active {
+    @apply bg-terminal-green bg-opacity-20;
+  }
+  .markdown-content :global(h1),
+  .markdown-content :global(h2),
+  .markdown-content :global(h3) {
+    @apply text-terminal-yellow;
+  }
+
+  .markdown-content :global(ul) {
+    @apply list-disc ml-6;
+  }
+
+  .markdown-content :global(ol) {
+    @apply list-decimal ml-6;
+  }
+
+  .markdown-content :global(a) {
+    @apply text-terminal-yellow underline;
+  }
+
+  .markdown-content :global(code) {
+    @apply bg-terminal-black bg-opacity-50 px-1 rounded;
+  }
+
+  .markdown-content :global(pre) {
+    @apply bg-terminal-black bg-opacity-50 p-3 rounded overflow-x-auto my-3;
+  }
+}
