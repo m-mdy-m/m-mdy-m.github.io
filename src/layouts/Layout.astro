@@ -1,0 +1,183 @@
+---
+import '@styles/global.css';
+import Header from '@components/Header.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'A terminal-style personal website' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container mx-auto px-4 pt-20 pb-10">
+      <Header />
+      <main class="mt-8 animate-fade-in-slow">
+        <slot />
+      </main>
+    </div>
+    <script>
+      // Initialize terminal history
+      window.terminalHistory = window.terminalHistory || [];
+      
+      // Import commands dynamically
+      import('../commands.js').then(({ commandRegistry, textOutput, errorOutput }) => {
+        const terminalInput = document.getElementById('terminal-input');
+        const terminalOutput = document.getElementById('terminal-output');
+        let historyIndex = -1;
+        
+        if (!terminalInput || !terminalOutput) return;
+        
+        // Focus the input when the page loads
+        terminalInput.focus();
+        
+        // Process the command
+        async function processCommand(commandStr) {
+          if (!commandStr.trim()) return;
+          
+          // Add to history
+          window.terminalHistory.push(commandStr);
+          historyIndex = window.terminalHistory.length;
+          
+          // Parse the command and arguments
+          const parts = commandStr.trim().split(' ');
+          const command = parts[0].toLowerCase();
+          const args = parts.slice(1);
+          
+          // Create command prompt display
+          const promptElement = document.createElement('div');
+          promptElement.className = 'flex items-start mb-4';
+          promptElement.innerHTML = `
+            <span class="text-terminal-green">x0</span>
+            <span class="terminal-command ml-2">${commandStr}</span>
+          `;
+          
+          // Append the prompt to the output
+          terminalOutput.appendChild(promptElement);
+          
+          // Process the command
+          let output = '';
+          
+          if (commandRegistry[command]) {
+            try {
+              output = await commandRegistry[command].execute(args);
+            } catch (error) {
+              output = errorOutput(`Error executing command: ${error.message}`);
+            }
+          } else {
+            output = errorOutput(`Command not found: ${command}`);
+          }
+          
+          // Create output element with typing effect
+          if (output) {
+            const outputElement = document.createElement('div');
+            outputElement.className = 'pl-5 mb-6 text-terminal-green animate-fade-in';
+            outputElement.innerHTML = output;
+            
+            // Append the output to the terminal
+            terminalOutput.appendChild(outputElement);
+          }
+          
+          // Scroll to the bottom of the terminal
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+          
+          // Clear the input
+          terminalInput.value = '';
+        }
+        
+        // Handle command input
+        terminalInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const command = terminalInput.value;
+            processCommand(command);
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+              historyIndex--;
+              terminalInput.value = window.terminalHistory[historyIndex];
+            }
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex < window.terminalHistory.length - 1) {
+              historyIndex++;
+              terminalInput.value = window.terminalHistory[historyIndex];
+            } else {
+              historyIndex = window.terminalHistory.length;
+              terminalInput.value = '';
+            }
+          } else if (e.key === 'Tab') {
+            e.preventDefault();
+            // Simple tab completion for commands
+            const input = terminalInput.value.toLowerCase();
+            const availableCommands = Object.keys(commandRegistry);
+            
+            const matchingCommands = availableCommands.filter(cmd => cmd.startsWith(input));
+            
+            if (matchingCommands.length === 1) {
+              terminalInput.value = matchingCommands[0];
+            } else if (matchingCommands.length > 1 && input) {
+              // Find common prefix
+              let commonPrefix = input;
+              let position = input.length;
+              let allMatch = true;
+              
+              while (allMatch && position < matchingCommands[0].length) {
+                const char = matchingCommands[0][position];
+                for (let i = 1; i < matchingCommands.length; i++) {
+                  if (position >= matchingCommands[i].length || matchingCommands[i][position] !== char) {
+                    allMatch = false;
+                    break;
+                  }
+                }
+                
+                if (allMatch) {
+                  commonPrefix += char;
+                  position++;
+                }
+              }
+              
+              terminalInput.value = commonPrefix;
+              
+              // Display matching commands
+              const promptElement = document.createElement('div');
+              promptElement.className = 'flex items-start mb-4';
+              promptElement.innerHTML = `
+                <span class="text-terminal-green">x0</span>
+                <span class="terminal-command ml-2">${input}</span>
+              `;
+              
+              const outputElement = document.createElement('div');
+              outputElement.className = 'pl-5 mb-6 text-terminal-green';
+              outputElement.innerHTML = matchingCommands.join('  ');
+              
+              terminalOutput.appendChild(promptElement);
+              terminalOutput.appendChild(outputElement);
+              terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+          }
+        });
+        
+        // Keep focus on the input when clicking anywhere in the terminal
+        document.addEventListener('click', () => {
+          terminalInput.focus();
+        });
+      }).catch(error => {
+        console.error('Failed to load commands:', error);
+      });
+    </script>
+  </body>
+</html>

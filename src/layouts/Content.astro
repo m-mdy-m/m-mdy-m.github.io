@@ -1,0 +1,36 @@
+---
+import BaseLayout from './Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+
+export interface Props {
+  title: string;
+  command: string;
+  content: {
+    title: string;
+    description?: string;
+    date?: Date;
+    updatedDate?: Date;
+    heroImage?: string;
+  };
+}
+
+const { title, command, content } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <TerminalWindow command={command} title={title}>
+    <h1 class="text-terminal-yellow text-2xl mb-4">{content.title}</h1>
+    {content.date && (
+      <p class="text-terminal-gray text-sm">
+        Date: {content.date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}
+      </p>
+    )}
+    <div class="mt-4 terminal-content">
+      <slot />
+    </div>
+  </TerminalWindow>
+</BaseLayout>
