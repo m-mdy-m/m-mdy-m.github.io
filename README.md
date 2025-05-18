@@ -7,8 +7,7 @@ A minimal, terminal-style personal website built with [Astro](https://astro.buil
 To run the project locally:
 
 ```bash
-git clone https://github.com/your-username/x0-terminal.git
-cd x0-terminal
+git clone https://github.com/m-mdy-m/m-mdy-m.github.io.git
 pnpm install
 pnpm dev
 ```
