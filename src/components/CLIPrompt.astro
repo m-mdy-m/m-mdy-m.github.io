@@ -1,0 +1,13 @@
+---
+export interface Props {
+  command: string;
+  delay?: number;
+}
+
+const { command, delay = 0 } = Astro.props;
+---
+
+<div class="flex items-start animate-fade-in" style={`animation-delay: ${delay}ms`}>
+  <span class="text-terminal-green">x0</span>
+  <span class="terminal-command ml-2">{command}</span>
+</div>

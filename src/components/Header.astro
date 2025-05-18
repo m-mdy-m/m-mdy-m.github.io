@@ -1,0 +1,47 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.split('/')[1];
+
+const navigation = [
+  { name: 'Posts', path: 'posts' },
+  { name: 'Projects', path: 'projects' },
+  { name: 'Articles', path: 'articles' },
+];
+---
+
+<header class="terminal-header">
+  <div class="container mx-auto px-4">
+    <div class="py-3">
+      <div class="flex flex-col md:flex-row items-start md:items-center">
+        <div class="text-terminal-green font-mono text-sm md:text-base">
+          <div class="flex flex-wrap items-center">
+            <span class="mr-1">┌─[x0]:</span>
+            {navigation.map((item) => (
+              <a
+                href={`/${item.path}`}
+                class={`nav-item ${currentPath === item.path ? 'active' : ''}`}
+              >
+                [{item.name}]
+              </a>
+            ))}
+            <a href="/" class={`nav-item ${currentPath === '' ? 'active' : ''}`}>[..]</a>
+          </div>
+        </div>
+      </div>
+      <div class="text-terminal-green font-mono text-sm md:text-base">
+        <span>└─ ></span>
+        <span class="ml-2 text-terminal-yellow blink-cursor cursor-text">
+           <input
+            id="terminal-input"
+            type="text"
+            class="bg-transparent border-none outline-none text-terminal-yellow w-32 md:w-64 placeholder-terminal-green placeholder-opacity-50"
+            placeholder="Enter command..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+
+        </span>
+      </div>
+    </div>
+  </div>
+</header>

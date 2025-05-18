@@ -1,0 +1,37 @@
+---
+export interface Props {
+  text: string;
+  speed?: number;
+  className?: string;
+}
+
+const { text, speed = 50, className = '' } = Astro.props;
+---
+
+<span class={`typing-effect ${className}`} data-text={text} data-speed={speed}>
+  {text}
+</span>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const typingElements = document.querySelectorAll('.typing-effect');
+
+    typingElements.forEach((element) => {
+      const text = element.getAttribute('data-text') || '';
+      const speed = parseInt(element.getAttribute('data-speed') || '50', 10);
+
+      element.textContent = '';
+      let i = 0;
+
+      const typeWriter = () => {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, speed);
+        }
+      };
+
+      typeWriter();
+    });
+  });
+</script>

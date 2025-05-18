@@ -1,0 +1,31 @@
+---
+export interface Props {
+  command?: string;
+  title?: string;
+}
+
+const { command = '', title = 'Terminal Output' } = Astro.props;
+---
+
+<div class="terminal-window bg-terminal-black border border-terminal-green border-opacity-30 rounded-md overflow-hidden">
+  <div class="flex items-center justify-between p-2 border-b border-terminal-green border-opacity-30">
+    <div class="flex space-x-2">
+      <div class="w-3 h-3 rounded-full bg-red-500"></div>
+      <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+      <div class="w-3 h-3 rounded-full bg-green-500"></div>
+    </div>
+    <div class="text-terminal-green opacity-70 text-xs">{title}</div>
+    <div class="w-3 h-3"></div>
+  </div>
+  <div id="terminal-output" class="p-4">
+    {command && (
+      <div class="terminal-prompt">
+        <span class="text-terminal-green">x0</span>
+        <span class="terminal-command ml-2">{command}</span>
+      </div>
+    )}
+    <div class="terminal-output">
+      <slot />
+    </div>
+  </div>
+</div>
