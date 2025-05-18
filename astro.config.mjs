@@ -1,7 +1,8 @@
-// @ts-check
-import { defineConfig } from 'astro/config'
-// https://astro.build/config
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+
 export default defineConfig({
-  site: 'https://m-mdy-m.github.io/whoami',
-  base: '/whoami',
-})
+  site: 'https://m-mdy-m.github.io',
+  base: '/',
+  integrations: [tailwind()],
+});
