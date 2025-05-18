@@ -333,15 +333,35 @@ function generateNeofetchOutput() {
 /_-''    ''-_\\
   </pre>
   <div class="flex flex-col justify-center space-y-1">
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">OS:</span> Astro</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">Host:</span> x0</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">Uptime:</span> 24/7</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">Packages:</span> npm (3)</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">Shell:</span> x0sh </div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">WM:</span> Browser</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">Terminal:</span> IBM Plex Mono</div>
-        <div><span class="text-terminal-yellow font-bold w-20 inline-block">CPU:</span> JavaScript Engine</div>
-      </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Platform:</span>
+      Powered by Astro
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Host:</span>
+      x0
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Package Manager:</span>
+      pnpm
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Shell:</span>
+      x0sh
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Environment:</span>
+      Browser-based
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Font:</span>
+      IBM Plex Mono
+    </div>
+    <div>
+      <span class="text-terminal-yellow font-bold w-24 inline-block">Engine:</span>
+      JavaScript
+    </div>
+  </div>
 </div>
 
   `;
