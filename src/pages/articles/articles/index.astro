@@ -53,25 +53,9 @@ const categorizedArticles = articles.reduce((acc, article) => {
                 </div>
                 <p class="mt-2 text-terminal-green">{article.data.description}</p>
                 <div class="mt-2">
-       {article.data.links ? (
-      <div class="mb-6 space-x-4">
-      {Object.entries(article.data.links).map(([platform, url]) => (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener"
-          class="inline-block text-terminal-green bg-black border border-terminal-green px-2 py-1 text-xs font-mono hover:bg-terminal-green hover:text-black transition"
-        >
-          {platform}
-        </a>
-      ))}
-    </div>
-
-      ) : (
-        <a href={`/articles/${article.slug}`} class="text-terminal-yellow hover:underline">
-          Read article →
-        </a>
-      )}
+                  <a href={`/articles/${article.slug}`} class="text-terminal-yellow hover:underline text-sm">
+                    Read article →
+                  </a>
                 </div>
               </div>
             ))}

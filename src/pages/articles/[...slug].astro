@@ -30,5 +30,20 @@ const { Content } = await article.render();
     ))}
   </div>
 
+  {article.data.links ? (
+    <div class="mb-6 space-x-4">
+      {Object.entries(article.data.links).map(([platform, url]) => (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener"
+          class="inline-block text-terminal-green bg-black border border-terminal-green px-2 py-1 text-xs font-mono hover:bg-terminal-green hover:text-black transition"
+        >
+          {platform}
+        </a>
+      ))}
+    </div>
+  ) : null}
+
   <Content />
 </ContentLayout>

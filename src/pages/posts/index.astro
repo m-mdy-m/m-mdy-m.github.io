@@ -9,7 +9,7 @@ posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <BaseLayout title="Posts | x0 Terminal">
-  <TerminalWindow command="ls /posts" title="Posts">
+  <TerminalWindow command="ls posts" title="Posts">
     <CommandOutput>
       <h1 class="text-terminal-yellow text-2xl mb-4">Blog Posts</h1>
 
@@ -41,7 +41,6 @@ posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
       {posts.length === 0 && (
         <div class="text-center py-8">
           <p class="text-terminal-gray">No posts found.</p>
-          <p class="mt-2 text-terminal-green">Create a new post in src/content/posts/</p>
         </div>
       )}
     </CommandOutput>
