@@ -7,11 +7,11 @@ export default {
       colors: {
         terminal: {
           black: '#0a0a0f',
-          green: '#c4c4c7',
-          yellow: '#ffffff',
-          gray: '#8b8b8d',
-          white: '#ffffff',
-          overlay: 'rgba(0, 0, 0, 0.75)',
+          green: '#00d97a',
+          yellow: '#ffd93d',
+          gray: '#21262d',
+          white: '#f0f6fc',
+          overlay: 'rgba(0, 212, 255, 0.1)',
         },
       },
       fontFamily: {
