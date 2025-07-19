@@ -1,5 +1,4 @@
- ---
-
+---
 title: "TideityIQ: Complexity on Command Line"
 description: "A C-based CLI that eyeballs your JS code and spits out Big O, Θ, Ω—quirky name, serious output."
 date: 2025-07-19
