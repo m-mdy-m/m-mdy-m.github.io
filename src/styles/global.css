@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply bg-terminal-black text-terminal-green font-mono;
+    @apply bg-terminal-void text-terminal-primary font-mono;
     font-feature-settings:
       'ss02' on,
       'ss01' on;
@@ -21,13 +21,13 @@
 
   body::after {
     content: '';
-    @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-terminal-black opacity-5;
+    @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-terminal-void opacity-5;
     background-image: radial-gradient(#32cd32 1px, transparent 1px);
     background-size: 3px 3px;
   }
 
   a {
-    @apply text-terminal-yellow underline transition-all duration-300 hover:text-terminal-white hover:no-underline;
+    @apply text-terminal-accent underline transition-all duration-300 hover:text-terminal-text hover:no-underline;
   }
 
   h1,
@@ -36,7 +36,7 @@
   h4,
   h5,
   h6 {
-    @apply text-terminal-white font-bold my-4;
+    @apply text-terminal-text font-bold my-4;
   }
 
   h1 {
@@ -54,7 +54,7 @@
 
   pre,
   code {
-    @apply bg-terminal-black bg-opacity-50 border border-terminal-green border-opacity-20 rounded p-1;
+    @apply bg-terminal-void bg-opacity-50 border border-terminal-primary border-opacity-20 rounded p-1;
   }
 
   pre {
@@ -62,11 +62,11 @@
   }
 
   blockquote {
-    @apply border-l-4 border-terminal-yellow pl-4 italic my-4;
+    @apply border-l-4 border-terminal-accent pl-4 italic my-4;
   }
 
   hr {
-    @apply border-terminal-green border-opacity-20 my-8;
+    @apply border-terminal-primary border-opacity-20 my-8;
   }
 
   table {
@@ -75,28 +75,28 @@
 
   th,
   td {
-    @apply border border-terminal-green border-opacity-20 p-2;
+    @apply border border-terminal-primary border-opacity-20 p-2;
   }
 
   th {
-    @apply bg-terminal-green bg-opacity-10;
+    @apply bg-terminal-primary bg-opacity-10;
   }
 
   /* Terminal specific styles */
   .terminal-header {
-    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-black bg-opacity-90 backdrop-blur-sm border-b border-terminal-green border-opacity-30;
+    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-void bg-opacity-90 backdrop-blur-sm border-b border-terminal-primary border-opacity-30;
   }
 
   .terminal-prompt {
-    @apply text-terminal-green flex items-start;
+    @apply text-terminal-primary flex items-start;
   }
 
   .terminal-command {
-    @apply text-terminal-white font-bold;
+    @apply text-terminal-text font-bold;
   }
 
   .terminal-output {
-    @apply mt-2 pl-4 border-l border-terminal-green border-opacity-30;
+    @apply mt-2 pl-4 border-l border-terminal-primary border-opacity-30;
   }
 
   .blink-cursor::after {
@@ -105,23 +105,23 @@
   }
 
   .typing-effect {
-    @apply inline-block overflow-hidden whitespace-nowrap border-r-2 border-terminal-green animate-cursor-blink;
+    @apply inline-block overflow-hidden whitespace-nowrap border-r-2 border-terminal-primary animate-cursor-blink;
     animation:
       typing 1.5s steps(30, end),
       cursor-blink 0.75s step-end infinite;
   }
 
   .nav-item {
-    @apply px-2 py-1 mx-1 hover:bg-terminal-green hover:bg-opacity-20 rounded transition-all duration-200;
+    @apply px-2 py-1 mx-1 hover:bg-terminal-primary hover:bg-opacity-20 rounded transition-all duration-200;
   }
 
   .nav-item.active {
-    @apply bg-terminal-green bg-opacity-20;
+    @apply bg-terminal-primary bg-opacity-20;
   }
   .markdown-content :global(h1),
   .markdown-content :global(h2),
   .markdown-content :global(h3) {
-    @apply text-terminal-yellow;
+    @apply text-terminal-accent;
   }
 
   .markdown-content :global(ul) {
@@ -133,14 +133,14 @@
   }
 
   .markdown-content :global(a) {
-    @apply text-terminal-yellow underline;
+    @apply text-terminal-accent underline;
   }
 
   .markdown-content :global(code) {
-    @apply bg-terminal-black bg-opacity-50 px-1 rounded;
+    @apply bg-terminal-void bg-opacity-50 px-1 rounded;
   }
 
   .markdown-content :global(pre) {
-    @apply bg-terminal-black bg-opacity-50 p-3 rounded overflow-x-auto my-3;
+    @apply bg-terminal-void bg-opacity-50 p-3 rounded overflow-x-auto my-3;
   }
 }

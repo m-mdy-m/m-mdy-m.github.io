@@ -20,11 +20,11 @@ const { Content } = await article.render();
   content={article.data}
 >
   <div class="mb-4">
-    <span class="inline-block bg-terminal-yellow bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2">
+    <span class="inline-block bg-terminal-accent bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2">
       {article.data.category}
     </span>
     {article.data.tags.map((tag: string) => (
-      <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2">
+      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2">
         {tag}
       </span>
     ))}
@@ -37,7 +37,7 @@ const { Content } = await article.render();
           href={url}
           target="_blank"
           rel="noopener"
-          class="inline-block text-terminal-green bg-black border border-terminal-green px-2 py-1 text-xs font-mono hover:bg-terminal-green hover:text-black transition"
+          class="inline-block text-terminal-primary bg-black border border-terminal-primary px-2 py-1 text-xs font-mono hover:bg-terminal-primary hover:text-black transition"
         >
           {platform}
         </a>

@@ -6,12 +6,12 @@ export default {
     extend: {
       colors: {
         terminal: {
-          black: '#0a0a0f',
-          green: '#00d97a',
-          yellow: '#ffd93d',
-          gray: '#21262d',
-          white: '#f0f6fc',
-          overlay: 'rgba(0, 212, 255, 0.1)',
+          void: '#0a0a0a',          
+          primary: '#e5e5e5',       
+          accent: '#666666',        
+          muted: '#1a1a1a',         
+          text: '#cccccc',          
+          overlay: 'rgba(230, 230, 230, 0.03)',
         },
       },
       fontFamily: {

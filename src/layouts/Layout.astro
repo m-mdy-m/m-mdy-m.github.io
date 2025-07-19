@@ -61,7 +61,7 @@ const { title, description = 'A terminal-style personal website' } = Astro.props
           const promptElement = document.createElement('div');
           promptElement.className = 'flex items-start mb-4';
           promptElement.innerHTML = `
-            <span class="text-terminal-green">x0</span>
+            <span class="text-terminal-primary">x0</span>
             <span class="terminal-command ml-2">${commandStr}</span>
           `;
           
@@ -84,7 +84,7 @@ const { title, description = 'A terminal-style personal website' } = Astro.props
           // Create output element with typing effect
           if (output) {
             const outputElement = document.createElement('div');
-            outputElement.className = 'pl-5 mb-6 text-terminal-green animate-fade-in';
+            outputElement.className = 'pl-5 mb-6 text-terminal-primary animate-fade-in';
             outputElement.innerHTML = output;
             
             // Append the output to the terminal
@@ -156,12 +156,12 @@ const { title, description = 'A terminal-style personal website' } = Astro.props
               const promptElement = document.createElement('div');
               promptElement.className = 'flex items-start mb-4';
               promptElement.innerHTML = `
-                <span class="text-terminal-green">x0</span>
+                <span class="text-terminal-primary">x0</span>
                 <span class="terminal-command ml-2">${input}</span>
               `;
               
               const outputElement = document.createElement('div');
-              outputElement.className = 'pl-5 mb-6 text-terminal-green';
+              outputElement.className = 'pl-5 mb-6 text-terminal-primary';
               outputElement.innerHTML = matchingCommands.join('  ');
               
               terminalOutput.appendChild(promptElement);

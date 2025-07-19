@@ -21,7 +21,7 @@ const { Content } = await project.render();
 >
   <div class="mb-4">
     {project.data.tags.map((tag: string) => (
-      <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded mr-2 mb-2">
+      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2 mb-2">
         {tag}
       </span>
     ))}
@@ -31,7 +31,7 @@ const { Content } = await project.render();
     <img
       src={project.data.image || "/placeholder.svg"}
       alt={project.data.title}
-      class="w-full h-auto rounded-md border border-terminal-green border-opacity-30 mb-4"
+      class="w-full h-auto rounded-md border border-terminal-primary border-opacity-30 mb-4"
     />
   )}
 
@@ -41,7 +41,7 @@ const { Content } = await project.render();
         href={project.data.demoUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center bg-terminal-green bg-opacity-20 hover:bg-opacity-30 text-terminal-white px-3 py-1 rounded-md transition-all duration-200"
+        class="inline-flex items-center bg-terminal-primary bg-opacity-20 hover:bg-opacity-30 text-terminal-text px-3 py-1 rounded-md transition-all duration-200"
       >
         Live Demo
       </a>
@@ -51,7 +51,7 @@ const { Content } = await project.render();
         href={project.data.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center bg-terminal-green bg-opacity-20 hover:bg-opacity-30 text-terminal-white px-3 py-1 rounded-md transition-all duration-200"
+        class="inline-flex items-center bg-terminal-primary bg-opacity-20 hover:bg-opacity-30 text-terminal-text px-3 py-1 rounded-md transition-all duration-200"
       >
         Source Code
       </a>

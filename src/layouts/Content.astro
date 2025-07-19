@@ -19,9 +19,9 @@ const { title, command, content } = Astro.props;
 
 <BaseLayout title={title}>
   <TerminalWindow command={command} title={title}>
-    <h1 class="text-terminal-yellow text-2xl mb-4">{content.title}</h1>
+    <h1 class="text-terminal-accent text-2xl mb-4">{content.title}</h1>
     {content.date && (
-      <p class="text-terminal-gray text-sm">
+      <p class="text-terminal-muted text-sm">
         Date: {content.date.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',

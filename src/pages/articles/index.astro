@@ -21,22 +21,22 @@ const categorizedArticles = articles.reduce((acc, article) => {
 <BaseLayout title="Articles | x0 Terminal">
   <TerminalWindow command="ls articles" title="Articles">
     <CommandOutput>
-      <h1 class="text-terminal-yellow text-2xl mb-4">Technical Articles</h1>
+      <h1 class="text-terminal-accent text-2xl mb-4">Technical Articles</h1>
 
       {Object.entries(categorizedArticles).map(([category, categoryArticles]) => (
         <div class="mb-8">
-          <h2 class="text-terminal-white text-xl border-b border-terminal-green border-opacity-30 pb-2 mb-4">
+          <h2 class="text-terminal-text text-xl border-b border-terminal-primary border-opacity-30 pb-2 mb-4">
             {category}
           </h2>
           <div class="space-y-4">
             {categoryArticles.map((article) => (
               <div class="animate-fade-in">
                 <h3 class="text-lg">
-                  <a href={`/articles/${article.slug}`} class="text-terminal-yellow hover:underline">
+                  <a href={`/articles/${article.slug}`} class="text-terminal-accent hover:underline">
                     {article.data.title}
                   </a>
                 </h3>
-                <div class="flex items-center text-terminal-gray text-sm mt-1">
+                <div class="flex items-center text-terminal-muted text-sm mt-1">
                   <span>{article.data.date.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -45,13 +45,13 @@ const categorizedArticles = articles.reduce((acc, article) => {
                   <span class="mx-2">•</span>
                   <div class="flex flex-wrap gap-1">
                     {article.data.tags.map((tag: string) => (
-                      <span class="inline-block bg-terminal-green bg-opacity-20 text-terminal-white text-xs px-2 py-1 rounded">
+                      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded">
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
-                <p class="mt-2 text-terminal-green">{article.data.description}</p>
+                <p class="mt-2 text-terminal-primary">{article.data.description}</p>
                 <div class="mt-2">
        {article.data.links ? (
       <div class="mb-6 space-x-4">
@@ -60,7 +60,7 @@ const categorizedArticles = articles.reduce((acc, article) => {
           href={url}
           target="_blank"
           rel="noopener"
-          class="inline-block text-terminal-green bg-black border border-terminal-green px-2 py-1 text-xs font-mono hover:bg-terminal-green hover:text-black transition"
+          class="inline-block text-terminal-primary bg-black border border-terminal-primary px-2 py-1 text-xs font-mono hover:bg-terminal-primary hover:text-black transition"
         >
           {platform}
         </a>
@@ -68,7 +68,7 @@ const categorizedArticles = articles.reduce((acc, article) => {
     </div>
 
       ) : (
-        <a href={`/articles/${article.slug}`} class="text-terminal-yellow hover:underline">
+        <a href={`/articles/${article.slug}`} class="text-terminal-accent hover:underline">
           Read article →
         </a>
       )}
@@ -81,7 +81,7 @@ const categorizedArticles = articles.reduce((acc, article) => {
 
       {articles.length === 0 && (
         <div class="text-center py-8">
-          <p class="text-terminal-gray">No articles found.</p>
+          <p class="text-terminal-muted">No articles found.</p>
         </div>
       )}
     </CommandOutput>
