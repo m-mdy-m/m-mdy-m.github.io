@@ -11,7 +11,6 @@ export default {
           accent: '#666666',        
           muted: '#1a1a1a',         
           text: '#cccccc',          
-          overlay: 'rgba(230, 230, 230, 0.03)',
         },
       },
       fontFamily: {
