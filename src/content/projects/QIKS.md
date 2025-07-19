@@ -20,18 +20,4 @@ Yeah, I was bored and wanted to explore the world of caching—so I built QIKS. 
 * **Namespaces**: Logical separation without extra instances
 * **TypeSafe™**: Full TS generics, no guessing
 
-## Quickstart
-
-```bash
-npm install @medishn/qiks
-```
-
-```ts
-import { Qiks } from '@medishn/qiks';
-
-const cache = new Qiks<string, any>({ maxSize: 1000, evictionPolicy: 'LRU' });
-cache.set('foo', { bar: 1 }, { ttl: 60000 });
-console.log(cache.get('foo'));
-```
-
 *Find the docs, changelog, and more in the repo.*

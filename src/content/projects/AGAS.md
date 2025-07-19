@@ -24,25 +24,6 @@ Why wrestle with bulky Node HTTP libraries when you can tap into Bun’s speed? 
 * **Type-Safe by Design**: Full TypeScript definitions ensure you never guess at a response shape
 * **Docker-Ready**: Official container image means zero local dependencies
 
-## Quickstart
-
-Install globally and fire off a request in seconds:
-
-```bash
-npm install -g @medishn/agas
-agas get https://api.example.com/data
-```
-
-Embed in your TypeScript project:
-
-```ts
-import { Agas } from '@medishn/agas';
-
-const client = new Agas();
-const response = await client.post('/login', { json: { user, pass } });
-console.log(await response.json());
-```
-
 ## Philosophy
 
 Keep it simple, keep it fast, and let events do the heavy lifting. AGAS isn’t about bells and whistles—it’s about giving you just what you need to move data, no fluff attached.

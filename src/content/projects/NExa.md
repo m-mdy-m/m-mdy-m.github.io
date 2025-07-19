@@ -19,35 +19,6 @@ Sick of opening your browser for every dev.to update? NExa slides right into you
 * Extend or tweak in Python—zero magic
 * Docker image if you hate local setups
 
-## Quickstart
-
-### Docker (easy mode)
-
-```bash
-docker pull bitsgenix/nexa
-docker run --rm -it bitsgenix/nexa
-```
-
-### Pip (DIY mode)
-
-```bash
-git clone https://github.com/m-mdy-m/NExa.git
-cd NExa
-python3 -m venv venv && source venv/bin/activate
-pip install -e .
-nexa
-```
-
-## Usage
-
-```bash
-$ nexa
-Choose a category:
-1) latest    2) programming    3) your-choice
-Select ▶ 1
-```
-
-See your feed pop up—title, author, time, excerpt—all colored for easy scanning.
 
 ## Philosophy
 

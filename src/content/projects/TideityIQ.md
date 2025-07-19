@@ -18,27 +18,4 @@ Yeah, the name’s weird and I can barely say it either. I built TideityIQ becau
 * **Complexity Report**: Prints Big O, Theta, Omega with a brief explanation
 * **Still WIP**: Doesn’t catch every algorithm, but handles common cases
 
-## Quickstart
-
-```bash
-git clone https://github.com/medishen/TideityIQ.git
-cd TideityIQ
-make
-sudo make install
-```
-
-Analyze your file:
-
-```bash
-tdq hello.js
-```
-
-Sample output:
-
-```
-Big O: O(2^n)
-Theta: Θ(2^n)
-Omega: Ω(1)
-```
-
 *See more examples and edge cases in the repo.*
