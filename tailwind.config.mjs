@@ -6,11 +6,11 @@ export default {
     extend: {
       colors: {
         terminal: {
-          black: '#0a0a0f',
-          green: '#c4c4c7',
-          yellow: '#ffffff',
-          gray: '#8b8b8d',
-          white: '#ffffff',
+          black: '#0d1117',
+          green: '#00d97a',
+          yellow: '#ffd93d',
+          gray: '#21262d',
+          white: '#f0f6fc',
           overlay: 'rgba(0, 0, 0, 0.75)',
         },
       },
