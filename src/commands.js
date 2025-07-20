@@ -172,6 +172,188 @@ const commandRegistry = {
       return generateNeofetchOutput();
     },
   },
+  fortune: {
+    description: 'Display a random fortune or quote',
+    execute: async () => {
+      const fortunes = [
+        '"The only way to do great work is to love what you do." - Steve Jobs',
+        '"Life is what happens to you while you\'re busy making other plans." - John Lennon',
+        '"The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt',
+        '"It is during our darkest moments that we must focus to see the light." - Aristotle',
+        '"The only impossible journey is the one you never begin." - Tony Robbins',
+        '"In the middle of difficulty lies opportunity." - Albert Einstein',
+        '"Code is like humor. When you have to explain it, it\'s bad." - Cory House',
+        '"First, solve the problem. Then, write the code." - John Johnson',
+        '"Experience is the name everyone gives to their mistakes." - Oscar Wilde',
+        '"The best time to plant a tree was 20 years ago. The second best time is now." - Chinese Proverb'
+      ];
+      
+      const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+      return `
+        <div class="border-l-4 border-terminal-accent pl-4 py-2">
+          <span class="text-terminal-text">${randomFortune}</span>
+        </div>
+      `;
+    },
+  },
+
+  matrix: {
+    description: 'Enter the Matrix (animated green text)',
+    execute: async () => {
+      const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+      let output = '<div class="matrix-rain font-mono text-green-400 text-sm leading-tight overflow-hidden h-64">';
+      
+      for (let i = 0; i < 20; i++) {
+        output += '<div class="matrix-column inline-block w-4 align-top">';
+        for (let j = 0; j < 30; j++) {
+          const randomChar = chars[Math.floor(Math.random() * chars.length)];
+          const opacity = Math.random() * 0.8 + 0.2;
+          output += `<div style="opacity: ${opacity}; animation-delay: ${Math.random() * 2}s">${randomChar}</div>`;
+        }
+        output += '</div>';
+      }
+      
+      output += '</div>';
+      output += `
+        <div class="mt-4 text-center">
+          <span class="text-terminal-accent">Welcome to the Matrix, Neo...</span>
+        </div>
+        <style>
+          .matrix-rain div {
+            animation: matrix-fall 3s linear infinite;
+          }
+          @keyframes matrix-fall {
+            0% { transform: translateY(-100px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100px); opacity: 0; }
+          }
+        </style>
+      `;
+      
+      return output;
+    },
+  },
+
+  tree: {
+    description: 'Display directory tree structure',
+    execute: async args => {
+      const virtualFS = buildVirtualFS(contentEntries);
+      
+      function buildTree(obj, prefix = '', isLast = true) {
+        let result = '';
+        const entries = Object.entries(obj).filter(([key]) => key !== '__file');
+        
+        entries.forEach(([key, value], index) => {
+          const isLastEntry = index === entries.length - 1;
+          const connector = isLastEntry ? '└── ' : '├── ';
+          const isDir = !value.__file;
+          const displayName = isDir ? `📁 ${key}/` : `📄 ${key}.md`;
+          
+          result += `${prefix}${connector}<span class="text-terminal-accent">${displayName}</span>\n`;
+          
+          if (isDir && Object.keys(value).length > 1) {
+            const newPrefix = prefix + (isLastEntry ? '    ' : '│   ');
+            result += buildTree(value, newPrefix, isLastEntry);
+          }
+        });
+        
+        return result;
+      }
+      
+      const treeOutput = buildTree(virtualFS);
+      
+      return `
+        <div class="font-mono text-sm">
+          <h3 class="text-terminal-accent text-lg mb-3">📂 Project Structure</h3>
+          <pre class="whitespace-pre-wrap">${treeOutput}</pre>
+        </div>
+      `;
+    },
+  },
+
+  cowsay: {
+    description: 'Make a cow say something',
+    execute: async args => {
+      const message = args.length > 0 ? args.join(' ') : 'Hello World!';
+      const messageLength = message.length;
+      const topBorder = ' ' + '_'.repeat(messageLength + 2);
+      const bottomBorder = ' ' + '-'.repeat(messageLength + 2);
+      
+      return `
+        <pre class="text-terminal-text font-mono text-sm">
+${topBorder}
+< ${message} >
+${bottomBorder}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+        </pre>
+      `;
+    },
+  },
+
+  figlet: {
+    description: 'Create ASCII art text',
+    execute: async args => {
+      const text = args.length > 0 ? args.join(' ').toUpperCase() : 'X0';
+      
+      const asciiMap = {
+        'A': ['  ██  ', ' ████ ', '██  ██', '██████', '██  ██'],
+        'B': ['██████', '██  ██', '██████', '██████', '██████'],
+        'C': [' █████', '██    ', '██    ', '██    ', ' █████'],
+        'H': ['██  ██', '██  ██', '██████', '██  ██', '██  ██'],
+        'E': ['██████', '██    ', '█████ ', '██    ', '██████'],
+        'L': ['██    ', '██    ', '██    ', '██    ', '██████'],
+        'O': [' █████', '██  ██', '██  ██', '██  ██', ' █████'],
+        'X': ['██  ██', ' ████ ', '  ██  ', ' ████ ', '██  ██'],
+        '0': [' █████', '██  ██', '██ ███', '██  ██', ' █████'],
+        ' ': ['      ', '      ', '      ', '      ', '      ']
+      };
+      
+      let result = '<pre class="text-terminal-accent font-mono text-xs leading-tight">';
+      
+      for (let row = 0; row < 5; row++) {
+        let line = '';
+        for (let char of text) {
+          if (asciiMap[char]) {
+            line += asciiMap[char][row] + ' ';
+          } else {
+            line += '██████ '; // Default block for unknown chars
+          }
+        }
+        result += line + '\n';
+      }
+      
+      result += '</pre>';
+      return result;
+    },
+  },
+
+  calc: {
+    description: 'Simple calculator',
+    execute: async args => {
+      if (!args || args.length === 0) {
+        return errorOutput('Usage: calc [expression] (e.g., calc 2 + 3 * 4)');
+      }
+      
+      try {
+        const expression = args.join(' ');
+        // Simple math evaluation (be careful with eval in real applications!)
+        const result = Function(`"use strict"; return (${expression})`)();
+        
+        return `
+          <div class="space-y-2">
+            <div><span class="text-terminal-text">Expression:</span> <span class="text-terminal-text">${expression}</span></div>
+            <div><span class="text-terminal-text">Result:</span> <span class="text-terminal-accent text-lg">${result}</span></div>
+          </div>
+        `;
+      } catch (error) {
+        return errorOutput(`Invalid expression: ${error.message}`);
+      }
+    },
+  },
 };
 
 // Helper functions to generate command outputs
@@ -319,51 +501,73 @@ function getCommandDescription(command) {
 
   return descriptions[command] || commandRegistry[command].description;
 }
-
 function generateNeofetchOutput() {
   return `
-    <div class="flex flex-col md:flex-row gap-4 text-sm font-mono text-terminal-primary">
-  <pre class="text-terminal-blue">
-      /\\
-     /  \\
-    /\\   \\
-   /      \\
-  /   ,,   \\
- /   |  |  -\\
-/_-''    ''-_\\
-  </pre>
-  <div class="flex flex-col justify-center space-y-1">
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Platform:</span>
-      Powered by Astro
+    <div class="flex flex-col lg:flex-row gap-6 text-sm font-mono text-terminal-primary">
+      <div class="flex-shrink-0">
+        <pre class="text-terminal-blue text-xs leading-tight">
+    ╭─────────────────────────╮
+    │ ◈ ░░░░░░░░░░░░░░░░░░░░ ◈ │
+    │ ░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ░ │
+    │ ░ ▓                ▓ ░ │
+    │ ░ ▓  ╭──────────╮  ▓ ░ │
+    │ ░ ▓  │ ▪▪    ▪▪ │  ▓ ░ │
+    │ ░ ▓  │    ──    │  ▓ ░ │
+    │ ░ ▓  ╰──────────╯  ▓ ░ │
+    │ ░ ▓                ▓ ░ │
+    │ ░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ░ │
+    │ ◈ ░░░░░░░░░░░░░░░░░░░░ ◈ │
+    ╰─────────────────────────╯
+        </pre>
+      </div>
+      
+      <div class="flex flex-col justify-center space-y-2 min-w-0 flex-1">
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">OS:</span>
+          <span class="text-terminal-text">Void Linux x86_64</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Host:</span>
+          <span class="text-terminal-text">x0 Terminal</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Kernel:</span>
+          <span class="text-terminal-text">6.6.52_1</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Packages:</span>
+          <span class="text-terminal-text">xbps</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">WM:</span>
+          <span class="text-terminal-text">i3wm</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Theme:</span>
+          <span class="text-terminal-text">Terminal Dark</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Terminal:</span>
+          <span class="text-terminal-text">Web-based Terminal</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">CPU:</span>
+          <span class="text-terminal-text">JavaScript Engine</span>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Memory:</span>
+          <span class="text-terminal-text">Browser Memory Pool</span>
+        </div>
+      </div>
     </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Host:</span>
-      x0
-    </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Package Manager:</span>
-      pnpm
-    </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Shell:</span>
-      x0sh
-    </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Environment:</span>
-      Browser-based
-    </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Font:</span>
-      IBM Plex Mono
-    </div>
-    <div>
-      <span class="text-terminal-accent font-bold w-24 inline-block">Engine:</span>
-      JavaScript
-    </div>
-  </div>
-</div>
-
   `;
 }
 export { commandRegistry, textOutput, errorOutput };
