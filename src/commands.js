@@ -331,26 +331,99 @@ ${bottomBorder}
     },
   },
 
-  calc: {
-    description: 'Simple calculator',
+  resume: {
+    description: 'Display resume',
     execute: async args => {
-      if (!args || args.length === 0) {
-        return errorOutput('Usage: calc [expression] (e.g., calc 2 + 3 * 4)');
+      const lang = args && args.length > 0 ? args[0].toLowerCase() : 'en';
+      const validLangs = ['en', 'fa'];
+      
+      if (!validLangs.includes(lang)) {
+        return errorOutput(`Invalid language. Use: resume [en|fa]`);
       }
       
-      try {
-        const expression = args.join(' ');
-        // Simple math evaluation (be careful with eval in real applications!)
-        const result = Function(`"use strict"; return (${expression})`)();
+      return generateResumeOutput(lang);
+    },
+  },
+
+  curl: {
+    description: 'Download files',
+    execute: async args => {
+      if (!args || args.length < 2) {
+        return errorOutput('Usage: curl -s [filename]');
+      }
+      
+      const flags = args[0];
+      const filename = args[1];
+      
+      if (flags !== '-s') {
+        return errorOutput('Only -s flag is supported. Usage: curl -s [filename]');
+      }
+      
+      if (filename === 'resume.pdf' || filename === 'resume-en.pdf') {
+        // Use fetch to trigger download properly
+        fetch('/resume/resume-en.pdf')
+          .then(response => response.blob())
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Mahdi_Mamashli_Resume.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          })
+          .catch(err => console.error('Download failed:', err));
         
         return `
-          <div class="space-y-2">
-            <div><span class="text-terminal-text">Expression:</span> <span class="text-terminal-text">${expression}</span></div>
-            <div><span class="text-terminal-text">Result:</span> <span class="text-terminal-accent text-lg">${result}</span></div>
+          <div class="space-y-2 animate-fade-in">
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">●</span>
+              <span class="text-terminal-text">Connecting to server...</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">●</span>
+              <span class="text-terminal-text">Downloading resume-en.pdf</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">✓</span>
+              <span class="text-terminal-primary">Download complete!</span>
+            </div>
           </div>
         `;
-      } catch (error) {
-        return errorOutput(`Invalid expression: ${error.message}`);
+      } else if (filename === 'resume-fa.pdf') {
+        fetch('/resume/resume-fa.pdf')
+          .then(response => response.blob())
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Mahdi_Mamashli_Resume_FA.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          })
+          .catch(err => console.error('Download failed:', err));
+        
+        return `
+          <div class="space-y-2 animate-fade-in">
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">●</span>
+              <span class="text-terminal-text">در حال اتصال به سرور...</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">●</span>
+              <span class="text-terminal-text">دانلود resume-fa.pdf</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-terminal-accent">✓</span>
+              <span class="text-terminal-primary">دانلود کامل شد!</span>
+            </div>
+          </div>
+        `;
+      } else {
+        return errorOutput(`File '${filename}' not found.`);
       }
     },
   },
@@ -497,6 +570,8 @@ function getCommandDescription(command) {
     uname: 'Print system information.',
     neofetch: 'Display system information in a visually pleasing way.',
     help: 'Display a list of available commands.',
+     resume: 'Display resume in terminal format.',
+    curl: 'Download files from the server.',
   };
 
   return descriptions[command] || commandRegistry[command].description;
@@ -566,6 +641,282 @@ function generateNeofetchOutput() {
           <span class="text-terminal-accent font-bold w-20 flex-shrink-0">Memory:</span>
           <span class="text-terminal-text">Browser Memory Pool</span>
         </div>
+      </div>
+    </div>
+  `;
+}
+
+
+function generateResumeOutput(lang = 'en') {
+  if (lang === 'fa') {
+    return `<div class="text-terminal-muted text-center py-8">Persian version coming soon...</div>`;
+  }
+  
+  return `
+    <div class="resume-container font-mono text-terminal-primary max-w-5xl mx-auto">
+      <style>
+        .resume-section { animation: slideIn 0.5s ease-out forwards; opacity: 0; }
+        .resume-section:nth-child(1) { animation-delay: 0.1s; }
+        .resume-section:nth-child(2) { animation-delay: 0.2s; }
+        .resume-section:nth-child(3) { animation-delay: 0.3s; }
+        .resume-section:nth-child(4) { animation-delay: 0.4s; }
+        .resume-section:nth-child(5) { animation-delay: 0.5s; }
+        .resume-section:nth-child(6) { animation-delay: 0.6s; }
+        
+        @keyframes slideIn {
+          from { transform: translateX(-20px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .skill-badge {
+          transition: all 0.3s ease;
+        }
+        
+        .skill-badge:hover {
+          transform: translateX(5px);
+          color: #666666;
+        }
+        
+        .project-item {
+          transition: all 0.3s ease;
+          border-left: 2px solid transparent;
+          padding-left: 1rem;
+        }
+        
+        .project-item:hover {
+          border-left-color: #666666;
+          padding-left: 1.5rem;
+        }
+      </style>
+
+      <!-- Header -->
+      <div class="resume-section mb-8 text-center border-b border-terminal-accent pb-6">
+        <pre class="text-terminal-accent text-xs leading-tight mb-3 inline-block">
+╔═══════════════════════════════════════════════════╗
+║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
+║  ▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓  ║
+║  ▓░  BACKEND DEVELOPER | OPEN SOURCE       ░▓  ║
+║  ▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓  ║
+║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
+╚═══════════════════════════════════════════════════╝
+        </pre>
+        <h1 class="text-3xl font-bold text-terminal-accent mb-2">MAHDI MAMASHLI</h1>
+        <p class="text-terminal-text text-sm mb-3">Backend Developer | Open Source Contributor</p>
+        <div class="flex flex-wrap justify-center gap-4 text-xs">
+          <span class="flex items-center gap-1">
+            <span class="text-terminal-accent">@</span>
+            <a href="mailto:bitsgenix@gmail.com" class="hover:text-terminal-accent transition">bitsgenix@gmail.com</a>
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="text-terminal-accent">⚡</span>
+            <a href="https://github.com/m-mdy-m" class="hover:text-terminal-accent transition">github.com/m-mdy-m</a>
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="text-terminal-accent">📍</span>
+            <span>Iran</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> SUMMARY
+        </h2>
+        <p class="text-terminal-text text-sm leading-relaxed pl-6">
+          Backend developer with experience in scalable architectures, event-driven systems, and developer tooling. 
+          Passionate about open-source contribution and building robust backend applications.
+        </p>
+      </div>
+
+      <!-- Skills -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> SKILLS
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6 text-xs">
+          <div>
+            <h3 class="text-terminal-text font-bold mb-2">Languages</h3>
+            <div class="space-y-1">
+              <div class="skill-badge">▪ TypeScript, JavaScript</div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-terminal-text font-bold mb-2">Frameworks</h3>
+            <div class="space-y-1">
+              <div class="skill-badge">▪ Express.js, Nest.js</div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-terminal-text font-bold mb-2">Databases</h3>
+            <div class="space-y-1">
+              <div class="skill-badge">▪ MongoDB, MySQL/MariaDB, Redis</div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-terminal-text font-bold mb-2">DevOps</h3>
+            <div class="space-y-1">
+              <div class="skill-badge">▪ Docker, Git, CI/CD</div>
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <h3 class="text-terminal-text font-bold mb-2">Architecture</h3>
+            <div class="space-y-1">
+              <div class="skill-badge">▪ Event-Driven, Microservices, RESTful APIs, Caching Strategies</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> PROFESSIONAL EXPERIENCE
+        </h2>
+        <div class="pl-6 space-y-4">
+          <div class="project-item">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-terminal-text font-bold">Open Source Developer</h3>
+              <span class="text-terminal-muted text-xs">2023 – Present</span>
+            </div>
+            <p class="text-terminal-muted text-xs italic mb-2">Independent Contributor</p>
+            <ul class="text-xs space-y-1 list-none">
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Developed open-source backend frameworks and developer tools, improving performance and modularity</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Designed scalable backend architectures using Node.js, TypeScript, and event-driven patterns</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Contributed to multiple open-source projects, enhancing engineering best practices</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Published 15+ technical articles on advanced programming topics with significant community engagement</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> PROJECTS
+        </h2>
+        <div class="pl-6 space-y-4 text-xs">
+          <div class="project-item">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-terminal-text font-bold">Gland | Backend Framework</h3>
+              <a href="https://github.com/m-mdy-m/gland" class="text-terminal-accent hover:underline">github</a>
+            </div>
+            <ul class="space-y-1 list-none">
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Developed event-driven backend framework</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Implemented modular architecture</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-terminal-text font-bold">Qiks | Caching System</h3>
+              <a href="https://github.com/medishen/qiks" class="text-terminal-accent hover:underline">github</a>
+            </div>
+            <ul class="space-y-1 list-none">
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Designed in-memory caching system for JavaScript/TypeScript applications to improve performance</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Implemented LRU, LFU, and TTL-based eviction policies with configurable parameters</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-terminal-text font-bold">TideityIQ | Developer Tool</h3>
+              <a href="https://github.com/medishen/TideityIQ" class="text-terminal-accent hover:underline">github</a>
+            </div>
+            <ul class="space-y-1 list-none">
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Created a CLI tool for analyzing algorithmic time complexity</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-terminal-text font-bold">Cop | Telegram Bot</h3>
+              <a href="https://github.com/CodeModule-ir/cop" class="text-terminal-accent hover:underline">github</a>
+            </div>
+            <ul class="space-y-1 list-none">
+              <li class="flex items-start gap-2">
+                <span class="text-terminal-accent">•</span>
+                <span>Developed a Telegram bot for managing group activities</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> EDUCATION
+        </h2>
+        <div class="pl-6">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="text-terminal-text font-bold">BSc in Computer Engineering</h3>
+            <span class="text-terminal-muted text-xs">2022 – Present</span>
+          </div>
+          <p class="text-terminal-muted text-xs">Azad University</p>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="resume-section mb-6">
+        <h2 class="text-terminal-accent text-lg font-bold mb-3 flex items-center gap-2">
+          <span class="text-terminal-accent">▶</span> ACHIEVEMENTS & COMMUNITY
+        </h2>
+        <div class="pl-6 space-y-3 text-xs">
+          <div class="project-item">
+            <h3 class="text-terminal-text font-bold mb-1">Published Articles</h3>
+            <p>Authored widely-read technical articles on programming, algorithms, and backend development</p>
+          </div>
+          <div class="project-item">
+            <h3 class="text-terminal-text font-bold mb-1">Top Contributor</h3>
+            <p>Among the top 10 GitHub contributors in Iran</p>
+          </div>
+          <div class="project-item">
+            <h3 class="text-terminal-text font-bold mb-1">Leading Open-Source Contributor</h3>
+            <p>Developed and maintained Gland, a modular backend framework used in scalable applications</p>
+          </div>
+          <div class="project-item">
+            <h3 class="text-terminal-text font-bold mb-1">Active Developer Community Engagement</h3>
+            <p>Actively contributed to Stack Overflow and open-source projects, sharing technical knowledge</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="resume-section border-t border-terminal-accent pt-4 text-center">
+        <p class="text-terminal-muted text-xs mb-2">
+          Download PDF version: <span class="text-terminal-accent cursor-pointer hover:underline" onclick="window.open('/resume/resume-en.pdf', '_blank')">curl -s resume.pdf</span>
+        </p>
+        <p class="text-terminal-muted text-xs">
+          Last updated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+        </p>
       </div>
     </div>
   `;
