@@ -1,0 +1,176 @@
+%-------------------------
+% Resume - Mahdi Mamashli
+% Professional, Google-standard format - Optimized for single page
+%-------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage[top=0.4in, bottom=0.3in, left=0.5in, right=0.5in]{geometry}
+
+% Font configuration
+\usepackage{charter}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Section formatting with optimized spacing
+\titleformat{\section}{
+	\vspace{-8pt}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{black}\titlerule\vspace{-5pt}]
+
+% Custom commands with tighter spacing
+\newcommand{\resumeItem}[1]{
+	\item\small{
+		{#1 \vspace{-2pt}}
+	}
+}
+
+\newcommand{\resumeSubheading}[4]{
+	\vspace{-1pt}\item
+	\begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
+		\textbf{#1} & \textbf{\small #2} \\
+		\textit{\small #3} & \textit{\small #4} \\
+	\end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+	\item
+	\begin{tabular*}{0.98\textwidth}{l@{\extracolsep{\fill}}r}
+		\small#1 & \small#2 \\
+	\end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.12in, label={}]}
+	\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{-1pt}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.12in]}
+	\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%
+%-------------------------------------------
+
+\begin{document}
+	
+	%----------HEADING----------
+	\begin{center}
+		{\Huge \scshape Mahdi Mamashli} \\ \vspace{6pt}
+		\small 
+		\faEnvelope\ \href{mailto:bitsgenix@gmail.com}{\underline{bitsgenix@gmail.com}} $|$ 
+		\faGithub\ \href{https://github.com/m-mdy-m}{\underline{github.com/m-mdy-m}} $|$
+		\faMapMarker\ Iran
+		\vspace{-6pt}
+	\end{center}
+	
+	%-----------SUMMARY-----------
+	\section{Professional Summary}
+	\small{Backend engineer specializing in event-driven architectures and high-performance systems. Creator of Gland framework and multiple developer tools. Top 10 GitHub contributor in Iran with proven expertise in building scalable, modular backend solutions. Author of 15+ technical articles on algorithms, system design, and backend development.}
+	\vspace{-3pt}
+	
+	%-----------TECHNICAL SKILLS-----------
+	\section{Technical Skills}
+	\begin{itemize}[leftmargin=0.12in, label={}]
+		\small{\item{
+				\textbf{Languages}: TypeScript, JavaScript, Python, C, SQL \\
+				\textbf{Backend Frameworks}: Node.js, Bun, Express.js, Nest.js \\
+				\textbf{Databases \& Caching}: MongoDB, MySQL/MariaDB, Redis, PostgreSQL \\
+				\textbf{Architecture Patterns}: Event-Driven Architecture, Microservices, RESTful APIs, Pub/Sub, CQRS \\
+				\textbf{DevOps \& Tools}: Docker, Git, CI/CD Pipelines, Linux/Unix, Shell Scripting \\
+				\textbf{Specializations}: Performance Optimization, Caching Strategies, System Design, API Development
+		}}
+	\end{itemize}
+	\vspace{-10pt}
+	
+	%-----------PROFESSIONAL EXPERIENCE-----------
+	\section{Professional Experience}
+	\resumeSubHeadingListStart
+	
+	\resumeSubheading
+	{Open Source Developer}{Jan 2023 -- Present}
+	{Independent Contributor}{Remote}
+	\resumeItemListStart
+	\resumeItem{Architected and developed Gland, an event-driven backend framework with modular architecture, enabling teams to build scalable systems with decoupled components and protocol-agnostic communication}
+	\resumeItem{Engineered QIKS, a high-performance in-memory caching system achieving 1M+ operations/sec with advanced eviction policies (LRU, LFU, TTL) and dependency graph support for TypeScript applications}
+	\resumeItem{Built TideityIQ, a C-based CLI tool for algorithmic complexity analysis, providing Big O, Theta, and Omega notation calculations for JavaScript code optimization}
+	\resumeItem{Authored and published 15+ in-depth technical articles on Dev.to and Medium covering advanced topics in algorithms, data structures, system architecture, and backend engineering best practices}
+	\resumeItem{Actively contributed to open-source ecosystem, reviewing pull requests, mentoring developers, and establishing engineering standards across multiple projects}
+	\resumeItemListEnd
+	
+	\resumeSubHeadingListEnd
+	
+	%-----------PROJECTS-----------
+	\section{Key Projects}
+	\resumeSubHeadingListStart
+	
+	\resumeProjectHeading
+	{\textbf{Gland Framework} $|$ \emph{TypeScript, Node.js, Event Architecture} $|$ \href{https://github.com/m-mdy-m/gland}{\faGithub\ GitHub}}{}
+	\resumeItemListStart
+	\resumeItem{Built complete event-driven architecture framework supporting multiple protocols (HTTP, WebSocket) with pluggable middleware system and dynamic event routing}
+	\resumeItem{Implemented broker-based event system with namespaced channels, event propagation strategies, and strategy-based execution patterns for complex workflows}
+	\resumeItem{Designed modular architecture enabling independent development and deployment of system components without tight coupling}
+	\resumeItemListEnd
+	
+	\resumeProjectHeading
+	{\textbf{QIKS Caching System} $|$ \emph{TypeScript, Performance Engineering} $|$ \href{https://github.com/medishen/qiks}{\faGithub\ GitHub}}{}
+	\resumeItemListStart
+	\resumeItem{Developed microsecond-level caching system with O(1) CRUD operations supporting 1M+ ops/sec for high-throughput applications}
+	\resumeItem{Implemented multiple eviction policies (LRU, LFU, MRU) with hybrid expiration (TTL, idle timeout), cascade invalidation via dependency graphs, and logical namespace separation}
+	\resumeItem{Achieved sub-millisecond latency for cache operations through optimized data structures and memory management}
+	\resumeItemListEnd
+	
+	\resumeProjectHeading
+	{\textbf{ARLIZ} $|$ \emph{LaTeX, Technical Writing, Computer Science} $|$ \href{https://github.com/m-mdy-m/Arliz}{\faGithub\ GitHub}}{}
+	\resumeItemListStart
+	\resumeItem{Authored comprehensive book exploring data structures and algorithms from historical foundations to modern implementations, emphasizing conceptual understanding over memorization}
+	\resumeItem{Created detailed visual explanations and step-by-step algorithm walkthroughs covering topics from ancient computing methods to contemporary data structure design patterns}
+	\resumeItemListEnd
+	
+	\resumeProjectHeading
+	{\textbf{Additional Projects} $|$ \emph{Various Technologies}}{}
+	\resumeItemListStart
+	\resumeItem{\textbf{TideityIQ}: CLI complexity analyzer for JavaScript using C for performance | \textbf{Cop}: Telegram bot with automated group moderation | \textbf{AGAS}: Bun-powered HTTP client with event-driven architecture}
+	\resumeItemListEnd
+	
+	\resumeSubHeadingListEnd
+	
+	%-----------EDUCATION-----------
+	\section{Education}
+	\resumeSubHeadingListStart
+	\resumeSubheading
+	{Azad University}{Sep 2022 -- Present}
+	{Bachelor of Science in Computer Engineering}{Iran}
+	\resumeSubHeadingListEnd
+	
+	%-----------ACHIEVEMENTS & LEADERSHIP-----------
+	\section{Achievements \& Community Impact}
+	\resumeSubHeadingListStart
+	\resumeProjectHeading{\textbf{Top 10 GitHub Contributor in Iran}}{}
+	\resumeProjectHeading{\textbf{15+ Published Technical Articles} -- Dev.to, Medium, personal blog with significant community engagement}{}
+	\resumeProjectHeading{\textbf{Framework Creator} -- Gland framework adopted for scalable production applications}{}
+	\resumeProjectHeading{\textbf{Active Mentor} -- Stack Overflow contributor, code reviewer, technical knowledge sharing}{}
+	\resumeSubHeadingListEnd
+	
+\end{document}
