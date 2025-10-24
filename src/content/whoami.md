@@ -3,8 +3,15 @@ title: About Me
 description: A brief biography
 ---
 
-I am Mahdi. If you prefer, you can call me by my alias: Genix. I am a student of Computer Engineering (at least at the time of writing this). I grew up with computers and I have always wondered what lies behind this screen of black and green text. There is not much you need to know about me, just that I am someone who works with computers, sometimes gives them commands, and sometimes learns from them.
+They call me Genix.  
+I build systems that trade simplicity for scale, and question abstractions until they fall apart.  
+Most of my work lives somewhere between distributed messaging, event-driven architectures, and the philosophy of arrays.  
+I like tools that do one thing well — and refuse to quit.
 
-#### Contact & Collaboration
+Still learning. Still breaking my own designs.
 
-I’m always open to new ideas, collaborations, and discussions—especially those that challenge conventional thinking and push the boundaries of system design. Feel free to reach out via email(bitsgenix@gmail.com) or open an issue on one of [my GitHub](https://github.com/m-mdy-m/m-mdy-m) projects.
+📬 bitsgenix@gmail.com  
+🐙 github.com/m-mdy-m
+
+# view resume
+curl -s resume.pdf
