@@ -360,8 +360,7 @@ ${bottomBorder}
       }
       
       if (filename === 'resume.pdf' || filename === 'resume-en.pdf') {
-        // Use fetch to trigger download properly
-        fetch('https://github.com/m-mdy-m/m-mdy-m.github.io/blob/main/src/resume/resumen-en.pdf')
+        fetch('https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf')
           .then(response => response.blob())
           .then(blob => {
             const url = window.URL.createObjectURL(blob);
@@ -388,37 +387,6 @@ ${bottomBorder}
             <div class="flex items-center gap-2">
               <span class="text-terminal-accent">✓</span>
               <span class="text-terminal-primary">Download complete!</span>
-            </div>
-          </div>
-        `;
-      } else if (filename === 'resume-fa.pdf') {
-        fetch('/resume/resume-fa.pdf')
-          .then(response => response.blob())
-          .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'Mahdi_Mamashli_Resume_FA.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-          })
-          .catch(err => console.error('Download failed:', err));
-        
-        return `
-          <div class="space-y-2 animate-fade-in">
-            <div class="flex items-center gap-2">
-              <span class="text-terminal-accent">●</span>
-              <span class="text-terminal-text">در حال اتصال به سرور...</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-terminal-accent">●</span>
-              <span class="text-terminal-text">دانلود resume-fa.pdf</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-terminal-accent">✓</span>
-              <span class="text-terminal-primary">دانلود کامل شد!</span>
             </div>
           </div>
         `;
@@ -912,7 +880,7 @@ function generateResumeOutput(lang = 'en') {
       <!-- Footer -->
       <div class="resume-section border-t border-terminal-accent pt-4 text-center">
         <p class="text-terminal-muted text-xs mb-2">
-          Download PDF version: <span class="text-terminal-accent cursor-pointer hover:underline" onclick="window.open('/resume/resume-en.pdf', '_blank')">curl -s resume.pdf</span>
+          Download PDF version: <span class="text-terminal-accent cursor-pointer hover:underline" onclick="window.open('https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf', '_blank')">curl -s resume.pdf</span>
         </p>
         <p class="text-terminal-muted text-xs">
           Last updated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
