@@ -346,22 +346,31 @@ ${bottomBorder}
   },
 
   curl: {
-    description: 'Download files',
-    execute: async args => {
-      if (!args || args.length < 2) {
-        return errorOutput('Usage: curl -s [filename]');
-      }
-      
-      const flags = args[0];
-      const filename = args[1];
-      
-      if (flags !== '-s') {
-        return errorOutput('Only -s flag is supported. Usage: curl -s [filename]');
-      }
-      
-      if (filename === 'resume.pdf' || filename === 'resume-en.pdf') {
-        fetch('https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf')
-          .then(response => response.blob())
+      description: 'Download files',
+      execute: async args => {
+        if (!args || args.length < 2) {
+          return errorOutput('Usage: curl -s [filename]');
+        }
+
+        const flags = args[0];
+        const filename = args[1];
+
+        if (flags !== '-s') {
+          return errorOutput('Only -s flag is supported. Usage: curl -s [filename]');
+        }
+
+        if (filename !== 'resume.pdf' && filename !== 'resume-en.pdf') {
+          return errorOutput(`File '${filename}' not found.`);
+        }
+
+        const repoFileName = filename === 'resume.pdf' ? 'resume.pdf' : 'resume-en.pdf';
+        const rawUrl = `https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/${encodeURIComponent(repoFileName)}`;
+
+        fetch(rawUrl)
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.blob();
+          })
           .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -373,7 +382,7 @@ ${bottomBorder}
             window.URL.revokeObjectURL(url);
           })
           .catch(err => console.error('Download failed:', err));
-        
+
         return `
           <div class="space-y-2 animate-fade-in">
             <div class="flex items-center gap-2">
@@ -382,19 +391,16 @@ ${bottomBorder}
             </div>
             <div class="flex items-center gap-2">
               <span class="text-terminal-accent">●</span>
-              <span class="text-terminal-text">Downloading resume-en.pdf</span>
+              <span class="text-terminal-text">Downloading ${repoFileName}</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-terminal-accent">✓</span>
-              <span class="text-terminal-primary">Download complete!</span>
+              <span class="text-terminal-primary">Download started — check your Downloads folder</span>
             </div>
           </div>
         `;
-      } else {
-        return errorOutput(`File '${filename}' not found.`);
-      }
-    },
-  },
+      },
+    }
 };
 
 // Helper functions to generate command outputs
