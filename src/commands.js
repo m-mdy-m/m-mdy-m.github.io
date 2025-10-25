@@ -361,7 +361,7 @@ ${bottomBorder}
       
       if (filename === 'resume.pdf' || filename === 'resume-en.pdf') {
         // Use fetch to trigger download properly
-        fetch('/resume/resume-en.pdf')
+        fetch('https://github.com/m-mdy-m/m-mdy-m.github.io/blob/main/src/resume/resumen-en.pdf')
           .then(response => response.blob())
           .then(blob => {
             const url = window.URL.createObjectURL(blob);
