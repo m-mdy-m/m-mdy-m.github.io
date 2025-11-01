@@ -4,7 +4,7 @@ subtitle: "The Mathematical Foundations of Computing"
 description: "A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond."
 status: "completed"
 version: "Living First Edition"
-date: 2025-01-111
+date: 2025-01-11
 updatedDate: 2025-01-11
 downloadUrl: "https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS"
 sourceUrl: "https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS"

@@ -42,7 +42,6 @@ const booksCollection = defineCollection({
     version: z.string().optional(),
     date: z.date(),
     updatedDate: z.date().optional(),
-    cover: z.string(), 
     downloadUrl: z.string().optional(),
     sourceUrl: z.string().optional(),
     parts: z.number().optional(),
