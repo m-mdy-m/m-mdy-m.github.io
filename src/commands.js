@@ -48,19 +48,17 @@ const commandRegistry = {
           const newPath = currentPath.join('/') || '/';
           window.location.href = newPath;
           return textOutput(`Navigating to ${newPath}...`);
-        } else {
-          return textOutput('Already at root directory.');
         }
+        return textOutput('Already at root directory.');
       }
 
-      const validDirectories = ['posts', 'projects', 'articles', 'about', 'contact'];
+      const validDirectories = ['posts', 'projects', 'articles', 'books', 'about', 'contact'];
 
       if (validDirectories.includes(directory)) {
         window.location.href = `/${directory}`;
         return textOutput(`Navigating to /${directory}...`);
-      } else {
-        return errorOutput(`Directory '${directory}' not found.`);
       }
+      return errorOutput(`Directory '${directory}' not found.`);
     },
   },
 
@@ -428,75 +426,77 @@ ${bottomBorder}
       return result;
     },
   },
-
-  resume: {
-    description: 'Display resume',
+  books: {
+    description: 'Display available books',
+    execute: async () => generateBooksOutput(),
+  },
+   resume: {
+    description: 'Display professional resume',
     execute: async args => {
-      const lang = args && args.length > 0 ? args[0].toLowerCase() : 'en';
-      const validLangs = ['en', 'fa'];
+      const format = args && args.length > 0 ? args[0].toLowerCase() : 'terminal';
       
-      if (!validLangs.includes(lang)) {
-        return errorOutput(`Invalid language. Use: resume [en|fa]`);
+      if (format === 'pdf') {
+        return downloadResumePDF();
       }
       
-      return generateResumeOutput(lang);
+      return generateResumeOutput();
     },
   },
 
-  curl: {
+  skills: {
+    description: 'Display technical skills matrix',
+    execute: async () => generateSkillsOutput(),
+  },
+
+ curl: {
     description: 'Download files',
     execute: async args => {
       if (!args || args.length < 2) {
-        return errorOutput('Usage: curl -s [filename]');
+        return errorOutput('Usage: curl -O [filename]');
       }
 
       const flags = args[0];
       const filename = args[1];
 
-      if (flags !== '-s') {
-        return errorOutput('Only -s flag is supported. Usage: curl -s [filename]');
+      if (flags !== '-O') {
+        return errorOutput('Only -O flag is supported. Usage: curl -O [filename]');
       }
 
-      if (filename !== 'resume.pdf' && filename !== 'resume-en.pdf') {
-        return errorOutput(`File '${filename}' not found.`);
+      if (filename === 'resume.pdf') {
+        const rawUrl = 'https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf';
+        
+        fetch(rawUrl)
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.blob();
+          })
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Mahdi_Mamashli_Resume.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          })
+          .catch(err => console.error('Download failed:', err));
+
+        return `
+          <div class="space-y-2 animate-fade-in">
+            <div class="flex items-center gap-2">
+              <span class="text-green-600">●</span>
+              <span class="text-gray-400">Downloading ${filename}...</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-green-600">✓</span>
+              <span class="text-gray-300">Download started — check your Downloads folder</span>
+            </div>
+          </div>
+        `;
       }
 
-      const repoFileName = filename === 'resume.pdf' ? 'resume.pdf' : 'resume-en.pdf';
-      const rawUrl = `https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/${encodeURIComponent(repoFileName)}`;
-
-      fetch(rawUrl)
-        .then(response => {
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          return response.blob();
-        })
-        .then(blob => {
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'Mahdi_Mamashli_Resume.pdf';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        })
-        .catch(err => console.error('Download failed:', err));
-
-      return `
-        <div class="space-y-2 animate-fade-in">
-          <div class="flex items-center gap-2">
-            <span class="text-gray-600 animate-pulse">●</span>
-            <span class="text-gray-400">Connecting to server...</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-gray-600 animate-pulse" style="animation-delay: 0.5s">●</span>
-            <span class="text-gray-400">Downloading ${repoFileName}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-green-600">✓</span>
-            <span class="text-gray-300">Download started — check your Downloads folder</span>
-          </div>
-        </div>
-      `;
+      return errorOutput(`File '${filename}' not found.`);
     },
   },
 
@@ -640,7 +640,7 @@ function generateHelpOutput() {
   const categories = {
     'System': ['whoami', 'uname', 'pwd', 'date', 'clear'],
     'Navigation': ['ls', 'cd', 'cat', 'tree'],
-    'Information': ['help', 'man', 'history', 'neofetch'],
+    'Information': ['help', 'man', 'history', 'neofetch', 'skills'],
     'Tools': ['resume', 'curl', 'echo'],
     'Fun': ['fortune', 'cowsay', 'figlet', 'matrix', 'hack', 'glitch'],
     'External': ['github']
@@ -738,6 +738,7 @@ function generateHelpOutput() {
 
 function generateLsOutput(args = []) {
   const virtualFS = buildVirtualFS(contentEntries);
+console.log('virtualFS:',virtualFS)
 
   let pathParts = args.length > 0 ? args[0].split('/') : [];
   let current = virtualFS;
@@ -790,6 +791,93 @@ const items = Object.entries(current).sort(([a], [b]) => a.localeCompare(b));
       </h2>
       <div class="space-y-1">
         ${htmlItems.join('\n')}
+      </div>
+    </div>
+  `;
+}
+
+function generateBooksOutput() {
+  return `
+    <div class="books-display animate-fade-in">
+      <h2 class="text-gray-400 text-2xl mb-6 flex items-center gap-2">
+        <span class="text-gray-600">📚</span> Published Works
+      </h2>
+      
+      <div class="space-y-8">
+        <!-- MATHESIS -->
+        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
+          <div class="flex gap-6 flex-col md:flex-row">
+            <div class="flex-shrink-0">
+              <img src="/books/books/MATHESIS/cover.svg" alt="MATHESIS Cover" class="w-48 h-64 object-contain" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl text-gray-300 font-bold mb-2">MATHESIS</h3>
+              <p class="text-sm text-gray-500 mb-3">The Mathematical Foundations of Computing</p>
+              <p class="text-gray-400 text-sm mb-4">A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond.</p>
+              <div class="flex gap-2 mb-4">
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Mathematics</span>
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">10 Parts</span>
+                <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded text-xs">Living Edition</span>
+              </div>
+              <div class="flex gap-3">
+                <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Art of Algorithmic Analysis -->
+        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
+          <div class="flex gap-6 flex-col md:flex-row">
+            <div class="flex-shrink-0">
+              <img src="/books/books/The Art of Algorithmic Analysis/cover.svg" alt="Art of Algorithmic Analysis Cover" class="w-48 h-64 object-contain" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl text-gray-300 font-bold mb-2">The Art of Algorithmic Analysis</h3>
+              <p class="text-sm text-gray-500 mb-3">From Foundations to Practice</p>
+              <p class="text-gray-400 text-sm mb-4">A rigorous exploration of algorithm analysis techniques—asymptotic notation, recurrence relations, amortized analysis, and complexity theory. Built for those who seek deep understanding.</p>
+              <div class="flex gap-2 mb-4">
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Algorithms</span>
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">6 Parts</span>
+                <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded text-xs">Living Edition</span>
+              </div>
+              <div class="flex gap-3">
+                <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/The%20Art%20of%20Algorithmic%20Analysis" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARLIZ -->
+        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
+          <div class="flex gap-6 flex-col md:flex-row">
+            <div class="flex-shrink-0">
+              <div class="w-48 h-64 bg-gray-800 rounded flex items-center justify-center">
+                <span class="text-4xl">📖</span>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl text-gray-300 font-bold mb-2">ARLIZ</h3>
+              <p class="text-sm text-gray-500 mb-3">Arrays, Reasoning, Logic, Identity, Zero</p>
+              <p class="text-gray-400 text-sm mb-4">A comprehensive exploration of data structures starting from their historical origins. Understanding the 'why' behind arrays, stacks, queues, and beyond.</p>
+              <div class="flex gap-2 mb-4">
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Data Structures</span>
+                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">5 Parts</span>
+                <span class="px-3 py-1 bg-yellow-900/30 text-yellow-400 rounded text-xs">In Progress</span>
+              </div>
+              <div class="flex gap-3">
+                <a href="https://github.com/m-mdy-m/Arliz" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 p-4 border border-gray-800 rounded">
+        <p class="text-gray-500 text-sm">
+          <span class="text-gray-400">💡 Tip:</span> All books are freely available and continuously updated. 
+          These are "living editions"—they grow and improve as understanding deepens.
+        </p>
       </div>
     </div>
   `;
@@ -1013,59 +1101,19 @@ function generateResumeOutput(lang = 'en') {
   }
   
   return `
-    <style>
-      .resume-section { 
-        animation: slideInUp 0.5s ease-out forwards; 
-        opacity: 0; 
-      }
-      .resume-section:nth-child(1) { animation-delay: 0.1s; }
-      .resume-section:nth-child(2) { animation-delay: 0.2s; }
-      .resume-section:nth-child(3) { animation-delay: 0.3s; }
-      .resume-section:nth-child(4) { animation-delay: 0.4s; }
-      .resume-section:nth-child(5) { animation-delay: 0.5s; }
-      .resume-section:nth-child(6) { animation-delay: 0.6s; }
-      
-      @keyframes slideInUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-      
-      .skill-badge {
-        transition: all 0.3s ease;
-      }
-      
-      .skill-badge:hover {
-        transform: translateX(5px);
-        color: #9ca3af;
-      }
-      
-      .project-item {
-        transition: all 0.3s ease;
-        border-left: 2px solid transparent;
-        padding-left: 1rem;
-      }
-      
-      .project-item:hover {
-        border-left-color: #6b7280;
-        padding-left: 1.5rem;
-      }
-    </style>
-
-    <div class="resume-container font-mono max-w-5xl mx-auto">
+    <div class="resume-container font-mono max-w-5xl mx-auto animate-fade-in">
       
       <!-- Header -->
-      <div class="resume-section mb-8 text-center border-b border-gray-800 pb-6">
+      <div class="mb-8 text-center border-b border-gray-800 pb-6">
         <pre class="text-gray-600 text-xs leading-tight mb-3 inline-block">
-╔═══════════════════════════════════════════════════╗
-║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
-║  ▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓  ║
-║  ▓░  BACKEND DEVELOPER | OPEN SOURCE       ░▓  ║
-║  ▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓  ║
-║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
-╚═══════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════╗
+║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
+║  ▓░░  BACKEND ENGINEER • OPEN SOURCE ░▓  ║
+║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ║
+╚═══════════════════════════════════════════╝
         </pre>
         <h1 class="text-3xl font-bold text-gray-400 mb-2">MAHDI MAMASHLI</h1>
-        <p class="text-gray-500 text-sm mb-3">Backend Developer | Open Source Contributor</p>
+        <p class="text-gray-500 text-sm mb-3">Backend Developer | Open Source Contributor | Framework Creator</p>
         <div class="flex flex-wrap justify-center gap-4 text-xs">
           <span class="flex items-center gap-1">
             <span class="text-gray-600">@</span>
@@ -1083,9 +1131,9 @@ function generateResumeOutput(lang = 'en') {
       </div>
 
       <!-- Summary -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
-          <span class="text-gray-600">▶</span> SUMMARY
+          <span class="text-gray-600">▶</span> PROFILE
         </h2>
         <p class="text-gray-500 text-sm leading-relaxed pl-6">
           Backend Developer specializing in event-driven architecture and modular system design. Creator of Gland framework 
@@ -1096,80 +1144,89 @@ function generateResumeOutput(lang = 'en') {
       </div>
 
       <!-- Skills -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
-          <span class="text-gray-600">▶</span> SKILLS
+          <span class="text-gray-600">▶</span> TECHNICAL EXPERTISE
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6 text-xs">
           <div>
-            <h3 class="text-gray-500 font-bold mb-2">Languages</h3>
+            <h3 class="text-gray-500 font-bold mb-2">Core Languages</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ TypeScript, JavaScript, Python</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ TypeScript, JavaScript (Expert)</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Python (Proficient)</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ C (Working Knowledge)</div>
             </div>
           </div>
           <div>
-            <h3 class="text-gray-500 font-bold mb-2">Backend</h3>
+            <h3 class="text-gray-500 font-bold mb-2">Backend Stack</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ Node.js, Bun, Express.js</div>
-              <div class="skill-badge">▪ Event-driven architectures, WebSocket</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Node.js, Bun Runtime</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Express.js, Event-driven Patterns</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ WebSocket, Pub/Sub Systems</div>
             </div>
           </div>
           <div>
-            <h3 class="text-gray-500 font-bold mb-2">Databases</h3>
+            <h3 class="text-gray-500 font-bold mb-2">Data Layer</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ PostgreSQL, MongoDB, Redis</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ PostgreSQL, MongoDB</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Redis (Caching, Eviction Policies)</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Cache Design Patterns</div>
             </div>
           </div>
           <div>
             <h3 class="text-gray-500 font-bold mb-2">System Design</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ Event brokers, CQRS patterns</div>
-              <div class="skill-badge">▪ Dependency injection, pub/sub</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Event Brokers, CQRS Patterns</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Dependency Injection</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Modular Architecture</div>
             </div>
           </div>
           <div>
-            <h3 class="text-gray-500 font-bold mb-2">Tools</h3>
+            <h3 class="text-gray-500 font-bold mb-2">DevOps & Tools</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ Docker, Git, Linux/Unix</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Docker, Git</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Linux/Unix, Shell Scripting</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ CI/CD Fundamentals</div>
             </div>
           </div>
           <div>
             <h3 class="text-gray-500 font-bold mb-2">Specializations</h3>
             <div class="space-y-1 text-gray-600">
-              <div class="skill-badge">▪ Performance optimization</div>
-              <div class="skill-badge">▪ Algorithm complexity analysis</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Performance Optimization</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Algorithm Complexity Analysis</div>
+              <div class="skill-badge hover:translate-x-1 transition-transform">▪ Technical Writing</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Experience -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
           <span class="text-gray-600">▶</span> EXPERIENCE
         </h2>
         <div class="pl-6 space-y-4">
-          <div class="project-item">
+          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
             <div class="flex justify-between items-start mb-2">
               <h3 class="text-gray-400 font-bold">Open Source Developer</h3>
               <span class="text-gray-600 text-xs">Jan 2023 – Present</span>
             </div>
             <p class="text-gray-600 text-xs italic mb-2">Independent Contributor</p>
-            <ul class="text-xs space-y-1 list-none text-gray-600">
+            <ul class="text-xs space-y-2 list-none text-gray-600">
               <li class="flex items-start gap-2">
-                <span class="text-gray-700">•</span>
-                <span>Designed and implemented Gland, an event-driven backend framework with broker-based architecture supporting protocol-agnostic communication (HTTP, WebSocket) and modular component isolation</span>
+                <span class="text-gray-700 flex-shrink-0">•</span>
+                <span>Designed and implemented <strong class="text-gray-500">Gland</strong>, an event-driven backend framework with broker-based architecture supporting protocol-agnostic communication (HTTP, WebSocket) and modular component isolation</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-gray-700">•</span>
-                <span>Built QIKS caching system achieving 1M+ ops/sec with O(1) complexity, implementing LRU/LFU/MRU eviction policies, cascade invalidation via dependency graphs, and TTL-based expiration</span>
+                <span class="text-gray-700 flex-shrink-0">•</span>
+                <span>Built <strong class="text-gray-500">QIKS</strong> caching system achieving 1M+ ops/sec with O(1) complexity, implementing LRU/LFU/MRU eviction policies, cascade invalidation via dependency graphs, and TTL-based expiration</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-gray-700">•</span>
-                <span>Developed TideityIQ complexity analyzer in C, parsing JavaScript AST to calculate Big O/Theta/Omega notations for recursive algorithms</span>
+                <span class="text-gray-700 flex-shrink-0">•</span>
+                <span>Developed <strong class="text-gray-500">TideityIQ</strong> complexity analyzer in C, parsing JavaScript AST to calculate Big O/Theta/Omega notations for recursive algorithms</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-gray-700">•</span>
+                <span class="text-gray-700 flex-shrink-0">•</span>
                 <span>Authored 15+ technical articles on Dev.to and Medium covering event-driven patterns, caching strategies, algorithm analysis, and backend architecture</span>
               </li>
             </ul>
@@ -1178,17 +1235,17 @@ function generateResumeOutput(lang = 'en') {
       </div>
 
       <!-- Projects -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
-          <span class="text-gray-600">▶</span> PROJECTS
+          <span class="text-gray-600">▶</span> KEY PROJECTS
         </h2>
         <div class="pl-6 space-y-4 text-xs">
-          <div class="project-item">
+          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
             <div class="flex justify-between items-start mb-1">
               <h3 class="text-gray-400 font-bold">Gland Framework</h3>
-              <a href="https://github.com/m-mdy-m/gland" class="text-gray-600 hover:text-gray-500 transition">github</a>
+              <a href="https://github.com/m-mdy-m/gland" class="text-gray-600 hover:text-gray-500 transition">github ↗</a>
             </div>
-            <p class="text-gray-600 text-xs mb-2">TypeScript, Event-Driven Architecture</p>
+            <p class="text-gray-600 text-xs mb-2">TypeScript • Event-Driven Architecture</p>
             <ul class="space-y-1 list-none text-gray-600">
               <li class="flex items-start gap-2">
                 <span class="text-gray-700">•</span>
@@ -1205,12 +1262,12 @@ function generateResumeOutput(lang = 'en') {
             </ul>
           </div>
 
-          <div class="project-item">
+          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
             <div class="flex justify-between items-start mb-1">
               <h3 class="text-gray-400 font-bold">QIKS Caching System</h3>
-              <a href="https://github.com/medishen/qiks" class="text-gray-600 hover:text-gray-500 transition">github</a>
+              <a href="https://github.com/medishen/qiks" class="text-gray-600 hover:text-gray-500 transition">github ↗</a>
             </div>
-            <p class="text-gray-600 text-xs mb-2">TypeScript, Performance Engineering</p>
+            <p class="text-gray-600 text-xs mb-2">TypeScript • Performance Engineering</p>
             <ul class="space-y-1 list-none text-gray-600">
               <li class="flex items-start gap-2">
                 <span class="text-gray-700">•</span>
@@ -1223,12 +1280,12 @@ function generateResumeOutput(lang = 'en') {
             </ul>
           </div>
 
-          <div class="project-item">
+          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
             <div class="flex justify-between items-start mb-1">
               <h3 class="text-gray-400 font-bold">TideityIQ</h3>
-              <a href="https://github.com/medishen/TideityIQ" class="text-gray-600 hover:text-gray-500 transition">github</a>
+              <a href="https://github.com/medishen/TideityIQ" class="text-gray-600 hover:text-gray-500 transition">github ↗</a>
             </div>
-            <p class="text-gray-600 text-xs mb-2">C, Compiler Design</p>
+            <p class="text-gray-600 text-xs mb-2">C • Compiler Design</p>
             <ul class="space-y-1 list-none text-gray-600">
               <li class="flex items-start gap-2">
                 <span class="text-gray-700">•</span>
@@ -1237,10 +1294,8 @@ function generateResumeOutput(lang = 'en') {
             </ul>
           </div>
 
-          <div class="project-item">
-            <div class="flex justify-between items-start mb-1">
-              <h3 class="text-gray-400 font-bold">Additional Projects</h3>
-            </div>
+          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
+            <h3 class="text-gray-400 font-bold mb-2">Additional Projects</h3>
             <ul class="space-y-1 list-none text-gray-600">
               <li class="flex items-start gap-2">
                 <span class="text-gray-700">•</span>
@@ -1260,7 +1315,7 @@ function generateResumeOutput(lang = 'en') {
       </div>
 
       <!-- Education -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
           <span class="text-gray-600">▶</span> EDUCATION
         </h2>
@@ -1274,27 +1329,30 @@ function generateResumeOutput(lang = 'en') {
       </div>
 
       <!-- Recognition -->
-      <div class="resume-section mb-6">
+      <div class="mb-6">
         <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
           <span class="text-gray-600">▶</span> RECOGNITION
         </h2>
         <div class="pl-6 space-y-2 text-xs text-gray-600">
-          <div class="project-item">
-            <span class="text-gray-700">▪</span> Top 10 GitHub Contributor in Iran
+          <div class="flex items-center gap-2 hover:translate-x-1 transition-transform">
+            <span class="text-gray-700">▪</span>
+            <span>Top 10 GitHub Contributor in Iran</span>
           </div>
-          <div class="project-item">
-            <span class="text-gray-700">▪</span> 15+ Published Technical Articles on Dev.to and Medium
+          <div class="flex items-center gap-2 hover:translate-x-1 transition-transform">
+            <span class="text-gray-700">▪</span>
+            <span>15+ Published Technical Articles on Dev.to and Medium</span>
           </div>
-          <div class="project-item">
-            <span class="text-gray-700">▪</span> Framework Creator — Gland framework with modular event-driven architecture
+          <div class="flex items-center gap-2 hover:translate-x-1 transition-transform">
+            <span class="text-gray-700">▪</span>
+            <span>Framework Creator — Gland framework with modular event-driven architecture</span>
           </div>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="resume-section border-t border-gray-800 pt-4 text-center">
+      <div class="border-t border-gray-800 pt-4 text-center">
         <p class="text-gray-600 text-xs mb-2">
-          Download PDF: <span class="text-gray-500 cursor-pointer hover:text-gray-400 transition" onclick="window.open('https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf', '_blank')">curl -s resume.pdf</span>
+          Download PDF: <span class="text-gray-500 cursor-pointer hover:text-gray-400 transition" onclick="window.location.href='/?cmd=curl%20-O%20resume.pdf'">curl -O resume.pdf</span>
         </p>
         <p class="text-gray-700 text-xs">
           Last updated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}

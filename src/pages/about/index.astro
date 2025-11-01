@@ -1,0 +1,129 @@
+---
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import CommandOutput from '@components/CommandOutput.astro';
+---
+
+<BaseLayout title="About | x0 Terminal" description="About Mahdi Mamashli - Backend Developer & Framework Creator">
+  <TerminalWindow command="cd about && cat README.md" title="About">
+    <CommandOutput>
+      <div class="about-container max-w-4xl animate-fade-in">
+        <!-- Tech Stack -->
+        <section class="mb-8">
+          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
+            <span class="text-gray-600">▶</span> Stack
+          </h2>
+          <div class="pl-6 grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Daily Drivers</div>
+              <div class="text-gray-600 text-xs">TypeScript, Node.js, Bun</div>
+            </div>
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Data Layer</div>
+              <div class="text-gray-600 text-xs">PostgreSQL, MongoDB, Redis</div>
+            </div>
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Systems</div>
+              <div class="text-gray-600 text-xs">Linux, Docker, i3</div>
+            </div>
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Editor</div>
+              <div class="text-gray-600 text-xs">Vim (my .vimrc: VEX)</div>
+            </div>
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Shell</div>
+              <div class="text-gray-600 text-xs">Bash, custom dotfiles</div>
+            </div>
+            <div class="bg-gray-900/30 p-3 rounded border border-gray-800">
+              <div class="text-gray-400 font-bold mb-1">Writing</div>
+              <div class="text-gray-600 text-xs">LaTeX, Markdown</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Random Facts -->
+        <section class="mb-8">
+          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
+            <span class="text-gray-600">▶</span> Random Facts
+          </h2>
+          <div class="pl-6 space-y-2 text-gray-600 text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-gray-700">▪</span>
+              <span>I've read more about data structures than I've implemented them</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-gray-700">▪</span>
+              <span>My GitHub contributions graph looks like a heartbeat monitor</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-gray-700">▪</span>
+              <span>I debug by writing. If I can't explain the bug, I don't understand the code</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interests -->
+        <section class="mb-8">
+          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
+            <span class="text-gray-600">▶</span> Beyond Code
+          </h2>
+          <div class="pl-6 space-y-3 text-gray-600 text-sm">
+            <p>
+              I'm fascinated by the intersection of <span class="text-gray-500">philosophy and computation</span>.
+              How do we know what we know? What makes a proof convincing? Why do some abstractions feel "right"?
+            </p>
+            <p>
+              I believe <span class="text-gray-500">writing is thinking</span>. That's why I write books, 
+              articles, documentation. Not to teach—to learn.
+            </p>
+            <p>
+              I think about <span class="text-gray-500">systems</span> more than solutions. 
+              How components interact matters more than what they do individually.
+            </p>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <section class="border-t border-gray-800 pt-6 mt-8">
+          <div class="text-center space-y-3">
+            <p class="text-gray-600 text-sm">
+              Want to talk? I'm always up for conversations about architecture, algorithms, or why arrays are beautiful.
+            </p>
+            <div class="flex justify-center gap-4 text-sm">
+              <a href="mailto:bitsgenix@gmail.com" class="text-gray-500 hover:text-gray-400 transition">
+                email →
+              </a>
+              <a href="https://github.com/m-mdy-m" target="_blank" class="text-gray-500 hover:text-gray-400 transition">
+                github →
+              </a>
+              <a href="/contact" class="text-gray-500 hover:text-gray-400 transition">
+                contact →
+              </a>
+            </div>
+            <p class="text-gray-700 text-xs pt-4">
+              Last updated: January 2025 • Still figuring things out
+            </p>
+          </div>
+        </section>
+
+      </div>
+    </CommandOutput>
+  </TerminalWindow>
+</BaseLayout>
+
+<style>
+  .about-container section {
+    animation: fadeInUp 0.5s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

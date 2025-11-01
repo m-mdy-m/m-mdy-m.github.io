@@ -33,8 +33,26 @@ const articlesCollection = defineCollection({
   }),
 });
 
+const booksCollection = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    description: z.string(),
+    status: z.enum(['in-progress', 'completed', 'planned']),
+    version: z.string().optional(),
+    date: z.date(),
+    updatedDate: z.date().optional(),
+    cover: z.string(), 
+    downloadUrl: z.string().optional(),
+    sourceUrl: z.string().optional(),
+    parts: z.number().optional(),
+    chapters: z.number().optional(),
+  }),
+});
+
 export const collections = {
   posts: postsCollection,
   projects: projectsCollection,
   articles: articlesCollection,
+  books: booksCollection,
 };

@@ -1,0 +1,136 @@
+---
+// src/pages/books/index.astro
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import CommandOutput from '@components/CommandOutput.astro';
+
+const books = [
+  {
+    title: 'MATHESIS',
+    subtitle: 'The Mathematical Foundations of Computing',
+    description: 'A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond.',
+    status: 'In Progress',
+    statusColor: 'yellow',
+    parts: 10,
+    cover: '/books/books/MATHESIS/cover.svg',
+    sourceUrl: 'https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS',
+    tags: ['Mathematics', 'Foundations', 'Set Theory', 'Logic']
+  },
+  {
+    title: 'The Art of Algorithmic Analysis',
+    subtitle: 'From Foundations to Practice',
+    description: 'A rigorous exploration of algorithm analysis techniques—asymptotic notation, recurrence relations, amortized analysis, and complexity theory. Built for those who seek deep understanding.',
+    status: 'In Progress',
+    statusColor: 'yellow',
+    parts: 6,
+    cover: '/books/books/The Art of Algorithmic Analysis/cover.svg',
+    sourceUrl: 'https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/The%20Art%20of%20Algorithmic%20Analysis',
+    tags: ['Algorithms', 'Complexity', 'Analysis', 'Computer Science']
+  },
+  {
+    title: 'ARLIZ',
+    subtitle: 'Arrays, Reasoning, Logic, Identity, Zero',
+    description: 'A comprehensive exploration of data structures starting from their historical origins. Understanding the \'why\' behind arrays, stacks, queues, and beyond.',
+    status: 'In Progress',
+    statusColor: 'yellow',
+    parts: 5,
+    cover: null,
+    sourceUrl: 'https://github.com/m-mdy-m/Arliz',
+    tags: ['Data Structures', 'Arrays', 'History', 'Implementation']
+  },
+];
+---
+
+<BaseLayout title="Books | x0 Terminal" description="Technical books on mathematics, algorithms, and computer science">
+  <TerminalWindow command="ls books" title="Published Works">
+    <CommandOutput>
+      <h1 class="text-terminal-accent text-2xl mb-6 flex items-center gap-2">
+        <span class="text-2xl">📚</span> Published Works
+      </h1>
+
+      <div class="space-y-8">
+        {books.map((book, index) => (
+          <div 
+            class="book-card border border-terminal-primary border-opacity-30 rounded-lg p-6 hover:border-opacity-50 transition-all animate-fade-in"
+            style={`animation-delay: ${index * 100}ms`}
+          >
+            <div class="flex gap-6 flex-col md:flex-row">
+              <div class="flex-shrink-0">
+                {book.cover ? (
+                  <img 
+                    src={book.cover} 
+                    alt={`${book.title} Cover`} 
+                    class="w-48 h-64 object-contain bg-terminal-void rounded"
+                  />
+                ) : (
+                  <div class="w-48 h-64 bg-terminal-primary bg-opacity-10 rounded flex items-center justify-center">
+                    <span class="text-5xl opacity-50">📖</span>
+                  </div>
+                )}
+              </div>
+              
+              <div class="flex-1">
+                <h2 class="text-xl text-terminal-text font-bold mb-2">{book.title}</h2>
+                {book.subtitle && (
+                  <p class="text-sm text-terminal-muted mb-3 italic">{book.subtitle}</p>
+                )}
+                
+                <p class="text-terminal-primary text-sm mb-4 leading-relaxed">
+                  {book.description}
+                </p>
+                
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {book.tags.map(tag => (
+                    <span class="px-3 py-1 bg-terminal-primary bg-opacity-10 text-terminal-primary rounded text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                  <span class="px-3 py-1 bg-terminal-primary bg-opacity-10 text-terminal-primary rounded text-xs">
+                    {book.parts} Parts
+                  </span>
+                  <span 
+                    class={`px-3 py-1 rounded text-xs ${
+                      book.statusColor === 'green' 
+                        ? 'bg-green-900/30 text-green-400' 
+                        : 'bg-yellow-900/30 text-yellow-400'
+                    }`}
+                  >
+                    {book.status}
+                  </span>
+                </div>
+                
+                <div class="flex gap-3 text-sm">
+                  <a 
+                    href={book.sourceUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="text-terminal-accent hover:text-terminal-text transition"
+                  >
+                    View Source →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 p-4 border border-terminal-primary border-opacity-20 rounded">
+        <p class="text-terminal-muted text-sm">
+          <span class="text-terminal-primary">💡 Tip:</span> All books are freely available and continuously updated. 
+          These are "living editions"—they grow and improve as understanding deepens.
+        </p>
+      </div>
+    </CommandOutput>
+  </TerminalWindow>
+</BaseLayout>
+
+<style>
+  .book-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.03) 100%);
+  }
+  
+  .book-card:hover {
+    transform: translateY(-2px);
+  }
+</style>
