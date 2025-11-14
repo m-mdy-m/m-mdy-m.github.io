@@ -7,20 +7,6 @@ const currentTime = new Date().toLocaleTimeString('en-US', {
   minute: '2-digit',
   hour12: false 
 });
-
-const quotes = [
-  "Write code nobody will read. Commit anyway.",
-  "Your bugs are features in an alternate universe.",
-  "The best code is the one you delete.",
-  "Debugging: Being a detective in a crime you committed.",
-  "Code like nobody's watching. Because they're not.",
-  "Your prod is someone's nightmare. Ship it.",
-  "Perfect code doesn't exist. Ship the chaos.",
-  "Every error is a feature in disguise.",
-  "The only winning move is not to deploy on Friday.",
-];
-
-const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 ---
 
 <BaseLayout title="x0 Terminal">
@@ -41,10 +27,6 @@ const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
             If you're not sure where to start, try typing help.
           </p>
         </div>
-      </div>
-      <!-- Random quote -->
-      <div class="mb-6 border-l-2 border-gray-600 pl-4 py-3 bg-gray-900/30 rounded-r">
-        <p class="text-gray-500 text-sm italic">"{randomQuote}"</p>
       </div>
       <!-- Quick start guide -->
       <div class="space-y-4">
