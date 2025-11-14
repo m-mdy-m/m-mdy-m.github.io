@@ -7,6 +7,36 @@ const contentEntries = Object.entries(contentModules).map(([file, mod]) => ({
   module: mod,
 }));
 
+let currentDirectory = '/';
+
+function normalizePath(path) {
+  if (!path) return '/';
+  
+  if (path.startsWith('/')) {
+    return path === '/' ? '/' : path.replace(/\/$/, '');
+  }
+  
+  if (path === '.') return currentDirectory;
+  if (path === '..') {
+    if (currentDirectory === '/') return '/';
+    const parts = currentDirectory.split('/').filter(Boolean);
+    parts.pop();
+    return '/' + parts.join('/');
+  }
+  
+  const combined = currentDirectory === '/' 
+    ? '/' + path 
+    : currentDirectory + '/' + path;
+  
+  return combined.replace(/\/+/g, '/').replace(/\/$/, '') || '/';
+}
+
+function getCurrentDirectory() {
+  const pathname = window.location.pathname;
+  if (pathname === '/' || pathname === '') return '/';
+  return pathname.replace(/\/$/, '');
+}
+
 const commandRegistry = {
   help: {
     description: 'Display available commands',
@@ -18,7 +48,9 @@ const commandRegistry = {
   ls: {
     description: 'List directory contents',
     execute: async args => {
-      return generateLsOutput(args);
+      currentDirectory = getCurrentDirectory();
+      const targetPath = args && args.length > 0 ? normalizePath(args[0]) : currentDirectory;
+      return generateLsOutput(targetPath);
     },
   },
 
@@ -28,37 +60,39 @@ const commandRegistry = {
       if (!args || args.length === 0) {
         return errorOutput('Missing filename. Usage: cat [filename]');
       }
-      return generateCatOutput(args[0]);
+      
+      currentDirectory = getCurrentDirectory();
+      const targetPath = normalizePath(args[0]);
+      return generateCatOutput(targetPath);
     },
   },
 
   cd: {
     description: 'Change directory',
     execute: async args => {
+      currentDirectory = getCurrentDirectory();
+      
       if (!args || args.length === 0) {
-        return textOutput('Current directory: /home/x0');
+        window.location.href = '/';
+        return textOutput('Navigating to home...');
       }
 
-      const directory = args[0];
-
-      if (directory === '..') {
-        const currentPath = window.location.pathname.split('/');
-        if (currentPath.length > 1) {
-          currentPath.pop();
-          const newPath = currentPath.join('/') || '/';
-          window.location.href = newPath;
-          return textOutput(`Navigating to ${newPath}...`);
-        }
-        return textOutput('Already at root directory.');
+      const targetPath = normalizePath(args[0]);
+      
+      if (args[0] === '.') {
+        return textOutput(`Current directory: ${currentDirectory}`);
       }
+      
+      window.location.href = targetPath === '/' ? '/' : targetPath;
+      return textOutput(`Navigating to ${targetPath}...`);
+    },
+  },
 
-      const validDirectories = ['posts', 'projects', 'articles', 'books', 'about', 'contact'];
-
-      if (validDirectories.includes(directory)) {
-        window.location.href = `/${directory}`;
-        return textOutput(`Navigating to /${directory}...`);
-      }
-      return errorOutput(`Directory '${directory}' not found.`);
+  pwd: {
+    description: 'Print working directory',
+    execute: async () => {
+      currentDirectory = getCurrentDirectory();
+      return textOutput(`/home/x0${currentDirectory}`);
     },
   },
 
@@ -82,14 +116,6 @@ const commandRegistry = {
     execute: async () => {
       window.open('https://github.com/m-mdy-m', '_blank');
       return textOutput('Opening GitHub profile...');
-    },
-  },
-
-  pwd: {
-    description: 'Print working directory',
-    execute: async () => {
-      const path = window.location.pathname || '/';
-      return textOutput(`/home/x0${path}`);
     },
   },
 
@@ -260,9 +286,12 @@ const commandRegistry = {
   tree: {
     description: 'Display directory tree structure',
     execute: async args => {
+      currentDirectory = getCurrentDirectory();
+      const targetPath = args && args.length > 0 ? normalizePath(args[0]) : currentDirectory;
+      
       const virtualFS = buildVirtualFS(contentEntries);
       
-      function buildTree(obj, prefix = '', isLast = true) {
+      function buildTree(obj, prefix = '', isLast = true, basePath = '') {
         let result = '';
         const entries = Object.entries(obj).filter(([key]) => key !== '__file');
         
@@ -277,19 +306,31 @@ const commandRegistry = {
           
           if (isDir && Object.keys(value).length > 1) {
             const newPrefix = prefix + (isLastEntry ? '    ' : '│   ');
-            result += buildTree(value, newPrefix, isLastEntry);
+            result += buildTree(value, newPrefix, isLastEntry, basePath + '/' + key);
           }
         });
         
         return result;
       }
       
-      const treeOutput = buildTree(virtualFS);
+      // Navigate to target path in virtual FS
+      let targetNode = virtualFS;
+      if (targetPath !== '/') {
+        const parts = targetPath.split('/').filter(Boolean);
+        for (const part of parts) {
+          if (!targetNode[part]) {
+            return errorOutput(`tree: ${targetPath}: No such file or directory`);
+          }
+          targetNode = targetNode[part];
+        }
+      }
+      
+      const treeOutput = buildTree(targetNode, '', true, targetPath);
       
       return `
         <div class="font-mono text-sm animate-fade-in">
           <h3 class="text-gray-400 text-lg mb-3 flex items-center gap-2">
-            <span class="text-gray-600">▶</span> Project Structure
+            <span class="text-gray-600">▶</span> ${targetPath === '/' ? 'Root' : targetPath}
           </h3>
           <pre class="text-gray-500 leading-relaxed whitespace-pre-wrap">${treeOutput}</pre>
         </div>
@@ -426,11 +467,13 @@ ${bottomBorder}
       return result;
     },
   },
+
   books: {
     description: 'Display available books',
     execute: async () => generateBooksOutput(),
   },
-   resume: {
+
+  resume: {
     description: 'Display professional resume',
     execute: async args => {
       const format = args && args.length > 0 ? args[0].toLowerCase() : 'terminal';
@@ -443,12 +486,7 @@ ${bottomBorder}
     },
   },
 
-  skills: {
-    description: 'Display technical skills matrix',
-    execute: async () => generateSkillsOutput(),
-  },
-
- curl: {
+  curl: {
     description: 'Download files',
     execute: async args => {
       if (!args || args.length < 2) {
@@ -736,29 +774,31 @@ function generateHelpOutput() {
   return output;
 }
 
-function generateLsOutput(args = []) {
+function generateLsOutput(targetPath) {
   const virtualFS = buildVirtualFS(contentEntries);
-console.log('virtualFS:',virtualFS)
 
-  let pathParts = args.length > 0 ? args[0].split('/') : [];
+  // Navigate to target path
   let current = virtualFS;
-
-  for (let part of pathParts) {
-    if (!current[part]) {
-      return errorOutput(`ls: cannot access '${args[0]}': No such file or directory`);
+  if (targetPath !== '/') {
+    const parts = targetPath.split('/').filter(Boolean);
+    for (const part of parts) {
+      if (!current[part]) {
+        return errorOutput(`ls: cannot access '${targetPath}': No such file or directory`);
+      }
+      if (current[part].__file) {
+        return errorOutput(`ls: cannot access '${targetPath}': Not a directory`);
+      }
+      current = current[part];
     }
-    if (current[part].__file) {
-      return errorOutput(`ls: cannot open '${args[0]}': Not a directory`);
-    }
-    current = current[part];
   }
-const items = Object.entries(current).sort(([a], [b]) => a.localeCompare(b));
+
+  const items = Object.entries(current).filter(([key]) => key !== '__file').sort(([a], [b]) => a.localeCompare(b));
   const now = new Date().toDateString();
 
   const htmlItems = items.map(([name, value], index) => {
     const isDir = !value.__file;
     const displayName = isDir ? name + '/' : name + '.md';
-    const href = '/' + (args[0] ? args[0] + '/' : '') + name;
+    const fullPath = targetPath === '/' ? '/' + name : targetPath + '/' + name;
     const date = now;
     const icon = isDir ? '📁' : '📄';
     const delay = index * 0.05;
@@ -767,7 +807,7 @@ const items = Object.entries(current).sort(([a], [b]) => a.localeCompare(b));
       <div class="flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-900/30 transition-all duration-200" style="animation: fadeInUp 0.4s ease-out ${delay}s both">
         <span class="text-gray-600 text-xs w-28">${date}</span>
         <span class="text-gray-600">${icon}</span>
-        <a href="${href}" class="text-gray-400 hover:text-gray-300 transition-colors">${displayName}</a>
+        <a href="${fullPath}" class="text-gray-400 hover:text-gray-300 transition-colors">${displayName}</a>
       </div>
     `;
   });
@@ -787,7 +827,7 @@ const items = Object.entries(current).sort(([a], [b]) => a.localeCompare(b));
     </style>
     <div class="font-mono">
       <h2 class="text-gray-400 text-lg mb-4 flex items-center gap-2">
-        <span class="text-gray-600">▶</span> ${args[0] ? args[0] : 'Current Directory'}
+        <span class="text-gray-600">▶</span> ${targetPath}
       </h2>
       <div class="space-y-1">
         ${htmlItems.join('\n')}
@@ -883,17 +923,21 @@ function generateBooksOutput() {
   `;
 }
 
-async function generateCatOutput(filename) {
+async function generateCatOutput(targetPath) {
+  // Remove leading slash and .md extension for searching
+  const searchPath = targetPath.replace(/^\//, '').replace(/\.md$/, '');
+  
   const entry = contentEntries.find(e => {
-    const file = e.file;
-    return file.endsWith(filename);
+    const file = e.file.replace('/src/content/', '');
+    return file === searchPath + '.md' || file.replace(/\.md$/, '') === searchPath;
   });
+  
   if (entry) {
     const html = await entry.module.compiledContent();
     return `<div class="animate-fade-in">${html}</div>`;
   }
 
-  return errorOutput(`File '${filename}' not found.`);
+  return errorOutput(`cat: ${targetPath}: No such file or directory`);
 }
 
 function generateManOutput(command) {
@@ -945,7 +989,7 @@ function getCommandSynopsis(command) {
     neofetch: 'neofetch',
     help: 'help',
     resume: 'resume [en|fa]',
-    curl: 'curl -s [filename]',
+    curl: 'curl -O [filename]',
     fortune: 'fortune',
     cowsay: 'cowsay [message]',
     figlet: 'figlet [text]',
@@ -1207,40 +1251,6 @@ function generateResumeOutput(lang = 'en') {
         </h2>
         <div class="pl-6 space-y-4">
           <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
-            <div class="flex justify-between items-start mb-2">
-              <h3 class="text-gray-400 font-bold">Open Source Developer</h3>
-              <span class="text-gray-600 text-xs">Jan 2023 – Present</span>
-            </div>
-            <p class="text-gray-600 text-xs italic mb-2">Independent Contributor</p>
-            <ul class="text-xs space-y-2 list-none text-gray-600">
-              <li class="flex items-start gap-2">
-                <span class="text-gray-700 flex-shrink-0">•</span>
-                <span>Designed and implemented <strong class="text-gray-500">Gland</strong>, an event-driven backend framework with broker-based architecture supporting protocol-agnostic communication (HTTP, WebSocket) and modular component isolation</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-gray-700 flex-shrink-0">•</span>
-                <span>Built <strong class="text-gray-500">QIKS</strong> caching system achieving 1M+ ops/sec with O(1) complexity, implementing LRU/LFU/MRU eviction policies, cascade invalidation via dependency graphs, and TTL-based expiration</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-gray-700 flex-shrink-0">•</span>
-                <span>Developed <strong class="text-gray-500">TideityIQ</strong> complexity analyzer in C, parsing JavaScript AST to calculate Big O/Theta/Omega notations for recursive algorithms</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-gray-700 flex-shrink-0">•</span>
-                <span>Authored 15+ technical articles on Dev.to and Medium covering event-driven patterns, caching strategies, algorithm analysis, and backend architecture</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Projects -->
-      <div class="mb-6">
-        <h2 class="text-gray-400 text-lg font-bold mb-3 flex items-center gap-2">
-          <span class="text-gray-600">▶</span> KEY PROJECTS
-        </h2>
-        <div class="pl-6 space-y-4 text-xs">
-          <div class="border-l-2 border-gray-700 pl-4 hover:border-gray-600 transition-colors">
             <div class="flex justify-between items-start mb-1">
               <h3 class="text-gray-400 font-bold">Gland Framework</h3>
               <a href="https://github.com/m-mdy-m/gland" class="text-gray-600 hover:text-gray-500 transition">github ↗</a>
@@ -1362,4 +1372,4 @@ function generateResumeOutput(lang = 'en') {
   `;
 }
 
-export { commandRegistry, textOutput, errorOutput };
+export { commandRegistry, textOutput, errorOutput }
