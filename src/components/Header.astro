@@ -1,6 +1,9 @@
 ---
 const pathname = new URL(Astro.request.url).pathname;
-const currentPath = pathname.split('/')[1];
+const currentPath = pathname.split('/').filter(Boolean);
+
+// Get current directory for display
+const cwd = currentPath.length > 0 ? currentPath[currentPath.length - 1] : '~';
 
 const navigation = [
   { name: 'Posts', path: 'posts' },
@@ -15,36 +18,55 @@ const navigation = [
 <header class="terminal-header">
   <div class="container mx-auto px-4">
     <div class="py-3">
-      <div class="flex flex-col md:flex-row items-start md:items-center">
-        <div class="text-terminal-primary font-mono text-sm md:text-base">
-          <div class="flex flex-wrap items-center">
-            <span class="mr-1">┌─[x0]:</span>
-            {navigation.map((item) => (
-              <a
-                href={`/${item.path}`}
-                class={`nav-item ${currentPath === item.path ? 'active' : ''}`}
-              >
-                [{item.name}]
-              </a>
-            ))}
-            <a href="/" class={`nav-item ${currentPath === '' ? 'active' : ''}`}>[..]</a>
-          </div>
+      <!-- Git-style prompt line -->
+      <div class="text-terminal-primary font-mono text-sm md:text-base mb-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Current directory with color -->
+          <span class="text-blue-400">{cwd}</span>
+          
+          <!-- Git branch indicator (simulated) -->
+          <span class="text-gray-600">⎇</span>
+          <span class="text-green-400">(main)</span>
+          
+          <!-- Status indicator -->
+          <span class="text-green-500">▶</span>
         </div>
       </div>
+      
+      <!-- Command input line -->
       <div class="text-terminal-primary font-mono text-sm md:text-base">
-        <span>└─ ></span>
-        <span class="ml-2 text-terminal-accent blink-cursor cursor-text">
-           <input
+        <div class="flex items-center">
+          <span class="text-gray-500 mr-2">$</span>
+          <input
             id="terminal-input"
             type="text"
-            class="bg-transparent border-none outline-none text-terminal-accent w-32 md:w-64 placeholder-terminal-primary placeholder-opacity-50"
+            class="bg-transparent border-none outline-none text-terminal-accent flex-1 placeholder-terminal-primary placeholder-opacity-50"
             placeholder="Enter command..."
             autocomplete="off"
             spellcheck="false"
           />
-
-        </span>
+        </div>
+      </div>
+      
+      <!-- Navigation breadcrumb -->
+      <div class="text-gray-600 font-mono text-xs mt-2 flex flex-wrap items-center gap-1">
+        <span>pwd:</span>
+        <span class="text-gray-500">/home/x0{pathname}</span>
       </div>
     </div>
   </div>
 </header>
+
+<style>
+  .terminal-header {
+    border-bottom: 1px solid rgba(229, 229, 229, 0.1);
+  }
+  
+  #terminal-input {
+    caret-color: #32cd32;
+  }
+  
+  #terminal-input::selection {
+    background-color: rgba(50, 205, 50, 0.3);
+  }
+</style>

@@ -2,19 +2,113 @@
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
 
+const currentTime = new Date().toLocaleTimeString('en-US', { 
+  hour: '2-digit', 
+  minute: '2-digit',
+  hour12: false 
+});
+
+const quotes = [
+  "Write code nobody will read. Commit anyway.",
+  "Your bugs are features in an alternate universe.",
+  "The best code is the one you delete.",
+  "Debugging: Being a detective in a crime you committed.",
+  "Code like nobody's watching. Because they're not.",
+  "Your prod is someone's nightmare. Ship it.",
+  "Perfect code doesn't exist. Ship the chaos.",
+  "Every error is a feature in disguise.",
+  "The only winning move is not to deploy on Friday.",
+];
+
+const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 ---
+
 <BaseLayout title="x0 Terminal">
   <TerminalWindow title="Home Terminal">
-    <div class="terminal-welcome animate-fade-in">
-      <h1 class="text-terminal-accent text-2xl mb-4">Welcome</h1>
+    <div class="terminal-welcome animate-fade-in font-mono">
+      <div class="mb-6">
+        <div class="text-[#999999] text-sm mb-4">
+          <span class="text-[#666666]">$</span> cat welcome.txt
+        </div>
+        
+        <div class="pl-4 border-l-2 border-[#1a1a1a] space-y-3">
+          <p class="text-[#cccccc]">
+            Welcome to x0 terminal.
+          </p>
+          
+          <p class="text-[#999999] text-sm">
+            There's not much to say—feel free to look around, explore a few things, and take what you find useful.
+            If you're not sure where to start, try typing help.
+          </p>
+        </div>
+      </div>
+      <!-- Random quote -->
+      <div class="mb-6 border-l-2 border-gray-600 pl-4 py-3 bg-gray-900/30 rounded-r">
+        <p class="text-gray-500 text-sm italic">"{randomQuote}"</p>
+      </div>
+      <!-- Quick start guide -->
+      <div class="space-y-4">
+        <h2 class="text-gray-400 text-xl flex items-center gap-2">
+          <span class="text-gray-600">▶</span> Quick Start
+        </h2>
 
-      <p class="mb-4">
-        There's not much to say—feel free to look around, explore a few things, and take what you find useful.
-      </p>
-
-      <p class="mb-4">
-        If you're not sure where to start, try typing <span class="text-terminal-text font-bold">help</span>.
-      </p>
+        <div class="pl-6 space-y-3">
+          <div>
+            <p class="text-gray-500 text-sm mb-2">
+              Not sure where to start? Try these commands:
+            </p>
+            
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">help</code>
+                  <span class="text-gray-600 text-xs ml-2">— Show all available commands</span>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">ls</code>
+                  <span class="text-gray-600 text-xs ml-2">— List available directories</span>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">whoami</code>
+                  <span class="text-gray-600 text-xs ml-2">— Learn more about me</span>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">cd articles</code>
+                  <span class="text-gray-600 text-xs ml-2">— Browse my articles</span>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">tree</code>
+                  <span class="text-gray-600 text-xs ml-2">— View directory structure</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 hover:bg-gray-900/30 p-2 rounded transition-all">
+                <span class="text-green-500 flex-shrink-0">$</span>
+                <div class="flex-1">
+                  <code class="text-gray-400">neofetch</code>
+                  <span class="text-gray-600 text-xs ml-2">— Display system info</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </TerminalWindow>
 </BaseLayout>

@@ -5,20 +5,20 @@
 @layer base {
   html {
     @apply bg-terminal-void text-terminal-primary font-mono;
-    font-feature-settings:
-      'ss02' on,
-      'ss01' on;
+    font-feature-settings: 'ss02' on, 'ss01' on;
   }
 
   body {
     @apply min-h-screen p-0 m-0 relative overflow-x-hidden;
   }
 
+  /* CRT overlay effect */
   body::before {
     content: '';
     @apply pointer-events-none fixed inset-0 z-50 h-screen w-screen bg-crt-overlay opacity-10;
   }
 
+  /* Scanline effect */
   body::after {
     content: '';
     @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-terminal-void opacity-5;
@@ -26,16 +26,18 @@
     background-size: 3px 3px;
   }
 
+  /* Links styling */
   a {
-    @apply text-terminal-accent underline transition-all duration-300 hover:text-terminal-text hover:no-underline;
+    @apply text-terminal-accent underline-offset-2 transition-all duration-200 hover:text-gray-400;
+    text-decoration: none;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
     @apply text-terminal-text font-bold my-4;
   }
 
@@ -47,13 +49,13 @@
     @apply text-xl md:text-2xl;
   }
 
-  p,
-  li {
+  /* Text */
+  p, li {
     @apply my-3;
   }
 
-  pre,
-  code {
+  /* Code blocks */
+  pre, code {
     @apply bg-terminal-void bg-opacity-50 border border-terminal-primary border-opacity-20 rounded p-1;
   }
 
@@ -61,20 +63,22 @@
     @apply p-4 my-4 overflow-x-auto;
   }
 
+  /* Blockquotes */
   blockquote {
     @apply border-l-4 border-terminal-accent pl-4 italic my-4;
   }
 
+  /* Horizontal rules */
   hr {
     @apply border-terminal-primary border-opacity-20 my-8;
   }
 
+  /* Tables */
   table {
     @apply w-full border-collapse my-4;
   }
 
-  th,
-  td {
+  th, td {
     @apply border border-terminal-primary border-opacity-20 p-2;
   }
 
@@ -84,11 +88,16 @@
 
   /* Terminal specific styles */
   .terminal-header {
-    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-void bg-opacity-90 backdrop-blur-sm border-b border-terminal-primary border-opacity-30;
+    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-void bg-opacity-95 backdrop-blur-sm;
   }
 
   .terminal-prompt {
-    @apply text-terminal-primary flex items-start;
+    @apply text-terminal-primary flex items-start gap-2;
+  }
+
+  .terminal-prompt::before {
+    content: '▶';
+    @apply text-green-500;
   }
 
   .terminal-command {
@@ -96,21 +105,21 @@
   }
 
   .terminal-output {
-    @apply mt-2 pl-4 border-l border-terminal-primary border-opacity-30;
+    @apply mt-2 pl-4 border-l-2 border-terminal-primary border-opacity-20;
   }
 
+  /* Cursor effects */
   .blink-cursor::after {
     content: '█';
     @apply animate-blink;
   }
 
   .typing-effect {
-    @apply inline-block overflow-hidden whitespace-nowrap border-r-2 border-terminal-primary animate-cursor-blink;
-    animation:
-      typing 1.5s steps(30, end),
-      cursor-blink 0.75s step-end infinite;
+    @apply inline-block overflow-hidden whitespace-nowrap border-r-2 border-terminal-primary;
+    animation: typing 1.5s steps(30, end), cursor-blink 0.75s step-end infinite;
   }
 
+  /* Navigation */
   .nav-item {
     @apply px-2 py-1 mx-1 hover:bg-terminal-primary hover:bg-opacity-20 rounded transition-all duration-200;
   }
@@ -118,6 +127,8 @@
   .nav-item.active {
     @apply bg-terminal-primary bg-opacity-20;
   }
+
+  /* Markdown content */
   .markdown-content :global(h1),
   .markdown-content :global(h2),
   .markdown-content :global(h3) {
@@ -142,5 +153,83 @@
 
   .markdown-content :global(pre) {
     @apply bg-terminal-void bg-opacity-50 p-3 rounded overflow-x-auto my-3;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-green-500 bg-opacity-30 text-white;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+
+  /* Git-style prompt components */
+  .git-branch {
+    @apply text-green-400;
+  }
+
+  .git-status-clean {
+    @apply text-green-500;
+  }
+
+  .git-status-dirty {
+    @apply text-yellow-500;
+  }
+
+  .git-status-conflict {
+    @apply text-red-500;
+  }
+
+  /* Directory colors (like ls --color) */
+  .dir-icon {
+    @apply text-blue-400;
+  }
+
+  .file-icon {
+    @apply text-gray-400;
+  }
+
+  .exec-icon {
+    @apply text-green-500;
+  }
+
+  /* Command prompt indicators */
+  .prompt-user {
+    @apply text-blue-400;
+  }
+
+  .prompt-host {
+    @apply text-green-400;
+  }
+
+  .prompt-dir {
+    @apply text-yellow-400;
+  }
+
+  .prompt-git {
+    @apply text-purple-400;
+  }
+
+  .prompt-arrow {
+    @apply text-green-500;
+  }
+
+  .prompt-error {
+    @apply text-red-500;
   }
 }
