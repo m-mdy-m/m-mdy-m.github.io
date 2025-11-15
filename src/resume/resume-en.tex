@@ -1,6 +1,6 @@
 %-------------------------
 % Resume - Mahdi Mamashli
-% Mid-Level Backend Engineer
+% Backend Engineer & Framework Architect
 %-------------------------
 
 \documentclass[letterpaper,10pt]{article}
@@ -17,7 +17,7 @@
 \usepackage[english]{babel}
 \usepackage{tabularx}
 \usepackage{fontawesome5}
-\usepackage[top=0.5in, bottom=0.4in, left=0.6in, right=0.6in]{geometry}
+\usepackage[top=0.45in, bottom=0.45in, left=0.6in, right=0.6in]{geometry}
 
 \usepackage{charter}
 
@@ -33,11 +33,11 @@
 \setlength{\tabcolsep}{0in}
 
 \titleformat{\section}{
-	\vspace{-7pt}\scshape\raggedright\large\bfseries
-}{}{0em}{}[\color{black}\titlerule\vspace{-5pt}]
+	\vspace{-6pt}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{black}\titlerule\vspace{-4pt}]
 
 \newcommand{\resumeItem}[1]{
-	\item\small{{#1 \vspace{-2pt}}}
+	\item\small{{#1 \vspace{-1.5pt}}}
 }
 
 \newcommand{\resumeSubheading}[4]{
@@ -45,14 +45,14 @@
 	\begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
 		\textbf{#1} & \textbf{\small #2} \\
 		\textit{\small #3} & \textit{\small #4} \\
-	\end{tabular*}\vspace{-5pt}
+	\end{tabular*}\vspace{-4pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
 	\item
 	\begin{tabular*}{0.98\textwidth}{l@{\extracolsep{\fill}}r}
 		\small#1 & \small#2 \\
-	\end{tabular*}\vspace{-5pt}
+	\end{tabular*}\vspace{-4pt}
 }
 
 \renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
@@ -60,53 +60,54 @@
 \newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.12in, label={}]}
 	\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{-2pt}}
 \newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.12in]}
-	\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-3pt}}
+	\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-2pt}}
 
 \begin{document}
 	
 	%----------HEADING----------
 	\begin{center}
-		{\Huge \scshape Mahdi Mamashli} \\ \vspace{5pt}
+		{\Huge \scshape Mahdi Mamashli} \\ \vspace{4pt}
 		\small 
 		\faEnvelope\ \href{mailto:bitsgenix@gmail.com}{bitsgenix@gmail.com} $|$ 
 		\faGithub\ \href{https://github.com/m-mdy-m}{github.com/m-mdy-m} $|$
-		\faGlobe\ \href{https://m-mdy-m.github.io/}{m-mdy-m.github.io} $|$
+		\faGlobe\ \href{https://m-mdy-m.github.io}{m-mdy-m.github.io} $|$
 		\faMapMarker\ Iran
-		\vspace{-5pt}
+		\vspace{-4pt}
 	\end{center}
 	
 	%-----------SUMMARY-----------
 	\section{Summary}
-	\small{Backend Developer specializing in event-driven architecture and modular system design. Creator of Gland framework with hands-on experience building scalable backend applications using TypeScript/Node.js. Strong focus on performance optimization, caching strategies, and clean architectural patterns. Active open-source contributor with 15+ published technical articles on algorithms and system design.}
-	\vspace{-4pt}
+	\small{Backend Developer experienced in using event-driven architecture and high-performance systems. Creator of Gland framework with event broker patterns achieving protocol-agnostic communication. Designed QIKS cache hitting 1M+ ops/sec with O(1) complexity. Strong background in distributed systems, algorithm analysis, and technical writing with 15+ published articles.}
+	\vspace{-3pt}
 	
 	%-----------TECHNICAL SKILLS-----------
 	\section{Technical Skills}
 	\begin{itemize}[leftmargin=0.12in, label={}]
 		\small{\item{
-				\textbf{Languages}: TypeScript, JavaScript, Python \\
-				\textbf{Backend}: Node.js, Bun, Express.js, event-driven architectures, WebSocket, pub/sub patterns \\
-				\textbf{Databases}: PostgreSQL, MongoDB, Redis (caching strategies, eviction policies) \\
-				\textbf{System Design}: Event brokers, modular architecture, CQRS patterns, dependency injection \\
-				\textbf{Tools}: Docker, Git, Linux/Unix, shell scripting, CI/CD fundamentals \\
-				\textbf{Specializations}: Performance optimization, algorithm complexity analysis, technical writing
+				\textbf{Languages}: TypeScript, JavaScript, Python, , LaTeX \\
+				\textbf{Backend}: JsRuntime(Nodejs,Bun), Nestjs,Expressjs, event-driven patterns, WebSocket, pub/sub, CQRS \\
+				\textbf{Databases}: PostgreSQL, MongoDB, Redis (caching strategies, eviction policies, data structures) \\
+				\textbf{System Design}: Event brokers, modular architecture, CQRS, dependency injection, microservices patterns \\
+				\textbf{DevOps}: Docker, shell scripting, CI/CD pipelines, Nginx \\
+				\textbf{Architecture}: Event brokers, DI containers, modular systems, protocol adapters, GoF design patterns \\
+				\textbf{Focus}: Performance optimization, algorithm analysis, technical writing
 		}}
 	\end{itemize}
-	\vspace{-8pt}
+	\vspace{-6pt}
 	
 	%-----------EXPERIENCE-----------
-	\section{Professional Experience}
+	\section{Experience}
 	\resumeSubHeadingListStart
 	
 	\resumeSubheading
-	{Open Source Developer}{Jan 2023 -- Present}
-	{Independent Contributor}{Remote}
+    {Framework Architect \& Backend Developer}{Jan 2023 -- Present}
+	{Open Source \& Independent Projects}{Remote}
 	\resumeItemListStart
-	\resumeItem{Designed and implemented Gland, an event-driven backend framework with broker-based architecture supporting protocol-agnostic communication (HTTP, WebSocket) and modular component isolation}
-	\resumeItem{Built QIKS caching system achieving 1M+ ops/sec with O(1) complexity, implementing LRU/LFU/MRU eviction policies, cascade invalidation via dependency graphs, and TTL-based expiration}
-	\resumeItem{Developed TideityIQ complexity analyzer in C, parsing JavaScript AST to calculate Big O/Theta/Omega notations for recursive algorithms}
-	\resumeItem{Authored 15+ technical articles on Dev.to and Medium covering event-driven patterns, caching strategies, algorithm analysis, and backend architecture}
-	\resumeItem{Contributed to open-source projects through code reviews, documentation improvements, and community support}
+	\resumeItem{Designed and implemented \textbf{Gland Framework}—an event-driven backend architecture with protocol-agnostic broker system supporting HTTP/WebSocket with modular component isolation and dependency injection}
+	\resumeItem{Built \textbf{QIKS}, a high-performance in-memory caching system achieving 1M+ ops/sec with O(1) complexity, implementing LRU/LFU/MRU eviction policies, TTL-based expiration, and cascade invalidation via dependency graphs}
+	\resumeItem{Developed \textbf{Gland Events}—a broker-based messaging system with radix tree routing, namespace isolation, wildcard pattern matching, and strategy-based execution (first/all/race) for decoupled communication}
+	\resumeItem{Authored 15+ technical articles (10K+ views) on Dev.to and Medium covering event-driven patterns, caching strategies, algorithm analysis, OOP principles, and backend architecture best practices}
+	\resumeItem{Maintained 10+ open-source repositories with comprehensive documentation and test coverage}
 	\resumeItemListEnd
 	
 	\resumeSubHeadingListEnd
@@ -116,61 +117,67 @@
 	\resumeSubHeadingListStart
 	
 	\resumeProjectHeading
-	{\textbf{Gland Framework} $|$ \emph{TypeScript, Event-Driven Architecture} $|$ \href{https://github.com/m-mdy-m/gland}{\faGithub}}{}
+	{\textbf{Gland Framework} $|$ \emph{TypeScript, Event-Driven Architecture, DI Container} $|$ \href{https://github.com/m-mdy-m/gland}{\faGithub}}{}
 	\resumeItemListStart
-	\resumeItem{Event broker system with radix tree-based routing, namespace isolation, and wildcard pattern matching for dynamic event propagation}
-	\resumeItem{Dependency injection container with reflection-based metadata scanning for automatic controller/channel registration}
-	\resumeItem{Protocol adapters (Express, WebSocket planned) connecting via central broker with strategy-based execution (first/all/race)}
-	\resumeItem{Lifecycle hooks (onModuleInit, onAppBootstrap, etc.) for systematic initialization and graceful shutdown}
+	\resumeItem{Event broker with radix tree routing supporting wildcard patterns and namespace isolation for 10K+ events/sec}
+	\resumeItem{DI container using reflection-based metadata scanning for automatic controller/channel registration with lifecycle hooks}
+	\resumeItem{Protocol adapters (HTTP, WebSocket planned) with strategy-based execution and cascade propagation}
 	\resumeItemListEnd
 	
 	\resumeProjectHeading
-	{\textbf{QIKS Caching System} $|$ \emph{TypeScript, Performance Engineering} $|$ \href{https://github.com/medishen/qiks}{\faGithub}}{}
+	{\textbf{QIKS Caching System} $|$ \emph{TypeScript, Performance Engineering, Data Structures} $|$ \href{https://github.com/medishen/qiks}{\faGithub}}{}
 	\resumeItemListStart
-	\resumeItem{In-memory cache with Map/WeakMap adapters achieving microsecond-level operations through optimized data structures}
-	\resumeItem{Multiple eviction policies (LRU, LFU, MRU) with hybrid expiration (TTL, idle timeout) and configurable capacity management}
-	\resumeItem{Dependency graph for cascade invalidation, event system for monitoring (Set/Get/Delete/Expire), and namespace support}
-	\resumeItem{Pattern matching utilities for key filtering and batch operations with functional programming interfaces}
+	\resumeItem{In-memory cache achieving 1M+ ops/sec with O(1) complexity using Map/WeakMap adapters and optimized eviction policies}
+	\resumeItem{Dependency graph for cascade invalidation with TTL/idle timeout expiration and pattern matching for batch operations}
+	\resumeItem{Event system for monitoring cache operations with namespace support and functional programming interfaces}
+	\resumeItemListEnd
+	
+    \resumeProjectHeading
+	{\textbf{Gland Events} $|$ \emph{TypeScript, Message Broker, Radix Tree} $|$ \href{https://github.com/glandjs/events}{\faGithub}}{}
+	\resumeItemListStart
+	\resumeItem{Radix-tree event broker with wildcard subscriptions, namespace isolation, and dynamic propagation.}
+	\resumeItem{IOEvent pattern for type-safe request–response with strategy execution (first/all/race) and timeouts.}
+	\resumeItem{Multi-broker mesh with propagation tracking, visited-node detection, and automatic loop prevention.}
 	\resumeItemListEnd
 	
 	\resumeProjectHeading
-	{\textbf{TideityIQ} $|$ \emph{C, Compiler Design} $|$ \href{https://github.com/medishen/TideityIQ}{\faGithub}}{}
+	{\textbf{AGAS} $|$ \emph{TypeScript, Bun} $|$ \href{https://github.com/m-mdy-m/agas}{\faGithub}}{}
 	\resumeItemListStart
-	\resumeItem{CLI tool parsing JavaScript source files to analyze recursive function complexity using AST traversal}
-	\resumeItem{Implemented pattern recognition for divide-and-conquer, linear recursion, and branching recursion with recurrence relation solving}
+	\resumeItem{Bun-powered HTTP client with event-driven lifecycle, streaming support, and CLI interface with Docker deployment}
 	\resumeItemListEnd
 	
 	\resumeProjectHeading
-	{\textbf{ARLIZ Book} $|$ \emph{LaTeX, Technical Writing} $|$ \href{https://github.com/m-mdy-m/Arliz}{\faGithub}}{}
+	{\textbf{Vero} $|$ \emph{TypeScript, PostgreSQL} $|$ \href{https://github.com/m-mdy-m/vero}{\faGithub}}{}
 	\resumeItemListStart
-	\resumeItem{Comprehensive guide to data structures and algorithms covering historical context, mathematical foundations, and practical implementations}
-	\resumeItem{Part I explores computing history from ancient counting to modern systems; Part II covers mathematical prerequisites for algorithm analysis}
+	\resumeItem{Text-based social platform with peer review system, reputation tracking, and structured debate framework}
 	\resumeItemListEnd
 	
 	\resumeProjectHeading
+	{\textbf{Technical Writing}}{}
+	\resumeItemListStart
+	\resumeItem{\textbf{ARLIZ Book}: Comprehensive guide to data structures covering historical context and algorithm analysis (\href{https://github.com/m-mdy-m/Arliz}{\faGithub})}
+	\resumeItem{\textbf{MATHESIS Book}: Mathematical foundations for computing from logic to complexity theory (\href{https://github.com/m-mdy-m/algorithms-data-structures}{\faGithub})}
+	\resumeItem{\textbf{The Art of Algorithmic Analysis}: Rigorous treatment of algorithm analysis techniques (\href{https://github.com/m-mdy-m/algorithms-data-structures}{\faGithub})}
+	\resumeItemListEnd
+
+    \resumeProjectHeading
 	{\textbf{Additional Projects}}{}
 	\resumeItemListStart
-	\resumeItem{\textbf{AGAS}: Bun-powered HTTP client with event-driven request/response lifecycle and CLI interface}
-	\resumeItem{\textbf{Cop}: Telegram bot for automated group moderation using Grammy framework and PostgreSQL}
-	\resumeItem{\textbf{NExa}: Python CLI tool fetching and displaying dev.to articles with Docker deployment support}
+	\resumeItem{\textbf{Cop}: Telegram moderation bot with Grammy framework, PostgreSQL, automated warning system, and admin dashboard}
+	\resumeItem{\textbf{NExa}: Python CLI tool for dev.to article fetching with Docker deployment, pretty-printing, and category filtering}
+	\resumeItem{\textbf{VEX}: Personal Vim configuration with LSP integration, custom keybindings, and plugin management via vim-plug}
 	\resumeItemListEnd
 	
-	\resumeSubHeadingListEnd
-	
-	%-----------EDUCATION-----------
-	\section{Education}
-	\resumeSubHeadingListStart
-	\resumeSubheading
-	{Azad University}{Sep 2022 -- Present}
-	{Bachelor of Science in Computer Engineering}{Iran}
 	\resumeSubHeadingListEnd
 	
 	%-----------ACHIEVEMENTS-----------
 	\section{Recognition}
 	\resumeSubHeadingListStart
-	\resumeProjectHeading{\textbf{Top 10 GitHub Contributor in Iran}}{}
-	\resumeProjectHeading{\textbf{15+ Published Technical Articles} on Dev.to and Medium}{}
-	\resumeProjectHeading{\textbf{Framework Creator} -- Gland framework with modular event-driven architecture}{}
+	\resumeProjectHeading{\textbf{Top 10 GitHub Contributor} in Iran}{}
+	\resumeProjectHeading{\textbf{15+ Technical Articles} published on Dev.to and Medium (10K+ readers)}{}
+	\resumeProjectHeading{\textbf{Framework Creator} Gland event-driven backend framework}{}
+	\resumeProjectHeading{\textbf{Book Author} ARLIZ: 500+ page comprehensive guide to data structures \& algorithms}{}
+	\resumeProjectHeading{\textbf{Open Source} 20+ repositories, 20+ contributions, active community engagement}{}
 	\resumeSubHeadingListEnd
 	
 \end{document}
