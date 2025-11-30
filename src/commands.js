@@ -184,13 +184,6 @@ const commandRegistry = {
     },
   },
 
-  uname: {
-    description: 'Print system information',
-    execute: async () => {
-      return textOutput('AstroOS Terminal v1.0.0');
-    },
-  },
-
   neofetch: {
     description: 'Display system information',
     execute: async () => {
@@ -384,271 +377,10 @@ ${bottomBorder}
     },
   },
 
-  figlet: {
-    description: 'Create ASCII art text',
-    execute: async args => {
-      const text = args.length > 0 ? args.join(' ').toUpperCase() : 'X0';
-      
-      const asciiMap = {
-        'A': ['  ██  ', ' ████ ', '██  ██', '██████', '██  ██'],
-        'B': ['█████ ', '██  ██', '█████ ', '██  ██', '█████ '],
-        'C': [' ████ ', '██    ', '██    ', '██    ', ' ████ '],
-        'D': ['█████ ', '██  ██', '██  ██', '██  ██', '█████ '],
-        'E': ['██████', '██    ', '████  ', '██    ', '██████'],
-        'F': ['██████', '██    ', '████  ', '██    ', '██    '],
-        'G': [' ████ ', '██    ', '██ ███', '██  ██', ' ████ '],
-        'H': ['██  ██', '██  ██', '██████', '██  ██', '██  ██'],
-        'I': ['██████', '  ██  ', '  ██  ', '  ██  ', '██████'],
-        'J': ['██████', '    ██', '    ██', '██  ██', ' ████ '],
-        'K': ['██  ██', '██ ██ ', '████  ', '██ ██ ', '██  ██'],
-        'L': ['██    ', '██    ', '██    ', '██    ', '██████'],
-        'M': ['██   ██', '███ ███', '██ █ ██', '██   ██', '██   ██'],
-        'N': ['██   ██', '███  ██', '██ █ ██', '██  ███', '██   ██'],
-        'O': [' ████ ', '██  ██', '██  ██', '██  ██', ' ████ '],
-        'P': ['█████ ', '██  ██', '█████ ', '██    ', '██    '],
-        'Q': [' ████ ', '██  ██', '██  ██', '██ ███', ' ██ ██'],
-        'R': ['█████ ', '██  ██', '█████ ', '██ ██ ', '██  ██'],
-        'S': [' ████ ', '██    ', ' ████ ', '    ██', '█████ '],
-        'T': ['██████', '  ██  ', '  ██  ', '  ██  ', '  ██  '],
-        'U': ['██  ██', '██  ██', '██  ██', '██  ██', ' ████ '],
-        'V': ['██  ██', '██  ██', '██  ██', ' ████ ', '  ██  '],
-        'W': ['██   ██', '██   ██', '██ █ ██', '███ ███', '██   ██'],
-        'X': ['██  ██', ' ████ ', '  ██  ', ' ████ ', '██  ██'],
-        'Y': ['██  ██', ' ████ ', '  ██  ', '  ██  ', '  ██  '],
-        'Z': ['██████', '   ██ ', '  ██  ', ' ██   ', '██████'],
-        '0': [' ████ ', '██  ██', '██ ███', '██  ██', ' ████ '],
-        '1': ['  ██  ', ' ███  ', '  ██  ', '  ██  ', '██████'],
-        '2': [' ████ ', '██  ██', '   ██ ', ' ██   ', '██████'],
-        '3': ['█████ ', '    ██', ' ████ ', '    ██', '█████ '],
-        '4': ['██  ██', '██  ██', '██████', '    ██', '    ██'],
-        '5': ['██████', '██    ', '█████ ', '    ██', '█████ '],
-        '6': [' ████ ', '██    ', '█████ ', '██  ██', ' ████ '],
-        '7': ['██████', '    ██', '   ██ ', '  ██  ', '  ██  '],
-        '8': [' ████ ', '██  ██', ' ████ ', '██  ██', ' ████ '],
-        '9': [' ████ ', '██  ██', ' █████', '    ██', ' ████ '],
-        ' ': ['      ', '      ', '      ', '      ', '      ']
-      };
-      
-      let result = '<div class="animate-typewriter"><pre class="text-gray-500 font-mono text-xs leading-tight">';
-      
-      for (let row = 0; row < 5; row++) {
-        let line = '';
-        for (let char of text) {
-          if (asciiMap[char]) {
-            line += asciiMap[char][row] + ' ';
-          } else {
-            line += '▓▓▓▓▓ ';
-          }
-        }
-        result += line + '\n';
-      }
-      
-      result += '</pre></div>';
-      
-      result += `
-        <style>
-          @keyframes typewriter {
-            from { 
-              width: 0;
-              opacity: 0;
-            }
-            to { 
-              width: 100%;
-              opacity: 1;
-            }
-          }
-          .animate-typewriter {
-            overflow: hidden;
-            animation: typewriter 1s steps(40) forwards;
-          }
-        </style>
-      `;
-      
-      return result;
-    },
-  },
 
   books: {
     description: 'Display available books',
     execute: async () => generateBooksOutput(),
-  },
-
-  curl: {
-    description: 'Download files',
-    execute: async args => {
-      if (!args || args.length < 2) {
-        return errorOutput('Usage: curl -O [filename]');
-      }
-
-      const flags = args[0];
-      const filename = args[1];
-
-      if (flags !== '-O') {
-        return errorOutput('Only -O flag is supported. Usage: curl -O [filename]');
-      }
-
-      if (filename === 'resume.pdf') {
-        const rawUrl = 'https://raw.githubusercontent.com/m-mdy-m/m-mdy-m.github.io/main/src/resume/resume-en.pdf';
-        
-        fetch(rawUrl)
-          .then(response => {
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.blob();
-          })
-          .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'Mahdi_Mamashli_Resume.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-          })
-          .catch(err => console.error('Download failed:', err));
-
-        return `
-          <div class="space-y-2 animate-fade-in">
-            <div class="flex items-center gap-2">
-              <span class="text-green-600">●</span>
-              <span class="text-gray-400">Downloading ${filename}...</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-green-600">✓</span>
-              <span class="text-gray-300">Download started — check your Downloads folder</span>
-            </div>
-          </div>
-        `;
-      }
-
-      return errorOutput(`File '${filename}' not found.`);
-    },
-  },
-
-  hack: {
-    description: 'Simulate hacking sequence',
-    execute: async () => {
-      const sequences = [
-        'Initializing connection...',
-        'Bypassing firewall...',
-        'Accessing mainframe...',
-        'Downloading database...',
-        'Extracting credentials...',
-        'Covering tracks...',
-        'Access granted. You\'re in.'
-      ];
-      
-      let output = '<div class="space-y-2 font-mono text-sm">';
-      
-      sequences.forEach((seq, i) => {
-        const delay = i * 0.6;
-        const color = i === sequences.length - 1 ? 'text-green-500' : 'text-gray-500';
-        output += `
-          <div class="flex items-center gap-2 opacity-0" style="animation: fadeInUp 0.5s ease-out ${delay}s forwards">
-            <span class="${color}">▶</span>
-            <span class="${color}">${seq}</span>
-          </div>
-        `;
-      });
-      
-      output += `
-        </div>
-        <style>
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        </style>
-      `;
-      
-      return output;
-    },
-  },
-
-  glitch: {
-    description: 'Glitch effect text',
-    execute: async args => {
-      const text = args.length > 0 ? args.join(' ') : 'SYSTEM ERROR';
-      
-      return `
-        <div class="glitch-container">
-          <div class="glitch" data-text="${text}">${text}</div>
-        </div>
-        <style>
-          .glitch-container {
-            padding: 2rem;
-            text-align: center;
-          }
-          
-          .glitch {
-            font-size: 3rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            position: relative;
-            color: #fff;
-            letter-spacing: 0.5em;
-            animation: glitch-skew 1s infinite;
-          }
-          
-          .glitch::before,
-          .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-          }
-          
-          .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-          }
-          
-          .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
-            animation: glitch-anim2 1s infinite linear alternate-reverse;
-          }
-          
-          @keyframes glitch-anim {
-            0% { clip: rect(31px, 9999px, 94px, 0); }
-            20% { clip: rect(60px, 9999px, 64px, 0); }
-            40% { clip: rect(37px, 9999px, 20px, 0); }
-            60% { clip: rect(39px, 9999px, 77px, 0); }
-            80% { clip: rect(62px, 9999px, 74px, 0); }
-            100% { clip: rect(30px, 9999px, 68px, 0); }
-          }
-          
-          @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 119px, 0); }
-            20% { clip: rect(52px, 9999px, 74px, 0); }
-            40% { clip: rect(79px, 9999px, 85px, 0); }
-            60% { clip: rect(106px, 9999px, 88px, 0); }
-            80% { clip: rect(45px, 9999px, 43px, 0); }
-            100% { clip: rect(19px, 9999px, 20px, 0); }
-          }
-          
-          @keyframes glitch-skew {
-            0% { transform: skew(0deg); }
-            10% { transform: skew(2deg); }
-            20% { transform: skew(-2deg); }
-            30% { transform: skew(1deg); }
-            40% { transform: skew(-1deg); }
-            50% { transform: skew(0deg); }
-            100% { transform: skew(0deg); }
-          }
-        </style>
-      `;
-    },
   },
 };
 
@@ -663,11 +395,11 @@ function errorOutput(text) {
 
 function generateHelpOutput() {
   const categories = {
-    'System': ['whoami', 'uname', 'pwd', 'date', 'clear'],
+    'System': ['whoami', 'pwd', 'date', 'clear'],
     'Navigation': ['ls', 'cd', 'cat', 'tree'],
     'Information': ['help', 'man', 'history', 'neofetch', 'skills'],
-    'Tools': ['resume', 'curl', 'echo'],
-    'Fun': ['fortune', 'cowsay', 'figlet', 'matrix', 'hack', 'glitch'],
+    'Tools': [ 'echo'],
+    'Fun': ['fortune', 'cowsay', 'matrix',],
     'External': ['github']
   };
 
@@ -972,18 +704,12 @@ function getCommandSynopsis(command) {
     echo: 'echo [text]',
     history: 'history',
     man: 'man command',
-    uname: 'uname',
     neofetch: 'neofetch',
     help: 'help',
-    resume: 'resume [en|fa]',
-    curl: 'curl -O [filename]',
     fortune: 'fortune',
     cowsay: 'cowsay [message]',
-    figlet: 'figlet [text]',
     matrix: 'matrix',
     tree: 'tree [directory]',
-    hack: 'hack',
-    glitch: 'glitch [text]'
   };
 
   return synopses[command] || command;
@@ -1002,18 +728,12 @@ function getCommandDescription(command) {
     echo: 'Display a line of text.',
     history: 'Display the command history.',
     man: 'Display the manual page for a command.',
-    uname: 'Print system information.',
     neofetch: 'Display system information in a visually pleasing way.',
     help: 'Display a list of available commands.',
-    resume: 'Display resume in terminal format.',
-    curl: 'Download files from the server.',
     fortune: 'Display a random programming quote.',
     cowsay: 'Make an ASCII cow say your message.',
-    figlet: 'Create large ASCII art text.',
     matrix: 'Enter the Matrix with falling characters.',
     tree: 'Display directory structure as a tree.',
-    hack: 'Simulate a hacking sequence.',
-    glitch: 'Display text with glitch effect.'
   };
 
   return descriptions[command] || commandRegistry[command].description;
