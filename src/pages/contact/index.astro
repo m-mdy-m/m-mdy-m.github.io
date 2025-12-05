@@ -1,212 +1,83 @@
 ---
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
-import CommandOutput from '@components/CommandOutput.astro';
 ---
 
-<BaseLayout title="Contact | x0 Terminal" description="Get in touch with Mahdi Mamashli">
-  <TerminalWindow command="cd contact && cat README.md" title="Contact">
-    <CommandOutput>
-      <div class="contact-container max-w-4xl animate-fade-in">
+<BaseLayout title="Contact | Genix">
+  <TerminalWindow command="cat contact.md">
+    <div class="space-y-6">
+      <!-- Primary Contact -->
+      <div class="space-y-3">
+        <div class="text-gray-600 text-xs uppercase tracking-wider">Primary</div>
         
-        <!-- Primary Contact Methods -->
-        <section class="mb-8">
-          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
-            <span class="text-gray-600">▶</span> Primary Channels
-          </h2>
-          
-          <div class="pl-6 space-y-4">
-            <!-- Email -->
-            <div class="contact-card border border-gray-700 rounded-lg p-5 hover:border-gray-600 transition-all">
-              <div class="flex items-start gap-4">
-                <div class="text-3xl">📧</div>
-                <div class="flex-1">
-                  <h3 class="text-gray-400 font-bold mb-2">Email</h3>
-                  <p class="text-gray-600 text-sm mb-3">
-                    Best for: Project discussions, collaborations, technical questions, feedback
-                  </p>
-                  <a 
-                    href="mailto:bitsgenix@gmail.com" 
-                    class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-400 transition font-mono text-sm"
-                  >
-                    <span>bitsgenix@gmail.com</span>
-                    <span class="text-gray-700">→</span>
-                  </a>
-                  <p class="text-gray-700 text-xs mt-2">
-                    Response time: Usually within 24-48 hours
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- GitHub -->
-            <div class="contact-card border border-gray-700 rounded-lg p-5 hover:border-gray-600 transition-all">
-              <div class="flex items-start gap-4">
-                <div class="text-3xl">🐙</div>
-                <div class="flex-1">
-                  <h3 class="text-gray-400 font-bold mb-2">GitHub</h3>
-                  <p class="text-gray-600 text-sm mb-3">
-                    Best for: Issues, pull requests, code discussions, bug reports
-                  </p>
-                  <a 
-                    href="https://github.com/m-mdy-m" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-400 transition font-mono text-sm"
-                  >
-                    <span>github.com/m-mdy-m</span>
-                    <span class="text-gray-700">↗</span>
-                  </a>
-                  <p class="text-gray-700 text-xs mt-2">
-                    I check notifications daily
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Dev.to -->
-            <div class="contact-card border border-gray-700 rounded-lg p-5 hover:border-gray-600 transition-all">
-              <div class="flex items-start gap-4">
-                <div class="text-3xl">📝</div>
-                <div class="flex-1">
-                  <h3 class="text-gray-400 font-bold mb-2">Dev.to</h3>
-                  <p class="text-gray-600 text-sm mb-3">
-                    Best for: Comments on articles, technical discussions
-                  </p>
-                  <a 
-                    href="https://dev.to/m__mdy__m" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-400 transition font-mono text-sm"
-                  >
-                    <span>dev.to/m__mdy__m</span>
-                    <span class="text-gray-700">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Medium -->
-            <div class="contact-card border border-gray-700 rounded-lg p-5 hover:border-gray-600 transition-all">
-              <div class="flex items-start gap-4">
-                <div class="text-3xl">📰</div>
-                <div class="flex-1">
-                  <h3 class="text-gray-400 font-bold mb-2">Medium</h3>
-                  <p class="text-gray-600 text-sm mb-3">
-                    Best for: Reading my articles, leaving responses
-                  </p>
-                  <a 
-                    href="https://medium.com/@m-mdy-m" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-400 transition font-mono text-sm"
-                  >
-                    <span>medium.com/@m-mdy-m</span>
-                    <span class="text-gray-700">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Quick Links -->
-        <section class="mb-8">
-          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
-            <span class="text-gray-600">▶</span> Quick Links
-          </h2>
-          
-          <div class="pl-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <a href="/about" class="bg-gray-900/50 p-3 rounded border border-gray-800 hover:border-gray-600 transition text-center">
-              <div class="text-gray-400 font-bold">About</div>
+        <div class="space-y-4">
+          <div class="space-y-1">
+            <div class="text-gray-400 text-sm">Email</div>
+            <a href="mailto:bitsgenix@gmail.com" 
+               class="text-gray-500 hover:text-gray-300 transition text-sm">
+              bitsgenix@gmail.com
             </a>
-            <a href="/projects" class="bg-gray-900/50 p-3 rounded border border-gray-800 hover:border-gray-600 transition text-center">
-              <div class="text-gray-400 font-bold">Projects</div>
-            </a>
-            <a href="/books" class="bg-gray-900/50 p-3 rounded border border-gray-800 hover:border-gray-600 transition text-center">
-              <div class="text-gray-400 font-bold">Books</div>
-            </a>
-            <a href="/articles" class="bg-gray-900/50 p-3 rounded border border-gray-800 hover:border-gray-600 transition text-center">
-              <div class="text-gray-400 font-bold">Articles</div>
-            </a>
+            <p class="text-xs text-gray-600">
+              Response: 24-48 hours
+            </p>
           </div>
-        </section>
 
-        <!-- CLI Contact Commands -->
-        <section class="mb-8">
-          <h2 class="text-gray-400 text-xl mb-4 flex items-center gap-2">
-            <span class="text-gray-600">▶</span> Via Terminal
-          </h2>
-          
-          <div class="pl-6 bg-gray-900/50 p-4 rounded border border-gray-800">
-            <p class="text-gray-600 text-sm mb-3">You can also reach me through these commands:</p>
-            <div class="space-y-2 font-mono text-sm">
-              <div class="flex items-center gap-3">
-                <span class="text-gray-700">$</span>
-                <span class="text-gray-500">whoami</span>
-                <span class="text-gray-700"># View profile info</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-gray-700">$</span>
-                <span class="text-gray-500">resume</span>
-                <span class="text-gray-700"># View full resume</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-gray-700">$</span>
-                <span class="text-gray-500">github</span>
-                <span class="text-gray-700"># Open GitHub profile</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-gray-700">$</span>
-                <span class="text-gray-500">curl -O resume.pdf</span>
-                <span class="text-gray-700"># Download resume</span>
-              </div>
-            </div>
+          <div class="space-y-1">
+            <div class="text-gray-400 text-sm">GitHub</div>
+            <a href="https://github.com/m-mdy-m" 
+               target="_blank"
+               rel="noopener noreferrer"
+               class="text-gray-500 hover:text-gray-300 transition text-sm">
+              github.com/m-mdy-m
+            </a>
+            <p class="text-xs text-gray-600">
+              Issues, PRs, discussions
+            </p>
           </div>
-        </section>
 
-        <!-- Footer Note -->
-        <section class="border-t border-gray-800 pt-6 mt-8">
-          <div class="text-center space-y-3">
-              <p class="text-gray-700 text-xs">
-                Last updated: January 2025
-              </p>
+          <div class="space-y-1">
+            <div class="text-gray-400 text-sm">Dev.to</div>
+            <a href="https://dev.to/m__mdy__m" 
+               target="_blank"
+               rel="noopener noreferrer"
+               class="text-gray-500 hover:text-gray-300 transition text-sm">
+              dev.to/m__mdy__m
+            </a>
+            <p class="text-xs text-gray-600">
+              Article comments
+            </p>
           </div>
-        </section>
 
+          <div class="space-y-1">
+            <div class="text-gray-400 text-sm">Medium</div>
+            <a href="https://medium.com/@m-mdy-m" 
+               target="_blank"
+               rel="noopener noreferrer"
+               class="text-gray-500 hover:text-gray-300 transition text-sm">
+              medium.com/@m-mdy-m
+            </a>
+            <p class="text-xs text-gray-600">
+              Reading & responses
+            </p>
+          </div>
+        </div>
       </div>
-    </CommandOutput>
+
+      <!-- CLI Commands -->
+      <div class="space-y-2">
+        <div class="text-gray-600 text-xs uppercase tracking-wider">Via Terminal</div>
+        <div class="space-y-1 text-xs text-gray-600 font-mono">
+          <div>$ whoami <span class="text-gray-800"># view profile</span></div>
+          <div>$ github <span class="text-gray-800"># open github</span></div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-4 border-t border-gray-900">
+        <p class="text-xs text-gray-700">
+          Last updated: January 2025
+        </p>
+      </div>
+    </div>
   </TerminalWindow>
 </BaseLayout>
-
-<style>
-  .contact-container section {
-    animation: fadeInUp 0.5s ease-out;
-  }
-  
-  .contact-card {
-    animation: slideInLeft 0.5s ease-out;
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-</style>

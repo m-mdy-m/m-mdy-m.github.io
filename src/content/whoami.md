@@ -12,6 +12,3 @@ Still learning. Still breaking my own designs.
 
 📬 bitsgenix@gmail.com  
 🐙 github.com/m-mdy-m
-
-# view resume
-curl -s resume.pdf

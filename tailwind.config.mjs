@@ -13,14 +13,14 @@ export default {
           text: '#cccccc',          
         },
       },
-      fontFamily: {
+       fontFamily: {
         mono: ['"IBM Plex Mono"', 'Consolas', 'Monaco', 'monospace'],
       },
       animation: {
         blink: 'blink 1s step-end infinite',
         typing: 'typing 1.5s steps(30, end)',
         'cursor-blink': 'cursor-blink 1.5s step-end infinite',
-        'fade-in': 'fade-in 0.5s ease-in-out',
+        'fade-in': 'fade-in 0.3s ease-in-out',
         'fade-in-slow': 'fade-in 1s ease-in-out',
         scanline: 'scanline 10s linear infinite',
       },
@@ -38,8 +38,8 @@ export default {
           '50%': { borderRightColor: 'currentColor' },
         },
         'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          '0%': { opacity: '0', transform: 'translateY(4px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         scanline: {
           '0%': { transform: 'translateY(0%)' },

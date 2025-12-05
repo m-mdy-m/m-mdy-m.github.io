@@ -4,12 +4,16 @@
 
 @layer base {
   html {
-    @apply bg-terminal-void text-terminal-primary font-mono;
+    @apply bg-black text-gray-400 font-mono;
     font-feature-settings: 'ss02' on, 'ss01' on;
   }
 
   body {
-    @apply min-h-screen p-0 m-0 relative overflow-x-hidden;
+    @apply min-h-screen p-0 m-0 overflow-x-hidden;
+    background: #000000;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(20, 20, 20, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(20, 20, 20, 0.3) 0%, transparent 50%);
   }
 
   /* CRT overlay effect */
@@ -21,7 +25,7 @@
   /* Scanline effect */
   body::after {
     content: '';
-    @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-terminal-void opacity-5;
+    @apply pointer-events-none fixed inset-0 z-40 h-screen w-screen bg-black opacity-5;
     background-image: radial-gradient(#32cd32 1px, transparent 1px);
     background-size: 3px 3px;
   }
@@ -56,7 +60,7 @@
 
   /* Code blocks */
   pre, code {
-    @apply bg-terminal-void bg-opacity-50 border border-terminal-primary border-opacity-20 rounded p-1;
+    @apply bg-black bg-opacity-50 border border-terminal-primary border-opacity-20 rounded p-1;
   }
 
   pre {
@@ -88,7 +92,7 @@
 
   /* Terminal specific styles */
   .terminal-header {
-    @apply fixed top-0 left-0 right-0 z-30 bg-terminal-void bg-opacity-95 backdrop-blur-sm;
+    @apply fixed top-0 left-0 right-0 z-30 bg-black bg-opacity-95 backdrop-blur-sm;
   }
 
   .terminal-prompt {
@@ -148,11 +152,11 @@
   }
 
   .markdown-content :global(code) {
-    @apply bg-terminal-void bg-opacity-50 px-1 rounded;
+    @apply bg-black bg-opacity-50 px-1 rounded;
   }
 
   .markdown-content :global(pre) {
-    @apply bg-terminal-void bg-opacity-50 p-3 rounded overflow-x-auto my-3;
+    @apply bg-black bg-opacity-50 p-3 rounded overflow-x-auto my-3;
   }
 
   /* Selection */

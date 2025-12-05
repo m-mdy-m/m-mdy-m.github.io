@@ -1,4 +1,4 @@
-# x0 Terminal
+# Personal Site - Genix
 
 A minimal, terminal-style personal website built with [Astro](https://astro.build), [TypeScript](https://www.typescriptlang.org/), and [Tailwind CSS](https://tailwindcss.com).
 

@@ -3,9 +3,9 @@ export interface Props {
   delay?: number;
 }
 
-const { delay = 300 } = Astro.props;
+const { delay = 100 } = Astro.props;
 ---
 
-<div class="pl-5 mt-2 text-terminal-primary animate-fade-in" style={`animation-delay: ${delay}ms`}>
+<div class="animate-fade-in" style={`animation-delay: ${delay}ms`}>
   <slot />
 </div>

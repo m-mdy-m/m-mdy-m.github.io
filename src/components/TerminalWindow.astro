@@ -4,28 +4,129 @@ export interface Props {
   title?: string;
 }
 
-const { command = '', title = 'Terminal Output' } = Astro.props;
+const { command = '', title = '' } = Astro.props;
 ---
 
-<div class="terminal-window bg-terminal-void border border-terminal-primary border-opacity-30 rounded-md overflow-hidden">
-  <div class="flex items-center justify-between p-2 border-b border-terminal-primary border-opacity-30">
-    <div class="flex space-x-2">
-      <div class="w-3 h-3 rounded-full bg-red-500"></div>
-      <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-      <div class="w-3 h-3 rounded-full bg-green-500"></div>
-    </div>
-    <div class="text-terminal-primary opacity-70 text-xs">{title}</div>
-    <div class="w-3 h-3"></div>
-  </div>
-  <div id="terminal-output" class="p-4">
+<div class="terminal-glass">
+  <!-- Terminal Content -->
+  <div id="terminal-output" class="terminal-content">
     {command && (
-      <div class="terminal-prompt">
-        <span class="text-terminal-primary">x0</span>
-        <span class="terminal-command ml-2">{command}</span>
+      <div class="terminal-command-line">
+        <span class="text-gray-800 mr-2">$</span>
+        <span class="text-gray-600">{command}</span>
       </div>
     )}
     <div class="terminal-output">
       <slot />
     </div>
   </div>
+  
+  <!-- Terminal Input -->
+  <div class="terminal-input-wrapper">
+    <span class="text-gray-800">$</span>
+    <input
+      id="terminal-input"
+      type="text"
+      class="terminal-input"
+      placeholder="type command..."
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
 </div>
+
+<style>
+  .terminal-glass {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.8) inset,
+      0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .terminal-content {
+    padding: 0.75rem;
+    min-height: 400px;
+    max-height: 65vh;
+    overflow-y: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .terminal-command-line {
+    display: flex;
+    align-items: start;
+    margin-bottom: 0.5rem;
+  }
+
+  .terminal-output {
+    /* Output styles handled by children */
+  }
+
+  .terminal-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    font-size: 0.875rem;
+  }
+
+  .terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #6b7280;
+    font-family: 'IBM Plex Mono', monospace;
+    caret-color: #4b5563;
+  }
+
+  .terminal-input::placeholder {
+    color: #1f2937;
+  }
+
+  .terminal-input::selection {
+    background-color: rgba(75, 85, 99, 0.2);
+  }
+
+  /* Custom Scrollbar */
+  .terminal-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .terminal-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .terminal-content::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.3);
+    border-radius: 2px;
+  }
+
+  .terminal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.5);
+  }
+
+  /* Subtle glow effect */
+  .terminal-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent
+    );
+  }
+</style>

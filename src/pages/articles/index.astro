@@ -2,12 +2,10 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
-import CommandOutput from '@components/CommandOutput.astro';
 
 const articles = await getCollection('articles');
 articles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// Group articles by category
 const categorizedArticles = articles.reduce((acc, article) => {
   const category = article.data.category;
   if (!acc[category]) {
@@ -18,61 +16,47 @@ const categorizedArticles = articles.reduce((acc, article) => {
 }, {} as Record<string, typeof articles>);
 ---
 
-<BaseLayout title="Articles | x0 Terminal">
-  <TerminalWindow command="ls articles" title="Articles">
-    <CommandOutput>
-      <h1 class="text-terminal-accent text-2xl mb-4">Technical Articles</h1>
-
+<BaseLayout title="Articles | Genix">
+  <TerminalWindow command="ls articles">
+    <div class="space-y-6">
       {Object.entries(categorizedArticles).map(([category, categoryArticles]) => (
-        <div class="mb-8">
-          <h2 class="text-terminal-text text-xl border-b border-terminal-primary border-opacity-30 pb-2 mb-4">
-            {category}
-          </h2>
+        <div class="space-y-3">
+          <div class="text-gray-600 text-xs uppercase tracking-wider">{category}</div>
           <div class="space-y-4">
             {categoryArticles.map((article) => (
-              <div class="animate-fade-in">
-                <h3 class="text-lg">
-                  <a href={`/articles/${article.slug}`} class="text-terminal-accent hover:underline">
+              <div class="space-y-1">
+                <div class="flex items-baseline gap-2">
+                  <a href={article.data.links ? Object.values(article.data.links)[0] : `/articles/${article.slug}`} 
+                     class="text-gray-300 hover:text-gray-100 transition-colors"
+                     target={article.data.links ? "_blank" : undefined}
+                     rel={article.data.links ? "noopener" : undefined}>
                     {article.data.title}
                   </a>
-                </h3>
-                <div class="flex items-center text-terminal-muted text-sm mt-1">
-                  <span>{article.data.date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}</span>
-                  <span class="mx-2">•</span>
-                  <div class="flex flex-wrap gap-1">
-                    {article.data.tags.map((tag: string) => (
-                      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded">
-                        {tag}
-                      </span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-600">
+                  <span>{article.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                  {article.data.tags.length > 0 && (
+                    <>
+                      <span class="text-gray-800">•</span>
+                      <div class="flex gap-1">
+                        {article.data.tags.slice(0, 3).map((tag: string) => (
+                          <span class="text-gray-700">{tag}</span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <p class="text-sm text-gray-500 leading-relaxed">{article.data.description}</p>
+                {article.data.links && (
+                  <div class="flex gap-2 text-xs">
+                    {Object.entries(article.data.links).map(([platform, url]) => (
+                      <a href={url} target="_blank" rel="noopener" 
+                         class="text-gray-600 hover:text-gray-400 transition-colors">
+                        [{platform}]
+                      </a>
                     ))}
                   </div>
-                </div>
-                <p class="mt-2 text-terminal-primary">{article.data.description}</p>
-                <div class="mt-2">
-       {article.data.links ? (
-      <div class="mb-6 space-x-4">
-      {Object.entries(article.data.links).map(([platform, url]) => (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener"
-          class="inline-block text-terminal-primary bg-black border border-terminal-primary px-2 py-1 text-xs font-mono hover:bg-terminal-primary hover:text-black transition"
-        >
-          {platform}
-        </a>
-      ))}
-    </div>
-
-      ) : (
-        <a href={`/articles/${article.slug}`} class="text-terminal-accent hover:underline">
-          Read article →
-        </a>
-      )}
-                </div>
+                )}
               </div>
             ))}
           </div>
@@ -80,10 +64,10 @@ const categorizedArticles = articles.reduce((acc, article) => {
       ))}
 
       {articles.length === 0 && (
-        <div class="text-center py-8">
-          <p class="text-terminal-muted">No articles found.</p>
+        <div class="text-center py-8 text-gray-600">
+          <p>No articles found.</p>
         </div>
       )}
-    </CommandOutput>
+    </div>
   </TerminalWindow>
 </BaseLayout>
