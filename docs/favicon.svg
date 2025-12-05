@@ -1,0 +1,35 @@
+<!-- public/favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title desc">
+  <title id="title">Genix mark</title>
+  <desc id="desc">Minimal circular mark with thin bars and a small center dot</desc>
+
+  <defs>
+    <!-- subtle radial for depth -->
+    <radialGradient id="bgG" cx="30%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#0b0b0b"/>
+      <stop offset="100%" stop-color="#040404"/>
+    </radialGradient>
+  </defs>
+
+  <!-- circular background -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgG)"/>
+
+  <!-- central motif: centered group (adapted from your snippet) -->
+  <g transform="translate(32,32)" opacity="0.98">
+    <!-- left thin bar -->
+    <line x1="-14" y1="0" x2="-6" y2="0"
+          stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.92"/>
+    <!-- refined center — a tiny ring + inner dot for a modern "spot" -->
+    <g>
+      <!-- subtle outer halo to help visibility on small sizes -->
+      <circle cx="0" cy="0" r="3.8" fill="#FFFFFF" opacity="0.06"/>
+      <!-- crisp outer ring -->
+      <circle cx="0" cy="0" r="3.0" fill="none" stroke="#FFFFFF" stroke-width="0.9" opacity="0.95" stroke-linecap="round"/>
+      <!-- solid inner dot -->
+      <circle cx="0" cy="0" r="1.4" fill="#FFFFFF"/>
+    </g>
+    <!-- right thin bar -->
+    <line x1="6" y1="0" x2="14" y2="0"
+          stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.92"/>
+  </g>
+</svg>
