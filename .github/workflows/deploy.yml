@@ -24,9 +24,6 @@ jobs:
           # copy if exists; || true so job won't fail if file absent
           cp docs/favicon.svg public/favicon.svg || true
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
