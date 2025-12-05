@@ -18,6 +18,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Install, build, and upload your site
         uses: withastro/action@v3
+      - name: Ensure public exists and copy favicon
+        run: |
+          mkdir -p public
+          # copy if exists; || true so job won't fail if file absent
+          cp docs/favicon.svg public/favicon.svg || true
+
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
 
   deploy:
     needs: build
