@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import ContentLayout from '@layouts/Content.astro';
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -14,36 +15,112 @@ const { article } = Astro.props;
 const { Content } = await article.render();
 ---
 
-<ContentLayout
-  title={`${article.data.title} | Genix`}
-  command={`cat ${article.slug}.md`}
-  content={article.data}
->
-  <div class="mb-4">
-    <span class="inline-block bg-terminal-accent bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2">
-      {article.data.category}
-    </span>
-    {article.data.tags.map((tag: string) => (
-      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2">
-        {tag}
-      </span>
-    ))}
-  </div>
+<BaseLayout title={`${article.data.title} | Genix`}>
+  <TerminalWindow command={`cat ${article.slug}.md`}>
+    <div class="space-y-6">
+      <!-- Header -->
+      <div class="space-y-3 pb-6 border-b border-gray-800">
+        <h1 class="text-xl text-white font-bold leading-tight">
+          {article.data.title}
+        </h1>
+        
+        <div class="flex items-center gap-2 text-xs text-gray-500">
+          <span>{article.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}</span>
+          <span class="text-gray-700">•</span>
+          <span>{article.data.category}</span>
+        </div>
 
-  {article.data.links ? (
-    <div class="mb-6 space-x-4">
-      {Object.entries(article.data.links).map(([platform, url]) => (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener"
-          class="inline-block text-terminal-primary bg-black border border-terminal-primary px-2 py-1 text-xs font-mono hover:bg-terminal-primary hover:text-black transition"
-        >
-          {platform}
+        {article.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            {article.data.tags.map((tag: string) => (
+              <span class="text-gray-500">{tag}</span>
+            ))}
+          </div>
+        )}
+
+        {article.data.links && (
+          <div class="flex gap-3 text-xs pt-2">
+            {Object.entries(article.data.links).map(([platform, url]) => (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener"
+                class="text-gray-400 hover:text-white transition-colors"
+              >
+                [read on {platform}]
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Content -->
+      <div class="prose prose-invert prose-sm max-w-none">
+        <Content />
+      </div>
+
+      <!-- Back Link -->
+      <div class="pt-6 border-t border-gray-800">
+        <a href="/articles" class="text-gray-400 hover:text-white transition-colors text-sm">
+          ← back to articles
         </a>
-      ))}
+      </div>
     </div>
-  ) : null}
+  </TerminalWindow>
+</BaseLayout>
 
-  <Content />
-</ContentLayout>
+<style>
+  .prose {
+    color: #d1d5db;
+  }
+  
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3) {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .prose :global(a) {
+    color: #9ca3af;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  
+  .prose :global(a:hover) {
+    color: #ffffff;
+  }
+  
+  .prose :global(code) {
+    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .prose :global(pre) {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.375rem;
+  }
+  
+  .prose :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+  
+  .prose :global(blockquote) {
+    border-left-color: #6b7280;
+    color: #9ca3af;
+  }
+  
+  .prose :global(strong) {
+    color: #ffffff;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import ContentLayout from '@layouts/Content.astro';
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -14,49 +15,122 @@ const { project } = Astro.props;
 const { Content } = await project.render();
 ---
 
-<ContentLayout
-  title={`${project.data.title} | Genix`}
-  command={`cat ${project.slug}.md`}
-  content={project.data}
->
-  <div class="mb-4">
-    {project.data.tags.map((tag: string) => (
-      <span class="inline-block bg-terminal-primary bg-opacity-20 text-terminal-text text-xs px-2 py-1 rounded mr-2 mb-2">
-        {tag}
-      </span>
-    ))}
-  </div>
+<BaseLayout title={`${project.data.title} | Genix`}>
+  <TerminalWindow command={`cat ${project.slug}.md`}>
+    <div class="space-y-6">
+      <!-- Header -->
+      <div class="space-y-3 pb-6 border-b border-gray-800">
+        <h1 class="text-xl text-white font-bold leading-tight">
+          {project.data.title}
+        </h1>
+        
+        <p class="text-sm text-gray-400 leading-relaxed">
+          {project.data.description}
+        </p>
 
-  {project.data.image && (
-    <img
-      src={project.data.image || "/placeholder.svg"}
-      alt={project.data.title}
-      class="w-full h-auto rounded-md border border-terminal-primary border-opacity-30 mb-4"
-    />
-  )}
+        <div class="flex flex-wrap gap-1.5 text-xs">
+          {project.data.tags.map((tag: string) => (
+            <span class="text-gray-500">{tag}</span>
+          ))}
+        </div>
 
-  <div class="flex flex-wrap gap-2 mb-4">
-    {project.data.demoUrl && (
-      <a
-        href={project.data.demoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center bg-terminal-primary bg-opacity-20 hover:bg-opacity-30 text-terminal-text px-3 py-1 rounded-md transition-all duration-200"
-      >
-        Live Demo
-      </a>
-    )}
-    {project.data.sourceUrl && (
-      <a
-        href={project.data.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center bg-terminal-primary bg-opacity-20 hover:bg-opacity-30 text-terminal-text px-3 py-1 rounded-md transition-all duration-200"
-      >
-        Source Code
-      </a>
-    )}
-  </div>
+        <div class="flex gap-4 text-xs pt-2">
+          {project.data.demoUrl && (
+            <a
+              href={project.data.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-white transition-colors"
+            >
+              [live demo]
+            </a>
+          )}
+          {project.data.sourceUrl && (
+            <a
+              href={project.data.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-white transition-colors"
+            >
+              [source code]
+            </a>
+          )}
+        </div>
+      </div>
 
-  <Content />
-</ContentLayout>
+      {project.data.image && (
+        <div class="mb-6">
+          <img
+            src={project.data.image}
+            alt={project.data.title}
+            class="w-full h-auto rounded border border-gray-800"
+          />
+        </div>
+      )}
+
+      <!-- Content -->
+      <div class="prose prose-invert prose-sm max-w-none">
+        <Content />
+      </div>
+
+      <!-- Back Link -->
+      <div class="pt-6 border-t border-gray-800">
+        <a href="/projects" class="text-gray-400 hover:text-white transition-colors text-sm">
+          ← back to projects
+        </a>
+      </div>
+    </div>
+  </TerminalWindow>
+</BaseLayout>
+
+<style>
+  .prose {
+    color: #d1d5db;
+  }
+  
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3) {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .prose :global(a) {
+    color: #9ca3af;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  
+  .prose :global(a:hover) {
+    color: #ffffff;
+  }
+  
+  .prose :global(code) {
+    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .prose :global(pre) {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.375rem;
+  }
+  
+  .prose :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+  
+  .prose :global(ul),
+  .prose :global(ol) {
+    color: #d1d5db;
+  }
+  
+  .prose :global(strong) {
+    color: #ffffff;
+  }
+</style>

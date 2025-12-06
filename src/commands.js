@@ -62,7 +62,10 @@ const commandRegistry = {
       }
       
       currentDirectory = getCurrentDirectory();
-      const targetPath = normalizePath(args[0]);
+      
+      const filename = args.join(' ');
+      const targetPath = normalizePath(filename);
+      
       return generateCatOutput(targetPath);
     },
   },

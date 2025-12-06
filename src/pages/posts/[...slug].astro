@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import ContentLayout from '@layouts/Content.astro';
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -14,10 +15,145 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<ContentLayout
-  title={`${post.data.title} | Genix`}
-  command={`cat ${post.slug}.md`}
-  content={post.data}
->
-  <Content />
-</ContentLayout>
+<BaseLayout title={`${post.data.title} | Genix`}>
+  <TerminalWindow command={`cat ${post.slug}.md`}>
+    <div class="space-y-6">
+      <!-- Header -->
+      <div class="space-y-3 pb-6 border-b border-gray-800">
+        <h1 class="text-xl text-white font-bold leading-tight">
+          {post.data.title}
+        </h1>
+        
+        <div class="text-xs text-gray-500">
+          {post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </div>
+
+        <p class="text-sm text-gray-400 leading-relaxed">
+          {post.data.description}
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="prose prose-invert prose-sm max-w-none">
+        <Content />
+      </div>
+
+      <!-- Back Link -->
+      <div class="pt-6 border-t border-gray-800">
+        <a href="/posts" class="text-gray-400 hover:text-white transition-colors text-sm">
+          ← back to posts
+        </a>
+      </div>
+    </div>
+  </TerminalWindow>
+</BaseLayout>
+
+<style>
+  .prose {
+    color: #d1d5db;
+  }
+  
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    color: #ffffff;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .prose :global(h1) {
+    font-size: 1.5rem;
+  }
+  
+  .prose :global(h2) {
+    font-size: 1.25rem;
+  }
+  
+  .prose :global(h3) {
+    font-size: 1.125rem;
+  }
+  
+  .prose :global(p) {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+  }
+  
+  .prose :global(a) {
+    color: #9ca3af;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  
+  .prose :global(a:hover) {
+    color: #ffffff;
+  }
+  
+  .prose :global(code) {
+    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .prose :global(pre) {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  
+  .prose :global(pre code) {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
+  
+  .prose :global(blockquote) {
+    border-left: 3px solid #6b7280;
+    padding-left: 1rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 1rem 0;
+  }
+  
+  .prose :global(ul),
+  .prose :global(ol) {
+    color: #d1d5db;
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+  }
+  
+  .prose :global(li) {
+    margin: 0.25rem 0;
+  }
+  
+  .prose :global(strong) {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .prose :global(em) {
+    color: #e5e7eb;
+  }
+  
+  .prose :global(hr) {
+    border-color: #374151;
+    margin: 2rem 0;
+  }
+  
+  .prose :global(img) {
+    border-radius: 0.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style>
