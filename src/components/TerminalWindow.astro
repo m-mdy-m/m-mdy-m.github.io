@@ -12,8 +12,8 @@ const { command = '', title = '' } = Astro.props;
   <div id="terminal-output" class="terminal-content">
     {command && (
       <div class="terminal-command-line">
-        <span class="text-gray-800 mr-2">$</span>
-        <span class="text-gray-600">{command}</span>
+        <span class="text-gray-600 mr-2">$</span>
+        <span class="text-gray-400">{command}</span>
       </div>
     )}
     <div class="terminal-output">
@@ -23,7 +23,7 @@ const { command = '', title = '' } = Astro.props;
   
   <!-- Terminal Input -->
   <div class="terminal-input-wrapper">
-    <span class="text-gray-800">$</span>
+    <span class="text-gray-600">$</span>
     <input
       id="terminal-input"
       type="text"
@@ -37,31 +37,32 @@ const { command = '', title = '' } = Astro.props;
 
 <style>
   .terminal-glass {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
     overflow: hidden;
     box-shadow: 
-      0 0 0 1px rgba(0, 0, 0, 0.8) inset,
-      0 8px 32px rgba(0, 0, 0, 0.4);
+      0 0 0 1px rgba(0, 0, 0, 0.9) inset,
+      0 10px 40px rgba(0, 0, 0, 0.6),
+      0 0 80px rgba(255, 255, 255, 0.02);
   }
 
   .terminal-content {
-    padding: 0.75rem;
-    min-height: 400px;
-    max-height: 65vh;
+    padding: 1rem;
+    min-height: 450px;
+    max-height: 70vh;
     overflow-y: auto;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.7;
   }
 
   .terminal-command-line {
     display: flex;
     align-items: start;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .terminal-output {
@@ -72,10 +73,10 @@ const { command = '', title = '' } = Astro.props;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.9rem;
   }
 
   .terminal-input {
@@ -83,22 +84,22 @@ const { command = '', title = '' } = Astro.props;
     background: transparent;
     border: none;
     outline: none;
-    color: #6b7280;
+    color: #9ca3af;
     font-family: 'IBM Plex Mono', monospace;
-    caret-color: #4b5563;
+    caret-color: #6b7280;
   }
 
   .terminal-input::placeholder {
-    color: #1f2937;
+    color: #374151;
   }
 
   .terminal-input::selection {
-    background-color: rgba(75, 85, 99, 0.2);
+    background-color: rgba(156, 163, 175, 0.3);
   }
 
   /* Custom Scrollbar */
   .terminal-content::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
 
   .terminal-content::-webkit-scrollbar-track {
@@ -106,16 +107,16 @@ const { command = '', title = '' } = Astro.props;
   }
 
   .terminal-content::-webkit-scrollbar-thumb {
-    background: rgba(75, 85, 99, 0.3);
-    border-radius: 2px;
+    background: rgba(107, 114, 128, 0.4);
+    border-radius: 3px;
   }
 
   .terminal-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(75, 85, 99, 0.5);
+    background: rgba(107, 114, 128, 0.6);
   }
 
   /* Subtle glow effect */
-  .terminal-glass::before {
+  .terminal-glass::after {
     content: '';
     position: absolute;
     top: 0;
@@ -125,8 +126,9 @@ const { command = '', title = '' } = Astro.props;
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.08),
       transparent
     );
+    pointer-events: none;
   }
 </style>

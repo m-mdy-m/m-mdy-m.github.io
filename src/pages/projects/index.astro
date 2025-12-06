@@ -11,34 +11,34 @@ projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   <TerminalWindow command="ls projects">
     <div class="space-y-6">
       {projects.map((project) => (
-        <div class="space-y-2 pb-6 border-b border-gray-900 last:border-0">
+        <div class="space-y-2 pb-6 border-b border-gray-800 last:border-0">
           <div class="flex items-baseline gap-2">
             <a href={`/projects/${project.slug}`} 
-               class="text-gray-200 hover:text-white transition-colors text-base">
+               class="text-gray-100 hover:text-white transition-colors text-base">
               {project.data.title}
             </a>
           </div>
           
-          <p class="text-sm text-gray-500 leading-relaxed">
+          <p class="text-sm text-gray-400 leading-relaxed">
             {project.data.description}
           </p>
           
           <div class="flex flex-wrap gap-1.5 text-xs">
             {project.data.tags.map((tag: string) => (
-              <span class="text-gray-700">{tag}</span>
+              <span class="text-gray-600">{tag}</span>
             ))}
           </div>
           
           <div class="flex gap-3 text-xs pt-1">
             <a href={`/projects/${project.slug}`} 
-               class="text-gray-600 hover:text-gray-400 transition-colors">
+               class="text-gray-500 hover:text-gray-300 transition-colors">
               [details]
             </a>
             {project.data.demoUrl && (
               <a href={project.data.demoUrl} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 class="text-gray-600 hover:text-gray-400 transition-colors">
+                 class="text-gray-500 hover:text-gray-300 transition-colors">
                 [demo]
               </a>
             )}
@@ -46,7 +46,7 @@ projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
               <a href={project.data.sourceUrl} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 class="text-gray-600 hover:text-gray-400 transition-colors">
+                 class="text-gray-500 hover:text-gray-300 transition-colors">
                 [source]
               </a>
             )}
@@ -55,7 +55,7 @@ projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
       ))}
 
       {projects.length === 0 && (
-        <div class="text-center py-8 text-gray-600">
+        <div class="text-center py-8 text-gray-500">
           <p>No projects found.</p>
         </div>
       )}

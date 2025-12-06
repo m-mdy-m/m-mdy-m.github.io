@@ -37,45 +37,45 @@ const books = [
   <TerminalWindow command="ls books">
     <div class="space-y-6">
       {books.map((book) => (
-        <div class="space-y-2 pb-6 border-b border-gray-900 last:border-0">
+        <div class="space-y-2 pb-6 border-b border-gray-800 last:border-0">
           <div class="space-y-0.5">
-            <div class="text-gray-200 text-base">
+            <div class="text-gray-100 text-base">
               {book.title}
             </div>
             {book.subtitle && (
-              <div class="text-xs text-gray-600 italic">
+              <div class="text-xs text-gray-500 italic">
                 {book.subtitle}
               </div>
             )}
           </div>
           
-          <p class="text-sm text-gray-500 leading-relaxed">
+          <p class="text-sm text-gray-400 leading-relaxed">
             {book.description}
           </p>
           
           <div class="flex flex-wrap gap-1.5 text-xs">
             {book.tags.map(tag => (
-              <span class="text-gray-700">{tag}</span>
+              <span class="text-gray-600">{tag}</span>
             ))}
-            <span class="text-gray-800">•</span>
-            <span class="text-gray-700">{book.parts} parts</span>
-            <span class="text-gray-800">•</span>
-            <span class="text-gray-700">{book.status}</span>
+            <span class="text-gray-700">•</span>
+            <span class="text-gray-600">{book.parts} parts</span>
+            <span class="text-gray-700">•</span>
+            <span class="text-gray-600">{book.status}</span>
           </div>
           
           <div class="text-xs pt-1">
             <a href={book.sourceUrl} 
                target="_blank" 
                rel="noopener noreferrer"
-               class="text-gray-600 hover:text-gray-400 transition-colors">
+               class="text-gray-500 hover:text-gray-300 transition-colors">
               [view source]
             </a>
           </div>
         </div>
       ))}
 
-      <div class="pt-4 border-t border-gray-900">
-        <p class="text-xs text-gray-600">
+      <div class="pt-4 border-t border-gray-800">
+        <p class="text-xs text-gray-500">
           All books are freely available and continuously updated as "living editions"
         </p>
       </div>

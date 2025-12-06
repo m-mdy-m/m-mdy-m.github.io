@@ -22,8 +22,8 @@ const { title, description = 'A terminal-style personal website' } = Astro.props
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div class="min-h-screen max-w-3xl mx-auto px-4 py-6 md:py-10">
-      <main>
+    <div class="min-h-screen max-w-3xl mx-auto px-4 py-16 md:py-24 flex items-center">
+      <main class="w-full">
         <slot />
       </main>
     </div>
