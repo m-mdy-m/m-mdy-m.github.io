@@ -5,5 +5,4 @@ export default defineConfig({
   site: 'https://m-mdy-m.github.io',
   base: '/',
   integrations: [tailwind()],
-  publicDir: 'docs',
 });
