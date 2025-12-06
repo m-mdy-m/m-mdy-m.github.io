@@ -741,106 +741,55 @@ function getCommandDescription(command) {
 
 function generateNeofetchOutput() {
   return `
-    <style>
-      .neofetch-container {
-        animation: slideInLeft 0.6s ease-out;
-      }
-      
-      @keyframes slideInLeft {
-        from {
-          opacity: 0;
-          transform: translateX(-30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      
-      .neofetch-item {
-        opacity: 0;
-        animation: fadeIn 0.4s ease-out forwards;
-      }
-      
-      .neofetch-item:nth-child(1) { animation-delay: 0.1s; }
-      .neofetch-item:nth-child(2) { animation-delay: 0.2s; }
-      .neofetch-item:nth-child(3) { animation-delay: 0.3s; }
-      .neofetch-item:nth-child(4) { animation-delay: 0.4s; }
-      .neofetch-item:nth-child(5) { animation-delay: 0.5s; }
-      .neofetch-item:nth-child(6) { animation-delay: 0.6s; }
-      .neofetch-item:nth-child(7) { animation-delay: 0.7s; }
-      .neofetch-item:nth-child(8) { animation-delay: 0.8s; }
-      .neofetch-item:nth-child(9) { animation-delay: 0.9s; }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(5px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    </style>
-    
-    <div class="neofetch-container flex flex-col lg:flex-row gap-6 text-sm font-mono">
-      <div class="flex-shrink-0">
-        <pre class="text-gray-600 text-xs leading-tight">
-    ╭─────────────────────────╮
-    │ ◈ ░░░░░░░░░░░░░░░░░░░░ ◈ │
-    │ ░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ░ │
-    │ ░ ▓                ▓ ░ │
-    │ ░ ▓  ╭──────────╮  ▓ ░ │
-    │ ░ ▓  │ ▪▪    ▪▪ │  ▓ ░ │
-    │ ░ ▓  │    ──    │  ▓ ░ │
-    │ ░ ▓  ╰──────────╯  ▓ ░ │
-    │ ░ ▓                ▓ ░ │
-    │ ░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ░ │
-    │ ◈ ░░░░░░░░░░░░░░░░░░░░ ◈ │
-    ╰─────────────────────────╯
-        </pre>
-      </div>
-      
-      <div class="flex flex-col justify-center space-y-2 min-w-0 flex-1">
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">OS:</span>
+    <div class="neofetch-container space-y-4 font-mono text-sm">
+      <div class="space-y-1">
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">user</span>
+          <span class="text-gray-400">genix@terminal</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">os</span>
           <span class="text-gray-400">Void Linux x86_64</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Host:</span>
-          <span class="text-gray-400">x0 Terminal</span>
-        </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Kernel:</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">kernel</span>
           <span class="text-gray-400">6.6.52_1</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Packages:</span>
-          <span class="text-gray-400">xbps</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">shell</span>
+          <span class="text-gray-400">bash</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">WM:</span>
-          <span class="text-gray-400">i3wm</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">wm</span>
+          <span class="text-gray-400">i3</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Theme:</span>
-          <span class="text-gray-400">Hacker Dark</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">terminal</span>
+          <span class="text-gray-400">web</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Terminal:</span>
-          <span class="text-gray-400">Web Terminal</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">editor</span>
+          <span class="text-gray-400">vim</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">CPU:</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">cpu</span>
           <span class="text-gray-400">JS Engine</span>
         </div>
-        
-        <div class="neofetch-item flex flex-wrap">
-          <span class="text-gray-500 font-bold w-20 flex-shrink-0">Memory:</span>
+        <div class="flex items-center gap-3">
+          <span class="text-gray-600 w-24">memory</span>
           <span class="text-gray-400">Browser Pool</span>
         </div>
+      </div>
+      
+      <div class="flex gap-1 pt-2">
+        <div class="w-8 h-3 bg-gray-900"></div>
+        <div class="w-8 h-3 bg-gray-800"></div>
+        <div class="w-8 h-3 bg-gray-700"></div>
+        <div class="w-8 h-3 bg-gray-600"></div>
+        <div class="w-8 h-3 bg-gray-500"></div>
+        <div class="w-8 h-3 bg-gray-400"></div>
+        <div class="w-8 h-3 bg-gray-300"></div>
+        <div class="w-8 h-3 bg-gray-200"></div>
       </div>
     </div>
   `;
