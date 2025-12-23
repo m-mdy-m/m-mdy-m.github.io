@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '@layouts/Layout.astro';
-import TerminalWindow from '@components/TerminalWindow.astro';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -13,124 +12,202 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await project.render();
+
+const statusConfig = {
+  'active': { label: 'Active Development', color: 'text-green-600 border-green-900' },
+  'archived': { label: 'Archived', color: 'text-gray-600 border-gray-900' },
+  'maintenance': { label: 'Maintenance Mode', color: 'text-yellow-600 border-yellow-900' }
+};
+
+const status = statusConfig[project.data.status];
 ---
 
-<BaseLayout title={`${project.data.title} | Genix`}>
-  <TerminalWindow command={`cat ${project.slug}.md`}>
-    <div class="space-y-6">
-      <!-- Header -->
-      <div class="space-y-3 pb-6 border-b border-gray-800">
-        <h1 class="text-xl text-white font-bold leading-tight">
-          {project.data.title}
-        </h1>
+<ArticleLayout 
+  title={`${project.data.title} | Genix`}
+  description={project.data.description}
+  backLink="/projects"
+  backText="back to projects">
+  
+  <article class="space-y-8">
+    <header class="space-y-5 pb-8 border-b border-gray-900">
+      <div class="space-y-3">
+        <div class="flex items-start justify-between gap-4">
+          <h1 class="text-3xl md:text-4xl text-white font-bold leading-tight tracking-tight flex-1">
+            {project.data.title}
+          </h1>
+          <div class={`text-xs px-3 py-1.5 rounded border bg-gray-950 ${status.color} whitespace-nowrap`}>
+            {status.label}
+          </div>
+        </div>
         
-        <p class="text-sm text-gray-400 leading-relaxed">
+        <p class="text-base text-gray-400 leading-relaxed">
           {project.data.description}
         </p>
+      </div>
 
-        <div class="flex flex-wrap gap-1.5 text-xs">
-          {project.data.tags.map((tag: string) => (
-            <span class="text-gray-500">{tag}</span>
-          ))}
-        </div>
+      <div class="flex flex-wrap gap-2">
+        {project.data.tags.map(tag => (
+          <span class="text-xs text-gray-600 bg-gray-950 px-2.5 py-1 rounded border border-gray-900">
+            {tag}
+          </span>
+        ))}
+      </div>
 
-        <div class="flex gap-4 text-xs pt-2">
-          {project.data.demoUrl && (
-            <a
-              href={project.data.demoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-gray-400 hover:text-white transition-colors"
-            >
-              [live demo]
-            </a>
-          )}
-          {project.data.sourceUrl && (
-            <a
-              href={project.data.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-gray-400 hover:text-white transition-colors"
-            >
-              [source code]
-            </a>
-          )}
-        </div>
+      <div class="flex flex-wrap gap-3 text-sm">
+        {project.data.demoUrl && (
+          <a href={project.data.demoUrl}
+             target="_blank"
+             rel="noopener noreferrer"
+             class="text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5">
+            <span>→</span>
+            <span>Live Demo</span>
+          </a>
+        )}
+        {project.data.sourceUrl && (
+          <a href={project.data.sourceUrl}
+             target="_blank"
+             rel="noopener noreferrer"
+             class="text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5">
+            <span>→</span>
+            <span>Source Code</span>
+          </a>
+        )}
       </div>
 
       {project.data.image && (
-        <div class="mb-6">
+        <div class="mt-4">
           <img
             src={project.data.image}
             alt={project.data.title}
-            class="w-full h-auto rounded border border-gray-800"
+            class="w-full h-auto rounded-lg border border-gray-900"
+            loading="lazy"
           />
         </div>
       )}
+    </header>
 
-      <!-- Content -->
-      <div class="prose prose-invert prose-sm max-w-none">
-        <Content />
-      </div>
-
-      <!-- Back Link -->
-      <div class="pt-6 border-t border-gray-800">
-        <a href="/projects" class="text-gray-400 hover:text-white transition-colors text-sm">
-          ← back to projects
-        </a>
-      </div>
+    <div class="article-content prose prose-invert prose-lg max-w-none">
+      <Content />
     </div>
-  </TerminalWindow>
-</BaseLayout>
+
+    <footer class="pt-8 border-t border-gray-900">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <a href="/projects" class="text-gray-600 hover:text-gray-400 transition-colors text-sm">
+          ← all projects
+        </a>
+        
+        <div class="flex gap-3 text-xs text-gray-700">
+          <span>Last updated: {project.data.date.toLocaleDateString('en-US', {
+            month: 'short',
+            year: 'numeric'
+          })}</span>
+        </div>
+      </div>
+    </footer>
+  </article>
+</ArticleLayout>
 
 <style>
-  .prose {
+  .article-content {
     color: #d1d5db;
+    line-height: 1.8;
   }
   
-  .prose :global(h1),
-  .prose :global(h2),
-  .prose :global(h3) {
+  .article-content :global(h1),
+  .article-content :global(h2),
+  .article-content :global(h3),
+  .article-content :global(h4) {
     color: #ffffff;
     font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
   }
   
-  .prose :global(a) {
+  .article-content :global(h1) { font-size: 2.25rem; line-height: 1.2; }
+  .article-content :global(h2) { font-size: 1.875rem; line-height: 1.3; }
+  .article-content :global(h3) { font-size: 1.5rem; line-height: 1.4; }
+  .article-content :global(h4) { font-size: 1.25rem; line-height: 1.5; }
+  
+  .article-content :global(p) {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: #d1d5db;
+    font-size: 1.0625rem;
+  }
+  
+  .article-content :global(a) {
     color: #9ca3af;
     text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 0.15s;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
   }
   
-  .prose :global(a:hover) {
-    color: #ffffff;
-  }
+  .article-content :global(a:hover) { color: #ffffff; }
   
-  .prose :global(code) {
+  .article-content :global(code) {
     color: #e5e7eb;
     background: rgba(255, 255, 255, 0.05);
-    padding: 0.125rem 0.25rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-    font-size: 0.875em;
+    font-size: 0.9em;
   }
   
-  .prose :global(pre) {
+  .article-content :global(pre) {
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.375rem;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
   }
   
-  .prose :global(pre code) {
+  .article-content :global(pre code) {
     background: transparent;
     padding: 0;
   }
   
-  .prose :global(ul),
-  .prose :global(ol) {
-    color: #d1d5db;
+  .article-content :global(blockquote) {
+    border-left: 4px solid #4b5563;
+    padding-left: 1.5rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 2rem 0;
   }
   
-  .prose :global(strong) {
+  .article-content :global(ul),
+  .article-content :global(ol) {
+    color: #d1d5db;
+    padding-left: 1.75rem;
+    margin: 1.25rem 0;
+  }
+  
+  .article-content :global(li) { margin: 0.5rem 0; }
+  .article-content :global(strong) { color: #ffffff; font-weight: 600; }
+  .article-content :global(em) { color: #e5e7eb; font-style: italic; }
+  .article-content :global(hr) { border-color: #374151; margin: 3rem 0; }
+  
+  .article-content :global(img) {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+  }
+
+  .article-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+  }
+
+  .article-content :global(th),
+  .article-content :global(td) {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  .article-content :global(th) {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
     color: #ffffff;
   }
 </style>

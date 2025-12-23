@@ -3,69 +3,144 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
 
-const articles = await getCollection('articles');
+const articles = (await getCollection('articles')).filter(a => !a.data.draft);
 articles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const categorizedArticles = articles.reduce((acc, article) => {
-  const category = article.data.category;
-  if (!acc[category]) {
-    acc[category] = [];
-  }
-  acc[category].push(article);
-  return acc;
-}, {} as Record<string, typeof articles>);
+const categories = Array.from(new Set(articles.map(a => a.data.category))).sort();
+const featured = articles.filter(a => a.data.featured);
 ---
 
 <BaseLayout title="Articles | Genix">
   <TerminalWindow command="ls articles">
-    <div class="space-y-6">
-      {Object.entries(categorizedArticles).map(([category, categoryArticles]) => (
-        <div class="space-y-3">
-          <div class="text-gray-500 text-xs uppercase tracking-wider">{category}</div>
-          <div class="space-y-4">
-            {categoryArticles.map((article) => (
-              <div class="space-y-1">
-                <div class="flex items-baseline gap-2">
-                  <a href={article.data.links ? Object.values(article.data.links)[0] : `/articles/${article.slug}`} 
-                     class="text-gray-200 hover:text-white transition-colors"
-                     target={article.data.links ? "_blank" : undefined}
-                     rel={article.data.links ? "noopener" : undefined}>
+    <div class="space-y-8">
+      {featured.length > 0 && (
+        <div class="space-y-4 pb-8 border-b border-gray-900">
+          <div class="flex items-center gap-2">
+            <span class="text-gray-700">▶</span>
+            <h2 class="text-gray-400 text-sm uppercase tracking-wider">Featured</h2>
+          </div>
+          
+          <div class="space-y-5">
+            {featured.slice(0, 2).map((article) => (
+              <article class="group">
+                <a href={article.data.links ? Object.values(article.data.links)[0] : `/articles/${article.slug}`}
+                   target={article.data.links ? "_blank" : undefined}
+                   rel={article.data.links ? "noopener" : undefined}
+                   class="block space-y-2">
+                  <h3 class="text-gray-200 group-hover:text-white transition-colors text-base">
                     {article.data.title}
-                  </a>
-                </div>
-                <div class="flex items-center gap-2 text-xs text-gray-500">
-                  <span>{article.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                  {article.data.tags.length > 0 && (
-                    <>
-                      <span class="text-gray-700">•</span>
-                      <div class="flex gap-1">
-                        {article.data.tags.slice(0, 3).map((tag: string) => (
-                          <span class="text-gray-600">{tag}</span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-                <p class="text-sm text-gray-400 leading-relaxed">{article.data.description}</p>
-                {article.data.links && (
-                  <div class="flex gap-2 text-xs">
-                    {Object.entries(article.data.links).map(([platform, url]) => (
-                      <a href={url} target="_blank" rel="noopener" 
-                         class="text-gray-500 hover:text-gray-300 transition-colors">
-                        [{platform}]
-                      </a>
-                    ))}
+                  </h3>
+                  
+                  <div class="flex items-center gap-2 text-xs text-gray-600">
+                    <time datetime={article.data.date.toISOString()}>
+                      {article.data.date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </time>
+                    <span class="text-gray-800">•</span>
+                    <span>{article.data.category}</span>
+                    {article.data.readTime && (
+                      <>
+                        <span class="text-gray-800">•</span>
+                        <span>{article.data.readTime} min read</span>
+                      </>
+                    )}
                   </div>
-                )}
-              </div>
+                  
+                  <p class="text-sm text-gray-500 leading-relaxed line-clamp-2">
+                    {article.data.description}
+                  </p>
+                  
+                  {article.data.tags.length > 0 && (
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                      {article.data.tags.slice(0, 4).map(tag => (
+                        <span class="text-xs text-gray-700 bg-gray-950 px-2 py-0.5 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </a>
+              </article>
             ))}
           </div>
         </div>
-      ))}
+      )}
+
+      <div class="space-y-6">
+        {categories.map(category => {
+          const categoryArticles = articles.filter(a => a.data.category === category);
+          return (
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="text-gray-700">▶</span>
+                <h2 class="text-gray-500 text-xs uppercase tracking-wider">
+                  {category}
+                </h2>
+                <span class="text-gray-800 text-xs">({categoryArticles.length})</span>
+              </div>
+              
+              <div class="space-y-4">
+                {categoryArticles.map((article) => (
+                  <article class="group space-y-1.5">
+                    <a href={article.data.links ? Object.values(article.data.links)[0] : `/articles/${article.slug}`}
+                       target={article.data.links ? "_blank" : undefined}
+                       rel={article.data.links ? "noopener" : undefined}
+                       class="block">
+                      <h3 class="text-gray-300 group-hover:text-white transition-colors">
+                        {article.data.title}
+                      </h3>
+                    </a>
+                    
+                    <div class="flex items-center gap-2 text-xs text-gray-600">
+                      <time datetime={article.data.date.toISOString()}>
+                        {article.data.date.toLocaleDateString('en-US', { 
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </time>
+                      {article.data.tags.length > 0 && (
+                        <>
+                          <span class="text-gray-800">•</span>
+                          <div class="flex gap-1.5">
+                            {article.data.tags.slice(0, 3).map(tag => (
+                              <span class="text-gray-700">{tag}</span>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 leading-relaxed">
+                      {article.data.description}
+                    </p>
+                    
+                    {article.data.links && (
+                      <div class="flex gap-2 text-xs pt-0.5">
+                        {Object.entries(article.data.links).map(([platform, url]) => (
+                          <a href={url} 
+                             target="_blank" 
+                             rel="noopener"
+                             class="text-gray-600 hover:text-gray-400 transition-colors">
+                            [{platform}]
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {articles.length === 0 && (
-        <div class="text-center py-8 text-gray-500">
-          <p>No articles found.</p>
+        <div class="text-center py-12">
+          <p class="text-gray-600">No articles found.</p>
         </div>
       )}
     </div>

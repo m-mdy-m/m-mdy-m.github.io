@@ -557,88 +557,112 @@ function generateLsOutput(targetPath) {
     </div>
   `;
 }
-
 function generateBooksOutput() {
   return `
     <div class="books-display animate-fade-in">
-      <h2 class="text-gray-400 text-2xl mb-6 flex items-center gap-2">
-        <span class="text-gray-600">📚</span> Published Works
-      </h2>
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-gray-700">▶</span>
+        <h2 class="text-gray-400 text-lg">Published Works</h2>
+      </div>
       
-      <div class="space-y-8">
+      <div class="space-y-6">
         <!-- MATHESIS -->
-        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
-          <div class="flex gap-6 flex-col md:flex-row">
-            <div class="flex-shrink-0">
-              <img src="/books/books/MATHESIS/cover.svg" alt="MATHESIS Cover" class="w-48 h-64 object-contain" />
-            </div>
+        <div class="book-card group space-y-3 pb-6 border-b border-gray-800 last:border-0">
+          <div class="flex items-start justify-between gap-4">
             <div class="flex-1">
-              <h3 class="text-xl text-gray-300 font-bold mb-2">MATHESIS</h3>
-              <p class="text-sm text-gray-500 mb-3">The Mathematical Foundations of Computing</p>
-              <p class="text-gray-400 text-sm mb-4">A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond.</p>
-              <div class="flex gap-2 mb-4">
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Mathematics</span>
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">10 Parts</span>
-                <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded text-xs">Living Edition</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
-              </div>
+              <h3 class="text-lg text-white font-bold mb-1">MATHESIS</h3>
+              <p class="text-xs text-gray-600 italic mb-2">The Mathematical Foundations of Computing</p>
             </div>
+            <span class="text-xs text-green-600 bg-gray-950 px-2 py-1 rounded border border-green-900 whitespace-nowrap">
+              Living Edition
+            </span>
+          </div>
+          
+          <p class="text-gray-500 text-sm leading-relaxed">
+            A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond.
+          </p>
+          
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">Mathematics</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">Foundations</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">10 Parts</span>
+          </div>
+          
+          <div class="flex gap-3 text-xs">
+            <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS" 
+               target="_blank" 
+               class="text-gray-500 hover:text-gray-300 transition-colors">
+              [view source]
+            </a>
           </div>
         </div>
 
         <!-- Art of Algorithmic Analysis -->
-        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
-          <div class="flex gap-6 flex-col md:flex-row">
-            <div class="flex-shrink-0">
-              <img src="/books/books/The Art of Algorithmic Analysis/cover.svg" alt="Art of Algorithmic Analysis Cover" class="w-48 h-64 object-contain" />
-            </div>
+        <div class="book-card group space-y-3 pb-6 border-b border-gray-800 last:border-0">
+          <div class="flex items-start justify-between gap-4">
             <div class="flex-1">
-              <h3 class="text-xl text-gray-300 font-bold mb-2">The Art of Algorithmic Analysis</h3>
-              <p class="text-sm text-gray-500 mb-3">From Foundations to Practice</p>
-              <p class="text-gray-400 text-sm mb-4">A rigorous exploration of algorithm analysis techniques—asymptotic notation, recurrence relations, amortized analysis, and complexity theory. Built for those who seek deep understanding.</p>
-              <div class="flex gap-2 mb-4">
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Algorithms</span>
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">6 Parts</span>
-                <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded text-xs">Living Edition</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/The%20Art%20of%20Algorithmic%20Analysis" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
-              </div>
+              <h3 class="text-lg text-white font-bold mb-1">The Art of Algorithmic Analysis</h3>
+              <p class="text-xs text-gray-600 italic mb-2">From Foundations to Practice</p>
             </div>
+            <span class="text-xs text-green-600 bg-gray-950 px-2 py-1 rounded border border-green-900 whitespace-nowrap">
+              Living Edition
+            </span>
+          </div>
+          
+          <p class="text-gray-500 text-sm leading-relaxed">
+            A rigorous exploration of algorithm analysis techniques—asymptotic notation, recurrence relations, amortized analysis, and complexity theory. Built for those who seek deep understanding.
+          </p>
+          
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">Algorithms</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">Analysis</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">6 Parts</span>
+          </div>
+          
+          <div class="flex gap-3 text-xs">
+            <a href="https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/The%20Art%20of%20Algorithmic%20Analysis" 
+               target="_blank" 
+               class="text-gray-500 hover:text-gray-300 transition-colors">
+              [view source]
+            </a>
           </div>
         </div>
 
         <!-- ARLIZ -->
-        <div class="book-card border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all">
-          <div class="flex gap-6 flex-col md:flex-row">
-            <div class="flex-shrink-0">
-              <div class="w-48 h-64 bg-gray-800 rounded flex items-center justify-center">
-                <span class="text-4xl">📖</span>
-              </div>
-            </div>
+        <div class="book-card group space-y-3 pb-6 border-b border-gray-800 last:border-0">
+          <div class="flex items-start justify-between gap-4">
             <div class="flex-1">
-              <h3 class="text-xl text-gray-300 font-bold mb-2">ARLIZ</h3>
-              <p class="text-sm text-gray-500 mb-3">Arrays, Reasoning, Logic, Identity, Zero</p>
-              <p class="text-gray-400 text-sm mb-4">A comprehensive exploration of data structures starting from their historical origins. Understanding the 'why' behind arrays, stacks, queues, and beyond.</p>
-              <div class="flex gap-2 mb-4">
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">Data Structures</span>
-                <span class="px-3 py-1 bg-gray-800 text-gray-400 rounded text-xs">5 Parts</span>
-                <span class="px-3 py-1 bg-yellow-900/30 text-yellow-400 rounded text-xs">In Progress</span>
-              </div>
-              <div class="flex gap-3">
-                <a href="https://github.com/m-mdy-m/Arliz" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">View Source →</a>
-              </div>
+              <h3 class="text-lg text-white font-bold mb-1">ARLIZ</h3>
+              <p class="text-xs text-gray-600 italic mb-2">Arrays, Reasoning, Logic, Identity, Zero</p>
             </div>
+            <span class="text-xs text-yellow-600 bg-gray-950 px-2 py-1 rounded border border-yellow-900 whitespace-nowrap">
+              In Progress
+            </span>
+          </div>
+          
+          <p class="text-gray-500 text-sm leading-relaxed">
+            A comprehensive exploration of data structures starting from their historical origins. Understanding the 'why' behind arrays, stacks, queues, and beyond.
+          </p>
+          
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">Data Structures</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">History</span>
+            <span class="text-gray-700 bg-gray-950 px-2 py-0.5 rounded border border-gray-900">5 Parts</span>
+          </div>
+          
+          <div class="flex gap-3 text-xs">
+            <a href="https://github.com/m-mdy-m/Arliz" 
+               target="_blank" 
+               class="text-gray-500 hover:text-gray-300 transition-colors">
+              [view source]
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="mt-8 p-4 border border-gray-800 rounded">
-        <p class="text-gray-500 text-sm">
-          <span class="text-gray-400">💡 Tip:</span> All books are freely available and continuously updated. 
-          These are "living editions"—they grow and improve as understanding deepens.
+      <div class="mt-6 pt-4 border-t border-gray-900">
+        <p class="text-gray-700 text-xs">
+          <span class="text-gray-600">💡 Note:</span> All books are freely available under MIT license and continuously updated
         </p>
       </div>
     </div>

@@ -5,58 +5,170 @@ import TerminalWindow from '@components/TerminalWindow.astro';
 
 const projects = await getCollection('projects');
 projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const featured = projects.filter(p => p.data.featured);
+const active = projects.filter(p => p.data.status === 'active');
+const archived = projects.filter(p => p.data.status === 'archived');
+
+const statusConfig = {
+  'active': { icon: '●', color: 'text-green-600' },
+  'archived': { icon: '○', color: 'text-gray-700' },
+  'maintenance': { icon: '◐', color: 'text-yellow-600' }
+};
 ---
 
 <BaseLayout title="Projects | Genix">
   <TerminalWindow command="ls projects">
-    <div class="space-y-6">
-      {projects.map((project) => (
-        <div class="space-y-2 pb-6 border-b border-gray-800 last:border-0">
-          <div class="flex items-baseline gap-2">
-            <a href={`/projects/${project.slug}`} 
-               class="text-gray-100 hover:text-white transition-colors text-base">
-              {project.data.title}
-            </a>
+    <div class="space-y-8">
+      {featured.length > 0 && (
+        <div class="space-y-4 pb-8 border-b border-gray-900">
+          <div class="flex items-center gap-2">
+            <span class="text-gray-700">▶</span>
+            <h2 class="text-gray-400 text-sm uppercase tracking-wider">Featured</h2>
           </div>
           
-          <p class="text-sm text-gray-400 leading-relaxed">
-            {project.data.description}
-          </p>
-          
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            {project.data.tags.map((tag: string) => (
-              <span class="text-gray-600">{tag}</span>
-            ))}
-          </div>
-          
-          <div class="flex gap-3 text-xs pt-1">
-            <a href={`/projects/${project.slug}`} 
-               class="text-gray-500 hover:text-gray-300 transition-colors">
-              [details]
-            </a>
-            {project.data.demoUrl && (
-              <a href={project.data.demoUrl} 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class="text-gray-500 hover:text-gray-300 transition-colors">
-                [demo]
-              </a>
-            )}
-            {project.data.sourceUrl && (
-              <a href={project.data.sourceUrl} 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class="text-gray-500 hover:text-gray-300 transition-colors">
-                [source]
-              </a>
-            )}
+          <div class="space-y-5">
+            {featured.map((project) => {
+              const status = statusConfig[project.data.status];
+              return (
+                <article class="group">
+                  <a href={`/projects/${project.slug}`} class="block space-y-2">
+                    <div class="flex items-start justify-between gap-3">
+                      <h3 class="text-gray-200 group-hover:text-white transition-colors text-base flex-1">
+                        {project.data.title}
+                      </h3>
+                      <span class={`text-xs ${status.color}`}>
+                        {status.icon}
+                      </span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 leading-relaxed">
+                      {project.data.description}
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                      {project.data.tags.slice(0, 5).map(tag => (
+                        <span class="text-xs text-gray-700 bg-gray-950 px-2 py-0.5 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div class="flex gap-3 text-xs pt-1">
+                      {project.data.demoUrl && (
+                        <span class="text-gray-600 hover:text-gray-400 transition-colors">
+                          [demo]
+                        </span>
+                      )}
+                      {project.data.sourceUrl && (
+                        <span class="text-gray-600 hover:text-gray-400 transition-colors">
+                          [source]
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                </article>
+              );
+            })}
           </div>
         </div>
-      ))}
+      )}
+
+      {active.length > 0 && (
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="text-gray-700">▶</span>
+            <h2 class="text-gray-500 text-xs uppercase tracking-wider">Active</h2>
+            <span class="text-gray-800 text-xs">({active.length})</span>
+          </div>
+          
+          <div class="space-y-4">
+            {active.map((project) => {
+              const status = statusConfig[project.data.status];
+              return (
+                <article class="group space-y-1.5">
+                  <a href={`/projects/${project.slug}`} class="block">
+                    <div class="flex items-start gap-2">
+                      <span class={`text-xs ${status.color} mt-0.5`}>
+                        {status.icon}
+                      </span>
+                      <h3 class="text-gray-300 group-hover:text-white transition-colors flex-1">
+                        {project.data.title}
+                      </h3>
+                    </div>
+                  </a>
+                  
+                  <p class="text-sm text-gray-500 leading-relaxed pl-4">
+                    {project.data.description}
+                  </p>
+                  
+                  <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs pl-4">
+                    {project.data.tags.slice(0, 4).map(tag => (
+                      <span class="text-gray-700">{tag}</span>
+                    ))}
+                    {project.data.tags.length > 4 && (
+                      <span class="text-gray-800">+{project.data.tags.length - 4}</span>
+                    )}
+                  </div>
+                  
+                  <div class="flex gap-3 text-xs pl-4">
+                    {project.data.demoUrl && (
+                      <a href={project.data.demoUrl}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         class="text-gray-600 hover:text-gray-400 transition-colors"
+                         onclick={(e) => e.stopPropagation()}>
+                        [demo]
+                      </a>
+                    )}
+                    {project.data.sourceUrl && (
+                      <a href={project.data.sourceUrl}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         class="text-gray-600 hover:text-gray-400 transition-colors"
+                         onclick={(e) => e.stopPropagation()}>
+                        [source]
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {archived.length > 0 && (
+        <div class="space-y-3 pt-2 border-t border-gray-900">
+          <div class="flex items-center gap-2">
+            <span class="text-gray-800">▶</span>
+            <h2 class="text-gray-700 text-xs uppercase tracking-wider">Archived</h2>
+            <span class="text-gray-800 text-xs">({archived.length})</span>
+          </div>
+          
+          <div class="space-y-3">
+            {archived.map((project) => (
+              <article class="group">
+                <a href={`/projects/${project.slug}`} class="block space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-800">○</span>
+                    <h3 class="text-gray-600 group-hover:text-gray-500 transition-colors text-sm">
+                      {project.data.title}
+                    </h3>
+                  </div>
+                  <p class="text-xs text-gray-700 pl-4">
+                    {project.data.description}
+                  </p>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
 
       {projects.length === 0 && (
-        <div class="text-center py-8 text-gray-500">
-          <p>No projects found.</p>
+        <div class="text-center py-12">
+          <p class="text-gray-600">No projects found.</p>
         </div>
       )}
     </div>

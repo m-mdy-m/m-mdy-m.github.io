@@ -1,13 +1,19 @@
 ---
-// src/layouts/ArticleLayout.astro
 import '@styles/global.css';
 
 export interface Props {
   title: string;
   description?: string;
+  backLink?: string;
+  backText?: string;
 }
 
-const { title, description = 'A terminal-style personal website' } = Astro.props;
+const { 
+  title, 
+  description = 'A terminal-style personal website',
+  backLink = '/',
+  backText = 'back to terminal'
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -20,21 +26,20 @@ const { title, description = 'A terminal-style personal website' } = Astro.props
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="min-h-screen">
-      <!-- Minimal header -->
-      <header class="border-b border-gray-900">
-        <div class="max-w-4xl mx-auto px-6 py-4">
-          <a href="/" class="text-gray-500 hover:text-gray-300 transition text-sm">
-            ← back to terminal
+      <header class="sticky top-0 z-50 border-b border-gray-900 bg-black/80 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3">
+          <a href={backLink} class="text-gray-600 hover:text-gray-400 transition-colors text-sm inline-flex items-center gap-1.5">
+            <span>←</span>
+            <span>{backText}</span>
           </a>
         </div>
       </header>
       
-      <!-- Article content -->
-      <main class="max-w-4xl mx-auto px-6 py-12">
+      <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <slot />
       </main>
     </div>

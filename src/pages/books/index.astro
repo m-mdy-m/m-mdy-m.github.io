@@ -1,84 +1,137 @@
 ---
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
+import { getCollection } from 'astro:content';
 
-const books = [
-  {
-    title: 'MATHESIS',
-    subtitle: 'The Mathematical Foundations of Computing',
-    description: 'A comprehensive journey through the mathematical concepts underlying computer science—from ancient number systems through modern discrete mathematics, set theory, logic, and beyond.',
-    status: 'Living Edition',
-    parts: 10,
-    sourceUrl: 'https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/MATHESIS',
-    tags: ['Mathematics', 'Foundations', 'Set Theory', 'Logic']
-  },
-  {
-    title: 'The Art of Algorithmic Analysis',
-    subtitle: 'From Foundations to Practice',
-    description: 'A rigorous exploration of algorithm analysis techniques—asymptotic notation, recurrence relations, amortized analysis, and complexity theory. Built for those who seek deep understanding.',
-    status: 'Living Edition',
-    parts: 6,
-    sourceUrl: 'https://github.com/m-mdy-m/algorithms-data-structures/tree/main/books/books/The%20Art%20of%20Algorithmic%20Analysis',
-    tags: ['Algorithms', 'Complexity', 'Analysis', 'Computer Science']
-  },
-  {
-    title: 'ARLIZ',
-    subtitle: 'Arrays, Reasoning, Logic, Identity, Zero',
-    description: 'A comprehensive exploration of data structures starting from their historical origins. Understanding the \'why\' behind arrays, stacks, queues, and beyond.',
-    status: 'In Progress',
-    parts: 5,
-    sourceUrl: 'https://github.com/m-mdy-m/Arliz',
-    tags: ['Data Structures', 'Arrays', 'History', 'Implementation']
-  },
-];
+const books = await getCollection('books');
+books.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const statusConfig = {
+  'completed': { label: 'Living Edition', color: 'text-green-600' },
+  'in-progress': { label: 'In Progress', color: 'text-yellow-600' },
+  'planned': { label: 'Planned', color: 'text-gray-600' }
+};
 ---
 
 <BaseLayout title="Books | Genix">
   <TerminalWindow command="ls books">
-    <div class="space-y-6">
-      {books.map((book) => (
-        <div class="space-y-2 pb-6 border-b border-gray-800 last:border-0">
-          <div class="space-y-0.5">
-            <div class="text-gray-100 text-base">
-              {book.title}
-            </div>
-            {book.subtitle && (
-              <div class="text-xs text-gray-500 italic">
-                {book.subtitle}
+    <div class="space-y-1">
+      {books.map((book, idx) => {
+        const status = statusConfig[book.data.status];
+        return (
+          <div class="group" style={`animation-delay: ${idx * 50}ms`}>
+            <div class="space-y-3 py-6 border-b border-gray-900 last:border-0 animate-fade-in">
+              <div class="space-y-2">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1 space-y-1">
+                    <h2 class="text-white text-lg font-bold leading-tight">
+                      {book.data.title}
+                    </h2>
+                    {book.data.subtitle && (
+                      <p class="text-gray-500 text-sm italic">
+                        {book.data.subtitle}
+                      </p>
+                    )}
+                  </div>
+                  <div class={`text-xs px-2 py-1 rounded border ${status.color} bg-gray-950`}>
+                    {status.label}
+                  </div>
+                </div>
+                
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  {book.data.description}
+                </p>
               </div>
-            )}
+              
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
+                <div class="flex items-center gap-1.5 text-gray-600">
+                  <span class="text-gray-700">📖</span>
+                  <span>
+                    {book.data.parts} parts
+                    {book.data.chapters && ` • ${book.data.chapters} chapters`}
+                  </span>
+                </div>
+                
+                {book.data.version && (
+                  <>
+                    <span class="text-gray-800">•</span>
+                    <span class="text-gray-600">{book.data.version}</span>
+                  </>
+                )}
+                
+                {book.data.tags && book.data.tags.length > 0 && (
+                  <>
+                    <span class="text-gray-800">•</span>
+                    <div class="flex gap-1.5">
+                      {book.data.tags.slice(0, 3).map(tag => (
+                        <span class="text-gray-700">{tag}</span>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              <div class="flex gap-3 text-xs">
+                {book.data.sourceUrl && (
+                  <a href={book.data.sourceUrl}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     class="text-gray-500 hover:text-gray-300 transition-colors">
+                    [view source]
+                  </a>
+                )}
+                {book.data.downloadUrl && (
+                  <a href={book.data.downloadUrl}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     class="text-gray-500 hover:text-gray-300 transition-colors">
+                    [download]
+                  </a>
+                )}
+              </div>
+              
+              {book.data.updatedDate && (
+                <div class="text-xs text-gray-700 pt-1">
+                  Last updated: {book.data.updatedDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              )}
+            </div>
           </div>
-          
-          <p class="text-sm text-gray-400 leading-relaxed">
-            {book.description}
-          </p>
-          
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            {book.tags.map(tag => (
-              <span class="text-gray-600">{tag}</span>
-            ))}
-            <span class="text-gray-700">•</span>
-            <span class="text-gray-600">{book.parts} parts</span>
-            <span class="text-gray-700">•</span>
-            <span class="text-gray-600">{book.status}</span>
-          </div>
-          
-          <div class="text-xs pt-1">
-            <a href={book.sourceUrl} 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="text-gray-500 hover:text-gray-300 transition-colors">
-              [view source]
-            </a>
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
-      <div class="pt-4 border-t border-gray-800">
-        <p class="text-xs text-gray-500">
-          All books are freely available and continuously updated as "living editions"
-        </p>
+      <div class="pt-6 border-t border-gray-900 mt-8">
+        <div class="space-y-2 text-xs">
+          <p class="text-gray-600">
+            <span class="text-gray-500">💡 Note:</span> All books are freely available under MIT license
+          </p>
+          <p class="text-gray-700">
+            "Living editions" means continuous updates as understanding deepens
+          </p>
+        </div>
       </div>
     </div>
   </TerminalWindow>
 </BaseLayout>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+    opacity: 0;
+  }
+</style>
