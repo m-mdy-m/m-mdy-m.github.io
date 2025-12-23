@@ -47,5 +47,5 @@ export const collections = {
   thoughts: thoughtsCollection,
   projects: projectsCollection,
   articles: articlesCollection,
-  books: booksCollection,
+  books: booksCollection,  
 };
