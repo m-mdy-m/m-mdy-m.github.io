@@ -32,7 +32,7 @@
 
   /* Links styling */
   a {
-    @apply text-terminal-accent underline-offset-2 transition-all duration-200 hover:text-gray-400;
+    @apply text-gray-400 underline-offset-2 transition-all duration-200 hover:text-white;
     text-decoration: none;
   }
 
@@ -42,7 +42,7 @@
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
-    @apply text-terminal-text font-bold my-4;
+    @apply text-gray-100 font-bold my-4;
   }
 
   h1 {
@@ -55,7 +55,7 @@
 
   /* Text */
   p, li {
-    @apply my-3;
+    @apply my-3 text-gray-300;
   }
 
   /* Code blocks */

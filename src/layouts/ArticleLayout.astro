@@ -4,6 +4,7 @@ import '@styles/global.css';
 export interface Props {
   title: string;
   description?: string;
+  showBackButton?: boolean;
   backLink?: string;
   backText?: string;
 }
@@ -11,6 +12,7 @@ export interface Props {
 const { 
   title, 
   description = 'A terminal-style personal website',
+  showBackButton = true,
   backLink = '/',
   backText = 'back to terminal'
 } = Astro.props;
@@ -30,24 +32,133 @@ const {
   </head>
   <body>
     <div class="min-h-screen">
-      <header class="sticky top-0 z-50 border-b border-gray-900 bg-black/80 backdrop-blur-sm">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3">
-          <a href={backLink} class="text-gray-600 hover:text-gray-400 transition-colors text-sm inline-flex items-center gap-1.5">
-            <span>←</span>
-            <span>{backText}</span>
-          </a>
-        </div>
-      </header>
+      <!-- Minimal header -->
+      {showBackButton && (
+        <header class="border-b border-gray-900 sticky top-0 bg-black/95 backdrop-blur-sm z-10">
+          <div class="max-w-4xl mx-auto px-6 py-4">
+            <a href={backLink} class="text-gray-400 hover:text-gray-200 transition text-sm inline-flex items-center gap-2">
+              <span>←</span>
+              <span>{backText}</span>
+            </a>
+          </div>
+        </header>
+      )}
       
-      <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <!-- Article content -->
+      <main class="max-w-4xl mx-auto px-6 py-12">
         <slot />
       </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-gray-900 mt-16">
+        <div class="max-w-4xl mx-auto px-6 py-8">
+          <div class="flex justify-between items-center text-xs text-gray-600">
+            <span>© 2025 Genix</span>
+            <div class="flex gap-4">
+              <a href="https://github.com/m-mdy-m" target="_blank" class="hover:text-gray-400 transition">GitHub</a>
+              <a href="mailto:bitsgenix@gmail.com" class="hover:text-gray-400 transition">Email</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </body>
 </html>
 
-<style>
+<style is:global>
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better readability for body text */
   body {
     background: #000000;
+    color: #d1d5db;
+  }
+
+  /* Code block improvements */
+  pre {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+
+  pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  /* Inline code */
+  :not(pre) > code {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e5e7eb;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Improve link visibility */
+  a {
+    color: #9ca3af;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s;
+  }
+
+  a:hover {
+    color: #e5e7eb;
+    border-bottom-color: #9ca3af;
+  }
+
+  /* Blockquote styling */
+  blockquote {
+    border-left: 4px solid #4b5563;
+    padding-left: 1.5rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 2rem 0;
+  }
+
+  /* Table improvements */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+  }
+
+  th,
+  td {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+    color: #e5e7eb;
+  }
+
+  /* Image improvements */
+  img {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Horizontal rule */
+  hr {
+    border-color: #374151;
+    margin: 3rem 0;
   }
 </style>

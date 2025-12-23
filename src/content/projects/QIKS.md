@@ -4,7 +4,8 @@ title: "QIKS: Fast Cache for TypeScript"
 description: "An in-memory TypeScript cache—built out of boredom, packed with features, and surprisingly solid."
 date: 2025-07-19
 tags: ['Cache','TypeScript']
-sourceUrl: "https://github.com/medishen/qiks"
+repository: "https://github.com/medishen/qiks"
+status: "active"
 ---
 
 # QIKS: Fast Cache for TypeScript

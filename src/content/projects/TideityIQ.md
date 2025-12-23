@@ -3,7 +3,8 @@ title: "TideityIQ: Complexity on Command Line"
 description: "A C-based CLI that eyeballs your JS code and spits out Big O, Θ, Ω—quirky name, serious output."
 date: 2025-07-19
 tags: ['CLI','C','Complexity','Analysis','JavaScript']
-sourceUrl: "https://github.com/medishen/TideityIQ"
+repository: "https://github.com/medishen/TideityIQ"
+status: "active"
 ---
 
 # TideityIQ: Complexity on Command Line

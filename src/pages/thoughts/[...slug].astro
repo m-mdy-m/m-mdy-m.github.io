@@ -12,6 +12,15 @@ export async function getStaticPaths() {
 
 const { thought } = Astro.props;
 const { Content } = await thought.render();
+
+const moodConfig = {
+  'technical': { icon: '⚙️', color: 'text-blue-400', label: 'Technical' },
+  'reflective': { icon: '💭', color: 'text-purple-400', label: 'Reflective' },
+  'philosophical': { icon: '🧠', color: 'text-yellow-400', label: 'Philosophical' },
+  'personal': { icon: '✍️', color: 'text-green-400', label: 'Personal' }
+};
+
+const mood = thought.data.mood ? moodConfig[thought.data.mood] : null;
 ---
 
 <ArticleLayout 
@@ -20,32 +29,31 @@ const { Content } = await thought.render();
   backLink="/thoughts"
   backText="back to thoughts">
   
-  <article class="space-y-8">
-    <header class="space-y-4 pb-8 border-b border-gray-900">
-      <div class="space-y-2">
-        <h1 class="text-3xl md:text-4xl text-white font-bold leading-tight tracking-tight">
+  <article class="space-y-10">
+    <header class="space-y-5 pb-8 border-b border-gray-800">
+      <div class="space-y-3">
+        {mood && (
+          <div class={`flex items-center gap-2 text-sm ${mood.color}`}>
+            <span>{mood.icon}</span>
+            <span>{mood.label}</span>
+          </div>
+        )}
+        
+        <h1 class="text-3xl md:text-4xl lg:text-5xl text-white font-bold leading-tight tracking-tight">
           {thought.data.title}
         </h1>
         
-        <time datetime={thought.data.date.toISOString()} class="text-sm text-gray-600">
-          {thought.data.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </time>
+        {thought.data.description && (
+          <p class="text-lg text-gray-200 leading-relaxed">
+            {thought.data.description}
+          </p>
+        )}
       </div>
-
-      {thought.data.description && (
-        <p class="text-base text-gray-500 leading-relaxed">
-          {thought.data.description}
-        </p>
-      )}
 
       {thought.data.tags.length > 0 && (
         <div class="flex flex-wrap gap-2">
           {thought.data.tags.map(tag => (
-            <span class="text-xs text-gray-700 bg-gray-950 px-2 py-1 rounded border border-gray-900">
+            <span class="text-sm text-gray-300 bg-gray-950 px-3 py-1 rounded border border-gray-900">
               {tag}
             </span>
           ))}
@@ -57,9 +65,9 @@ const { Content } = await thought.render();
       <Content />
     </div>
 
-    <footer class="pt-8 border-t border-gray-900 flex justify-between items-center">
-      <a href="/thoughts" class="text-gray-600 hover:text-gray-400 transition-colors text-sm">
-        ← all thoughts
+    <footer class="pt-8 border-t border-gray-900">
+      <a href="/thoughts" class="text-gray-300 hover:text-white transition-colors text-base">
+        ← All thoughts
       </a>
     </footer>
   </article>
@@ -67,7 +75,7 @@ const { Content } = await thought.render();
 
 <style>
   .article-content {
-    color: #d1d5db;
+    color: #e5e5e5;
     line-height: 1.8;
   }
   
@@ -82,19 +90,19 @@ const { Content } = await thought.render();
   }
   
   .article-content :global(h1) { font-size: 2.25rem; line-height: 1.2; }
-  .article-content :global(h2) { font-size: 1.875rem; line-height: 1.3; }
-  .article-content :global(h3) { font-size: 1.5rem; line-height: 1.4; }
-  .article-content :global(h4) { font-size: 1.25rem; line-height: 1.5; }
+  .article-content :global(h2) { font-size: 2rem; line-height: 1.3; }
+  .article-content :global(h3) { font-size: 1.625rem; line-height: 1.4; }
+  .article-content :global(h4) { font-size: 1.375rem; line-height: 1.5; }
   
   .article-content :global(p) {
     margin-top: 1.25rem;
     margin-bottom: 1.25rem;
-    color: #d1d5db;
+    color: #e0e0e0;
     font-size: 1.0625rem;
   }
   
   .article-content :global(a) {
-    color: #9ca3af;
+    color: #b0b0b0;
     text-decoration: underline;
     text-underline-offset: 3px;
     transition: color 0.2s;
@@ -103,16 +111,16 @@ const { Content } = await thought.render();
   .article-content :global(a:hover) { color: #ffffff; }
   
   .article-content :global(code) {
-    color: #e5e7eb;
-    background: rgba(255, 255, 255, 0.05);
+    color: #f0f0f0;
+    background: rgba(255, 255, 255, 0.08);
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.9em;
   }
   
   .article-content :global(pre) {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 0.5rem;
     padding: 1.5rem;
     overflow-x: auto;
@@ -122,32 +130,32 @@ const { Content } = await thought.render();
   .article-content :global(pre code) {
     background: transparent;
     padding: 0;
-    border-radius: 0;
+    color: #e5e5e5;
   }
   
   .article-content :global(blockquote) {
-    border-left: 4px solid #4b5563;
+    border-left: 4px solid #666;
     padding-left: 1.5rem;
-    color: #9ca3af;
+    color: #b8b8b8;
     font-style: italic;
     margin: 2rem 0;
   }
   
   .article-content :global(ul),
   .article-content :global(ol) {
-    color: #d1d5db;
+    color: #e0e0e0;
     padding-left: 1.75rem;
     margin: 1.25rem 0;
   }
   
-  .article-content :global(li) { margin: 0.5rem 0; }
+  .article-content :global(li) { margin: 0.625rem 0; }
   .article-content :global(strong) { color: #ffffff; font-weight: 600; }
-  .article-content :global(em) { color: #e5e7eb; font-style: italic; }
-  .article-content :global(hr) { border-color: #374151; margin: 3rem 0; }
+  .article-content :global(em) { color: #f0f0f0; font-style: italic; }
+  .article-content :global(hr) { border-color: #444; margin: 3rem 0; }
   
   .article-content :global(img) {
     border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     margin: 2rem 0;
   }
 
@@ -159,13 +167,14 @@ const { Content } = await thought.render();
 
   .article-content :global(th),
   .article-content :global(td) {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 0.75rem;
     text-align: left;
+    color: #e0e0e0;
   }
 
   .article-content :global(th) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     font-weight: 600;
     color: #ffffff;
   }

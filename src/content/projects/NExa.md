@@ -4,7 +4,8 @@ title: "NExa: Dev.to Article Fetcher"
 description: "CLI tool to grab the latest dev.to posts—straight to your terminal."
 date: 2025-07-19
 tags: ['CLI','Python','dev.to','Docker']
-sourceUrl: "https://github.com/m-mdy-m/NExa"
+repository: "https://github.com/m-mdy-m/NExa"
+status: "active"
 ---
 
 # NExa: Dev.to Article Fetcher

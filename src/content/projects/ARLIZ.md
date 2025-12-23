@@ -4,8 +4,8 @@ description: "A comprehensive exploration of data structures and algorithms from
 date: 2025-06-10
 tags: ['Book','Data Structures', 'Algorithms', 'Computer Science', 'Education', 'LaTeX']
 image: "https://github.com/m-mdy-m/Arliz/raw/main/logo.svg"
-demoUrl: "https://github.com/m-mdy-m/Arliz/blob/main/book/Arliz.pdf"
-sourceUrl: "https://github.com/m-mdy-m/Arliz"
+repository: "https://github.com/m-mdy-m/Arliz"
+status: "active"
 ---
 
 # ARLIZ: Arrays, Reasoning, Logic, Identity, Zero

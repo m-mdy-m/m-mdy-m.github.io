@@ -3,7 +3,8 @@ title: "PSX"
 description: "A command-line tool that validates and automatically fixes project structures across different programming languages."
 date: 2025-01-19
 tags: ['CLI', 'Go', 'Project Management', 'Automation', 'Standards', 'Tooling']
-sourceUrl: "https://github.com/m-mdy-m/psx"
+repository: "https://github.com/m-mdy-m/psx"
+status: "active"
 ---
 
 # PSX: Project Structure Checker

@@ -1,10 +1,9 @@
 ---
-
 title: "AGAS"
 description: "A minimal, CLI-friendly HTTP client powered by Bun—fast, event-driven, and type-safe."
-date: 2025-07-19
 tags: ['CLI','HTTP','Bun','TypeScript','Tooling']
-sourceUrl: "https://github.com/m-mdy-m/agas"
+repository: "https://github.com/m-mdy-m/agas"
+status: "maintenance"
 ---
 
 # AGAS: The Bun-Powered HTTP Sidekick

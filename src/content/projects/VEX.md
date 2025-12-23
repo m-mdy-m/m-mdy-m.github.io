@@ -1,10 +1,11 @@
 ---
-title: "VEX: Vim Ecosystem Extension"
+title: "VEX"
 description: "A minimal, dark-themed Vim configuration with handpicked plugins, custom keybindings, and LSP support—built for speed and productivity."
 date: 2025-07-19
 tags: ['Vim', 'Editor', 'Configuration', 'LSP', 'Productivity', 'CLI']
 image: "https://raw.githubusercontent.com/m-mdy-m/.vimrc/main/screenshots/home.png"
-sourceUrl: "https://github.com/m-mdy-m/.vimrc"
+repository: "https://github.com/m-mdy-m/.vimrc"
+status: "active"
 ---
 
 # VEX: Vim Ecosystem Extension
