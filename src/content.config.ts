@@ -4,10 +4,8 @@ const thoughtsCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.date(),
     tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-    featured: z.boolean().default(false),
+    mood: z.enum(['reflective', 'technical', 'personal', 'philosophical']).optional(),
   }),
 });
 
@@ -15,13 +13,10 @@ const projectsCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.date(),
     tags: z.array(z.string()).default([]),
-    image: z.string().optional(),
-    demoUrl: z.string().url().optional(),
-    sourceUrl: z.string().url().optional(),
+    image: z.string().url().optional(),
+    repository: z.string().url(),
     status: z.enum(['active', 'archived', 'maintenance']).default('active'),
-    featured: z.boolean().default(false),
   }),
 });
 
@@ -29,14 +24,9 @@ const articlesCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.date(),
-    updatedDate: z.date().optional(),
     category: z.string(),
     tags: z.array(z.string()).default([]),
     links: z.record(z.string().url()).optional(),
-    readTime: z.number().optional(),
-    featured: z.boolean().default(false),
-    draft: z.boolean().default(false),
   }),
 });
 
@@ -46,14 +36,9 @@ const booksCollection = defineCollection({
     subtitle: z.string().optional(),
     description: z.string(),
     status: z.enum(['in-progress', 'completed', 'planned']),
-    version: z.string().optional(),
-    date: z.date(),
-    updatedDate: z.date().optional(),
-    downloadUrl: z.string().url().optional(),
-    sourceUrl: z.string().url().optional(),
-    coverImage: z.string().optional(),
-    parts: z.number().optional(),
-    chapters: z.number().optional(),
+    repository: z.string().url(),
+    pdf: z.string().url().optional(),
+    cover: z.string().url().optional(),
     tags: z.array(z.string()).default([]),
   }),
 });
