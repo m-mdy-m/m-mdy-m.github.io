@@ -1,7 +1,7 @@
 ---
-title: "VEX"
-description: "A modern, minimal Vim configuration with LSP support, custom keybindings, and a dark theme built for productivity."
-date: 2025-01-19
+title: "VEX: Vim Ecosystem Extension"
+description: "A minimal, dark-themed Vim configuration with handpicked plugins, custom keybindings, and LSP support—built for speed and productivity."
+date: 2025-07-19
 tags: ['Vim', 'Editor', 'Configuration', 'LSP', 'Productivity', 'CLI']
 image: "https://raw.githubusercontent.com/m-mdy-m/.vimrc/main/screenshots/home.png"
 sourceUrl: "https://github.com/m-mdy-m/.vimrc"
@@ -9,126 +9,625 @@ sourceUrl: "https://github.com/m-mdy-m/.vimrc"
 
 # VEX: Vim Ecosystem Extension
 
-A carefully crafted Vim configuration that bridges the gap between minimal setups and bloated frameworks. VEX provides modern editor features through LSP integration, intelligent file navigation, and git workflow tools while maintaining Vim's speed and simplicity.
+A clean, minimal Vim setup designed for developers who want power without complexity. VEX combines modern LSP support, intelligent plugins, and intuitive keybindings into a dark-themed workflow that just works.
 
-## Core Philosophy
+## The Philosophy
 
-Most Vim configurations either leave you building everything yourself or hide so much complexity you can't understand what's happening. VEX takes a different approach. Every plugin serves a clear purpose. Every keybinding follows intuitive patterns. The entire configuration stays readable and hackable.
+Most Vim configurations are either too minimal (bare bones) or too bloated (kitchen sink). VEX strikes a balance—handpicked plugins that solve real problems, keybindings that feel natural, and a setup script that gets you coding in seconds.
 
-The focus is productivity without complexity. You get language server support for real code intelligence. Fuzzy file finding that works like modern editors. Git integration that shows changes as you type. Terminal access without leaving the editor. All organized in a way that makes sense.
+Built for:
+- Fast navigation and editing
+- LSP-powered autocomplete and diagnostics  
+- Git integration without leaving Vim
+- Terminal access within your editor
+- Visual consistency with a modern dark theme
 
-## What Makes It Different
+## Quick Start
 
-The configuration works immediately after installation. One script handles everything: checks your system, installs Vim if needed, backs up existing configs, sets up plugins, and optionally installs language servers. Five minutes from nothing to a working development environment.
+```bash
+git clone https://github.com/m-mdy-m/.vimrc.git
+cd .vimrc
+./script/setup
+```
 
-Keybindings blend Vim power with familiar shortcuts. Control+S saves, Control+F searches, Control+Z undoes. This reduces the learning curve while you internalize Vim's more powerful features. The bindings are documented completely so you always know what's available.
+The setup script handles everything:
+1. Checks/installs Vim
+2. Links your `.vimrc` configuration
+3. Installs [vim-plug](https://github.com/junegunn/vim-plug)
+4. Auto-installs all plugins
+5. Optionally sets up LSP servers
 
-Modular structure means understanding comes naturally. Appearance settings live separately from keybindings. Plugin configurations are isolated. You can modify any piece without touching others. This organization makes customization straightforward.
+## Project Structure
 
-## LSP Integration
+```
+.vimrc/
+├── src/
+│   ├── .vimrc              # Main configuration entry point
+│   ├── appearance.vim      # Color scheme & UI
+│   ├── keys.vim            # All keybindings
+│   ├── editorconfig.vim    # EditorConfig integration
+│   ├── plugins/
+│   │   ├── install.vim     # Plugin declarations
+│   │   └── settings.vim    # Plugin configurations
+│   └── lsp/
+│       └── settings.vim    # LSP & completion setup
+├── script/
+│   ├── setup               # Main installation script
+│   └── install-lsp         # Language server installer
+└── .editorconfig.default   # Default EditorConfig template
+```
 
-Language server support provides features you expect from modern editors. Real-time diagnostics show errors as you type. Intelligent completion understands your code semantically. Jump to definitions, find references, rename symbols across files. All powered by actual language servers, not basic word matching.
+---
 
-The setup includes configurations for major languages. TypeScript and JavaScript through typescript-language-server. Python via pyright. Go with gopls. Rust using rust-analyzer. C and C++ through clangd. The installation script detects what's available and sets everything up automatically.
+## Complete Keybindings Reference
 
-Completion integrates smoothly without being intrusive. Suggestions appear as you type but don't auto-select and break your flow. The popup shows relevant options with proper context. It understands your language server's semantic analysis rather than just pattern matching.
+### Basic Editing
 
-## File Navigation
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+Z` | Undo | Works in normal & insert mode |
+| `Ctrl+Y` | Redo | Standard redo operation |
+| `Ctrl+X` | Cut line | Cuts to system clipboard |
+| `Ctrl+C` | Copy line | Copies to system clipboard |
+| `Ctrl+V` | Paste | Pastes from system clipboard |
+| `Ctrl+Shift+V` | Paste before cursor | Alternative paste position |
+| `Ctrl+A` | Select all | Selects entire buffer |
+| `Ctrl+S` | Save file | Quick save in all modes |
 
-FZF provides fuzzy finding that feels instant. Type part of a filename and jump there. Search file contents and see matching lines with context. Navigate huge codebases without ever needing a mouse. The integration includes file search, content search, buffer selection, and more.
+### Text Selection
 
-NERDTree adds a visual file browser when needed. Toggle it on to see project structure. Open files, create directories, move things around. Toggle it off and it disappears. No permanent sidebar stealing screen space you could use for code.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Shift+Left/Right/Up/Down` | Character selection | Visual selection by char |
+| `Ctrl+Shift+Left/Right` | Word selection | Select by word boundaries |
+| `Shift+Home` | Select to line start | From cursor to beginning |
+| `Shift+End` | Select to line end | From cursor to end |
 
-The navigation supports both approaches. Use FZF for speed when you know what you want. Use NERDTree when you need to browse or don't remember exact filenames. Pick the right tool for each situation.
+### Navigation
 
-## Git Workflow
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Home` | Jump to line start | Beginning of line (column 0) |
+| `End` | Jump to line end | End of line |
+| `Ctrl+Left` | Previous word | Word-based navigation |
+| `Ctrl+Right` | Next word | Jump forward by word |
+| `Ctrl+Delete` | Delete word forward | Removes next word |
+| `Ctrl+Backspace` | Delete word backward | Removes previous word |
 
-GitGutter shows diff markers in real time. Add lines and see green markers appear. Delete code and red markers show up. Modify something and yellow indicates changes. The gutter updates continuously without saving, giving immediate visual feedback.
+### Line Operations
 
-Fugitive provides full Git integration. Check status, stage changes, commit, push, pull. View diffs in split windows. Resolve merge conflicts with three-way diffs. Everything accessible through commands without leaving Vim.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+L` | Select entire line | Quick line selection |
+| `Alt+Shift+Down` | Duplicate line down | Like VSCode |
+| `Alt+Up` | Move line up | Swap with line above |
+| `Alt+Down` | Move line down | Swap with line below |
 
-Git Messenger displays commit information on demand. Hover over any line to see who wrote it, when, and why. The popup shows the complete commit message and optionally the diff. Navigate your project's history without external tools.
+### Indentation
 
-GV creates a visual commit browser. View all commits, filter by author or file, jump to specific changes. See your project history in a browsable interface. Navigate like a GUI tool but stay in the terminal.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Tab` | Indent right | In normal/visual mode |
+| `Shift+Tab` | Indent left | Un-indent selection |
 
-## Terminal Access
+### Search & Replace
 
-FloaTerm creates floating terminal windows over your code. They appear when needed, run commands, then disappear. Multiple terminals can exist simultaneously. Switch between them with keybindings. The integration knows your project context automatically.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+F` | Start search | Opens search prompt |
+| `F3` | Find next | Jump to next match |
+| `Shift+F3` | Find previous | Jump to previous match |
+| `Ctrl+H` | Find & replace | Interactive replacement |
 
-Terminal navigation uses the same keys as editor navigation. Move between terminal and code splits naturally. No mode confusion or special cases. Everything feels like part of the same environment.
+### Window Management
 
-Commands can target specific terminals. Run tests in one, build in another, deploy in a third. Each terminal maintains its own state. Switch contexts without closing and reopening.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+\` | Vertical split | Split window vertically |
+| `Ctrl+Shift+\` | Horizontal split | Split window horizontally |
+| `Ctrl+Shift+W` | Close window | Close current split |
+| `Ctrl+Shift+H/J/K/L` | Navigate splits | Vim-style window nav |
+| `Ctrl+Shift+Left/Right` | Resize horizontal | Adjust split width |
+| `Ctrl+Shift+Up/Down` | Resize vertical | Adjust split height |
 
-## Plugin Selection
+### Tab Management
 
-Every included plugin justifies its existence through daily use. If something can be done with Vim's built-in features, that's preferred. Plugins solve specific problems that Vim doesn't handle elegantly on its own.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+T` | New tab | Opens empty tab |
+| `Ctrl+W` | Close tab | Closes current tab |
+| `Ctrl+Tab` | Next tab | Cycle tabs forward |
+| `Ctrl+Shift+Tab` | Previous tab | Cycle tabs backward |
+| `Alt+1` through `Alt+9` | Jump to tab N | Direct tab access |
 
-The list stays curated through regular review. Plugins that stop being useful get removed. New plugins are tested before inclusion. The goal is a working set of tools, not a showcase of everything available.
+### File Explorer (NERDTree)
 
-Updates happen deliberately rather than automatically. Plugins are pinned to tested versions. When updates appear, they're evaluated first. Breaking changes don't surprise you mid-project.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `F2` | Toggle NERDTree | Show/hide file tree |
+| `F3` | Focus NERDTree | Jump to file explorer |
+| `Ctrl+E` | Toggle NERDTree | Alternative toggle |
+| `Leader+N` | Find current file | Locate in tree |
+| `Leader+F` | Find file in tree | Navigate to file |
 
-## Installation Process
+### LSP (Language Server Protocol)
 
-The setup script works across platforms. Linux, macOS, and Windows through WSL all follow the same process. The script detects your distribution and uses the appropriate package manager automatically.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `F12` | Go to definition | Jump to symbol definition |
+| `Shift+F12` | Find references | Show all references |
+| `F2` | Rename symbol | Intelligent rename |
+| `Ctrl+K Ctrl+I` | Show documentation | Hover info popup |
+| `Leader+CA` | Code actions | Quick fixes & refactors |
+| `Leader+QF` | Quick fix | Apply first suggestion |
+| `Shift+Alt+F` | Format document | Auto-format code |
+| `Leader+D` | Document diagnostics | Show all errors/warnings |
+| `Leader+E` | Next diagnostic | Jump to next issue |
+| `Leader+Shift+E` | Previous diagnostic | Jump to previous issue |
+| `K` | Hover documentation | LSP hover info |
+| `GD` | Go to definition | Alternative binding |
+| `GR` | Go to references | Find all references |
+| `GI` | Go to implementation | Jump to implementation |
+| `GT` | Go to type definition | Jump to type |
 
-Existing configurations are backed up before installation. Your previous setup goes to a timestamped directory. If something doesn't work or you want to switch back, restoration is straightforward.
+### Git Integration
 
-Permission handling is intelligent. With sudo access, installation happens system-wide. Without it, files go to your home directory with PATH updates. The script adapts to your environment.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Leader+GS` | Git status | Show status in terminal |
+| `Leader+GL` | Git log | Visual commit history |
+| `Leader+GD` | Git diff | Show changes |
+| `Leader+GB` | Git blame | Line-by-line blame |
+| `Leader+GM` | Git messenger | Commit info popup |
+| `Leader+GA` | Git add all | Stage all changes |
+| `Leader+GC` | Git commit | Interactive commit |
+| `Leader+GP` | Git push | Push to remote |
+| `Leader+Shift+GP` | Git pull | Pull from remote |
+| `Leader+GAF` | Git add current file | Stage current file |
+| `]H` | Next hunk | Jump to next change |
+| `[H` | Previous hunk | Jump to previous change |
+| `Leader+HP` | Preview hunk | Show diff inline |
+| `Leader+HS` | Stage hunk | Stage current change |
+| `Leader+HU` | Undo hunk | Revert change |
+| `Leader+GCO` | Git checkout | Switch branch |
+| `Leader+GNB` | New branch | Create & switch branch |
+| `Leader+GST` | Git stash | Stash changes |
+| `Leader+GSP` | Git stash pop | Apply stashed changes |
+| `Leader+GSL` | Git stash list | View stash stack |
+| `Leader+GV` | Git viewer | Visual commit browser |
 
-## Performance Focus
+**Semantic Commit Types:**
 
-Startup time measures in milliseconds. Editing large files doesn't introduce lag. Scrolling through thousands of lines stays smooth. The experience feels immediate because careful plugin selection avoids heavy dependencies.
+| Keybinding | Commit Type | Usage |
+|------------|-------------|-------|
+| `Leader+GCF` | `feat:` | New features |
+| `Leader+GCX` | `fix:` | Bug fixes |
+| `Leader+GCD` | `docs:` | Documentation |
+| `Leader+GCR` | `refactor:` | Code refactoring |
 
-Async operations prevent UI blocking. Language servers run in separate processes. File operations happen in background. Nothing freezes the editor while waiting for external work.
+### Terminal (FloaTerm)
 
-Memory usage stays reasonable through efficient undo handling. Changes write to disk rather than accumulating in RAM. Even long editing sessions with complex history don't cause performance degradation.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+Shift+T` | Toggle terminal | Show/hide floating terminal |
+| `Leader+TT` | New terminal | Create new terminal |
+| `Leader+TH` | Toggle terminal | Alternative toggle |
+| `Leader+TK` | Kill terminal | Close current terminal |
+| `Leader+TN` | Next terminal | Switch to next |
+| `Leader+TP` | Previous terminal | Switch to previous |
+| `Leader+TR` | Run command | Execute in terminal |
+| `Leader+TG` | Git terminal | Terminal with git context |
+| `Esc` | Exit terminal mode | Return to normal mode |
+| `Alt+H/J/K/L` | Navigate from terminal | Switch splits from terminal |
 
-## Platform Support
+### FZF (Fuzzy Finder)
 
-The same configuration works everywhere. Linux systems from Debian to Arch to Void. macOS through Homebrew. Windows developers using WSL. Vim itself provides portability and the config maintains it.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+P` | Find files | Fuzzy file search |
+| `Ctrl+F` | Find in files | Content search (Ripgrep) |
 
-Server environments work without modification. SSH into any system and your editing environment is right there. Docker containers get the same setup. Consistency across every machine you touch.
+### Comments
 
-Vim compatibility beats Neovim-specific features. While the config works with Neovim, it's optimized for vanilla Vim. This ensures it functions on any system with Vim 8 or newer installed.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Ctrl+/` | Toggle comment | Comment/uncomment lines |
 
-## Documentation
+### Productivity Tools
 
-Every keybinding is documented with purpose and context. The documentation shows not just what keys do, but why they're mapped that way. This helps you remember and eventually internalize the bindings.
+| Keybinding | Action | Notes |
+|------------|--------|-------|
+| `Leader+U` | Undo tree | Visual undo history |
+| `F12` | Reload .vimrc | Apply config changes |
 
-Plugin purposes are explained clearly. You understand what each one provides and why it's included. No mystery about what's installed or why.
+### Special Keys Reference
 
-Settings have comments explaining their effects. Change behavior with confidence because you know what each option does. The configuration teaches Vim as you read it.
+- `Leader` key is set to `\` (backslash)
+- Timeout: 3000ms for leader combinations
+- All clipboard operations use system clipboard (`+` register)
 
-## Customization Path
+---
 
-The modular structure makes changes straightforward. Want a different theme? Edit appearance.vim. Need to adjust keybindings? They're centralized in keys.vim. Adding plugins means modifying one line in install.vim.
+## Plugin Stack
 
-The configuration doesn't hide complexity. Files are readable Vimscript. No abstraction layers or domain-specific languages. If you know Vim configuration, you understand this setup.
+### LSP & Completion
+- **vim-lsp** - Native LSP client
+- **vim-lsp-settings** - Auto language server installer
+- **asyncomplete** - Async completion framework
+- **asyncomplete-lsp** - LSP integration for completion
 
-Defaults work well for most use cases. You can use VEX as-is productively. When you want changes, the structure makes them easy to implement.
+### File & Project Management
+- **NERDTree** - Visual file explorer with icons
+- **NERDCommenter** - Quick comment toggling
+- **FZF** + **fzf.vim** - Fuzzy file/content search
 
-## What's Not Included
+### Editor Enhancement
+- **vim-surround** - Manipulate surrounding characters
+- **vim-repeat** - Enhanced `.` repeat
+- **auto-pairs** - Auto-close brackets/quotes
+- **vim-multiple-cursors** - Multi-cursor editing
+- **vim-easymotion** - Jump anywhere fast
+- **syntastic** - Syntax error checking
+- **editorconfig-vim** - EditorConfig support
+- **indentLine** - Visual indent guides
 
-VEX avoids feature creep. There's no snippet engine because native expansion works fine. No separate settings manager because EditorConfig handles per-project configuration. No fancy start screen because jumping into files is faster.
+### UI & Status
+- **vim-airline** - Enhanced status/tabline
+- **vim-airline-themes** - Airline color schemes
+- **vim-startify** - Custom start screen
+- **vim-css-color** - Color preview in files
 
-It doesn't try becoming an IDE. Vim excels at text editing. Features that blur this focus add complexity without proportional benefit. The goal is great editing, not replicating Visual Studio.
+### Language Support
+- **vim-polyglot** - 100+ language packs
 
-No configuration wizard asks endless questions. The defaults work. If customization is needed, you edit files directly. This is Vim's way and VEX respects it.
+### Formatting
+- **tabular** - Text alignment tool
+- **neoformat** - Universal code formatter
 
-## Current State
+### Sessions & State
+- **vim-session** + **vim-misc** - Project sessions
+- **vim-obsession** - Auto session tracking
+- **undotree** - Visual undo tree browser
 
-The configuration is stable and actively maintained. Daily use drives development. Issues get fixed quickly because they affect real workflow. Features are added based on actual needs rather than hypothetical use cases.
+### Git Integration
+- **vim-fugitive** - Git commands in Vim
+- **vim-gitgutter** - Git diff in sign column
+- **gv.vim** - Commit browser
+- **git-messenger.vim** - Blame popup
+- **vim-mergetool** - Conflict resolution
 
-Evolution continues based on usage patterns. Language servers get added for new languages. Keybindings adjust based on what proves most useful. The config grows organically through experience.
+### Terminal
+- **vim-floaterm** - Floating terminal windows
 
-Documentation stays current because it's referenced constantly. Screenshots reflect actual appearance. The README matches reality. There's no drift between docs and implementation.
+---
 
-## Getting Started Today
+## Theme & Appearance
 
-Clone the repository to any location. Run the setup script and wait a few minutes. The script handles everything automatically. When it finishes, type 'vex' and start editing.
+VEX uses a custom dark theme optimized for long coding sessions:
 
-All features work immediately. Language servers provide completion and diagnostics. File navigation responds instantly. Git integration shows current changes. You're productive from the first session.
+**Color Palette:**
+- Background: `#0a0a0a` (true black)
+- Foreground: `#d4d4d8` (light gray)
+- Accent: `#c084fc` (purple)
+- Comments: `#6b8e6b` (muted green)
+- Strings: `#8b9d8b` (soft green)
+- Keywords: `#b8b4d8` (light purple)
+- Functions: `#e0e7f5` (white-blue)
 
-The learning curve is gradual. Familiar keybindings work day one. As you learn more Vim features, the configuration supports them. Productivity increases steadily without needing to relearn everything.
+**Features:**
+- Syntax highlighting for 100+ languages
+- Git diff colors in gutter
+- LSP diagnostic signs (✗ ⚠ ℹ)
+- Semantic token highlighting
+- Custom FZF color integration
+- Transparent backgrounds for floating windows
 
-This is the Vim configuration I needed. It might be what you need too.
+---
+
+## LSP Configuration
+
+VEX includes pre-configured LSP support for major languages:
+
+**Supported Languages:**
+- JavaScript/TypeScript (typescript-language-server)
+- Python (pyright / python-lsp-server)
+- Go (gopls)
+- Rust (rust-analyzer)
+- C/C++ (clangd)
+- HTML/CSS/JSON (vscode-langservers-extracted)
+- YAML (yaml-language-server)
+- Bash (bash-language-server)
+- Docker (dockerfile-language-server)
+- Ruby (solargraph)
+- PHP (php-language-server)
+- Lua (lua-language-server)
+
+**LSP Features:**
+- Real-time diagnostics with error/warning signs
+- Intelligent code completion (no autoselect)
+- Signature help in insert mode
+- Go to definition/references/implementation
+- Symbol renaming across files
+- Code actions & quick fixes
+- Document/workspace symbols
+- Hover documentation
+- Document formatting
+
+**Install LSP Servers:**
+```bash
+./script/install-lsp
+```
+
+The script detects your system and installs all available language servers automatically.
+
+---
+
+## EditorConfig Integration
+
+VEX respects `.editorconfig` files with priority:
+1. Project `.editorconfig`
+2. VEX defaults
+3. Vim defaults
+
+**Create default config:**
+```vim
+:EditorConfigCreate
+```
+
+**Check current settings:**
+```vim
+:EditorConfigStatus
+```
+
+**Keybindings:**
+- `Leader+EC` - Show EditorConfig status
+- `Leader+EN` - Create new .editorconfig
+- `Leader+EE` - Edit .editorconfig
+
+---
+
+## Git Features
+
+### GitGutter
+Real-time diff markers in the sign column:
+- `+` Added lines (green)
+- `~` Modified lines (yellow)
+- `-` Removed lines (red)
+
+### Git Messenger
+Hover over any line and press `Leader+GM` to see:
+- Commit hash
+- Author & date
+- Full commit message
+- Optional diff view
+
+### GV (Git Viewer)
+Visual commit browser:
+- `Leader+GV` - All commits
+- `Leader+Shift+GV` - Current file history
+- `Leader+GVF` - Search commits
+
+---
+
+## Terminal Integration
+
+FloaTerm provides a floating terminal overlay:
+
+**Layouts:**
+- Center: `0.8` width × `0.7` height
+- Custom positioning via commands
+
+**Features:**
+- Multiple terminal instances
+- Navigate between terminals
+- Auto-close on success
+- Git-aware commands
+- Custom borders & styling
+
+---
+
+## Custom Commands
+
+| Command | Description |
+|---------|-------------|
+| `:EditorConfigCreate` | Create default .editorconfig |
+| `:EditorConfigStatus` | Show current EditorConfig settings |
+| `:LspStatus` | Display LSP server status |
+| `:LspRestart` | Restart all LSP servers |
+| `:LspInstallServer` | Install language servers |
+| `:GitStatus` | Open git status in terminal |
+| `:GitLog` | View commit history |
+| `:GitDiff` | Show changes |
+| `:GitAdd` | Stage changes interactively |
+| `:GitCommit` | Interactive commit |
+
+---
+
+## Performance Features
+
+- Lazy plugin loading where possible
+- Async completion (no UI blocking)
+- Timed updates: 300ms
+- Efficient undo file storage
+- No swap/backup files (configurable)
+- Fast redraw with `lazyredraw`
+
+---
+
+## System Requirements
+
+**Minimum:**
+- Vim 8.0+ or Neovim 0.5+
+- Git
+- curl or wget
+
+**Recommended:**
+- Vim 9.0+ or Neovim 0.9+
+- Node.js (for many LSP servers)
+- Python 3.8+ (for Python LSP)
+- Ripgrep (for FZF content search)
+
+**Supported Systems:**
+- Linux (Debian, Arch, Fedora, RHEL, openSUSE, Alpine, Void)
+- macOS (with Homebrew)
+- Windows (via WSL)
+
+---
+
+## Screenshots
+
+**Home Screen:**
+![VEX Home](https://raw.githubusercontent.com/m-mdy-m/.vimrc/main/screenshots/home.png)
+
+**Code Editing:**
+![VEX Code](https://raw.githubusercontent.com/m-mdy-m/.vimrc/main/screenshots/code.png)
+
+---
+
+## Installation Details
+
+The setup script performs:
+
+1. **System Check** - Detects OS and package manager
+2. **Vim Installation** - Installs if missing
+3. **Backup** - Preserves existing config to `~/.vim/backups/`
+4. **Directory Structure** - Creates required folders
+5. **vim-plug** - Installs plugin manager
+6. **Config Linking** - Symlinks `.vimrc` to VEX source
+7. **EditorConfig** - Copies default template
+8. **Plugin Installation** - Auto-installs all plugins
+9. **LSP Setup** (optional) - Installs language servers
+
+**Backup Location:**
+```
+~/.vim/backups/
+├── .vimrc.backup.20250119_143022
+└── .vim.backup.20250119_143022/
+```
+
+---
+
+## Configuration Files
+
+**Main Config:**
+- `src/.vimrc` - Entry point with basic settings
+
+**Modular Components:**
+- `src/appearance.vim` - Theme & colors
+- `src/keys.vim` - All keybindings
+- `src/editorconfig.vim` - EditorConfig logic
+- `src/plugins/install.vim` - Plugin list
+- `src/plugins/settings.vim` - Plugin configs
+- `src/lsp/settings.vim` - LSP setup
+
+---
+
+## Customization
+
+### Change Leader Key
+Edit `src/.vimrc`:
+```vim
+let mapleader = ','  " Use comma instead of backslash
+```
+
+### Add Plugins
+Edit `src/plugins/install.vim`:
+```vim
+Plug 'author/plugin-name'
+```
+Then run `:PlugInstall`
+
+### Modify Theme
+Edit `src/appearance.vim` - All highlight groups are defined here.
+
+### Custom Keybindings
+Add to `src/keys.vim`:
+```vim
+nnoremap <Leader>custom :YourCommand<CR>
+```
+
+---
+
+## Troubleshooting
+
+**Plugins not installing:**
+```vim
+:PlugInstall
+:PlugUpdate
+```
+
+**LSP not working:**
+```vim
+:LspStatus
+:LspLog
+:LspInstallServer
+```
+
+**Permission issues:**
+```bash
+chmod +x ./script/setup
+chmod +x ./script/install-lsp
+```
+
+**Config not loading:**
+```vim
+:so $MYVIMRC
+" or press F12
+```
+
+---
+
+## Philosophy
+
+VEX follows these principles:
+
+1. **Minimal but Complete** - Only what you actually use
+2. **Intuitive Keybindings** - Muscle memory from other editors
+3. **LSP First** - Modern language support out of the box
+4. **Git Integrated** - Version control without context switching
+5. **Terminal Native** - Work within Vim, not alongside it
+6. **Dark by Default** - Easy on the eyes, focus on code
+7. **Fast Setup** - One command to working environment
+8. **Modular Config** - Easy to understand and customize
+
+---
+
+## Links
+
+- **Repository:** [github.com/m-mdy-m/.vimrc](https://github.com/m-mdy-m/.vimrc)
+- **Screenshots:** [View Gallery](https://github.com/m-mdy-m/.vimrc/tree/main/screenshots)
+- **Issues:** [Report Bug](https://github.com/m-mdy-m/.vimrc/issues)
+- **License:** MIT
+
+---
+
+## Contributing
+
+Found a bug? Have a suggestion? Want to add a feature?
+
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+All contributions welcome—especially:
+- New language LSP configs
+- Keybinding improvements
+- Theme variations
+- Documentation fixes
+
+---
+
+## Credits
+
+VEX builds on the work of countless Vim plugin authors. Special thanks to:
+- **vim-plug** - junegunn
+- **vim-lsp** - prabirshrestha
+- **vim-airline** - vim-airline contributors
+- **NERDTree** - preservim
+- **fzf.vim** - junegunn
+- All other plugin maintainers
+
+---
+
+*VEX: Vim Ecosystem Extension - Because your editor should work for you, not against you.*
