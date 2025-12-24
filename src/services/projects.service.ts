@@ -1,5 +1,3 @@
-// src/services/projects.service.ts
-
 import { projectsConfig, type ManualProject } from '../config/projects.config';
 import {
   getUserRepos,
@@ -9,7 +7,8 @@ import {
   getReleases,
   getLanguageColor,
   parseRepoUrl,
-  GitHubRepo
+  fixReadmeUrls,
+  type GitHubRepo
 } from '../utils/github';
 
 export interface Project {
@@ -33,6 +32,7 @@ export interface Project {
   homepage: string | null;
   created: string;
   updated: string;
+  pushed: string;
   priority: number;
   source: 'github-user' | 'github-org' | 'manual';
 }
@@ -45,10 +45,7 @@ interface CacheEntry {
 let projectsCache: CacheEntry | null = null;
 
 export async function getAllProjects(
-  options: {
-    forceRefresh?: boolean;
-    token?: string;
-  } = {}
+  options: { forceRefresh?: boolean; token?: string } = {}
 ): Promise<Project[]> {
   const { forceRefresh = false, token } = options;
 
@@ -61,6 +58,7 @@ export async function getAllProjects(
 
   const allProjects: Project[] = [];
 
+  // Fetch from configured sources
   for (const source of projectsConfig.sources) {
     let repos: GitHubRepo[] = [];
 
@@ -91,6 +89,7 @@ export async function getAllProjects(
     }
   }
 
+  // Process manual projects
   for (const manualProject of projectsConfig.manualProjects) {
     const project = await processManualProject(manualProject, token);
     if (project) {
@@ -98,6 +97,7 @@ export async function getAllProjects(
     }
   }
 
+  // Sort projects
   const sortedProjects = sortProjects(allProjects);
 
   projectsCache = {
@@ -119,7 +119,9 @@ async function convertRepoToProject(
 ): Promise<Project | null> {
   try {
     const { readmeSource, customReadmePath, token } = options;
+    const [owner, repoName] = repo.full_name.split('/');
 
+    // Determine README path
     let readmePath = 'README.md';
     if (readmeSource === 'docs') {
       readmePath = 'docs/README.md';
@@ -127,9 +129,13 @@ async function convertRepoToProject(
       readmePath = customReadmePath;
     }
 
-    const [owner, repoName] = repo.full_name.split('/');
-    const readme = await getReadme(owner, repoName, readmePath, token);
+    // Fetch README and fix relative URLs
+    let readme = await getReadme(owner, repoName, readmePath, token);
+    if (readme) {
+      readme = fixReadmeUrls(readme, owner, repoName, repo.default_branch);
+    }
 
+    // Fetch releases
     const releasesData = await getReleases(owner, repoName, token);
     const releases = releasesData.map(r => ({
       tag: r.tag_name,
@@ -138,10 +144,12 @@ async function convertRepoToProject(
       url: r.html_url
     }));
 
+    // Get language color
     const languageColor = repo.language 
       ? await getLanguageColor(repo.language)
       : '#858585';
 
+    // Determine project status
     let status: 'active' | 'archived' | 'maintenance' = 'active';
     if (repo.archived) {
       status = 'archived';
@@ -169,10 +177,10 @@ async function convertRepoToProject(
       homepage: repo.homepage,
       created: repo.created_at,
       updated: repo.updated_at,
+      pushed: repo.pushed_at,
       priority: 0,
       source
     };
-
   } catch (error) {
     console.error(`Error converting repo ${repo.full_name}:`, error);
     return null;
@@ -191,12 +199,10 @@ async function processManualProject(
     }
 
     const { owner, repo } = parsed;
-
     const repoData = await getRepo(owner, repo, token);
-    if (!repoData) {
-      return null;
-    }
+    if (!repoData) return null;
 
+    // Determine README path
     let readmePath = 'README.md';
     if (manualProject.readmeSource === 'docs') {
       readmePath = 'docs/README.md';
@@ -204,8 +210,13 @@ async function processManualProject(
       readmePath = manualProject.customReadmePath;
     }
 
-    const readme = await getReadme(owner, repo, readmePath, token);
+    // Fetch and fix README
+    let readme = await getReadme(owner, repo, readmePath, token);
+    if (readme) {
+      readme = fixReadmeUrls(readme, owner, repo, repoData.default_branch);
+    }
 
+    // Fetch releases
     const releasesData = await getReleases(owner, repo, token);
     const releases = releasesData.map(r => ({
       tag: r.tag_name,
@@ -234,10 +245,10 @@ async function processManualProject(
       homepage: repoData.homepage,
       created: repoData.created_at,
       updated: repoData.updated_at,
+      pushed: repoData.pushed_at,
       priority: manualProject.priority || 0,
       source: 'manual'
     };
-
   } catch (error) {
     console.error(`Error processing manual project ${manualProject.title}:`, error);
     return null;
@@ -246,30 +257,26 @@ async function processManualProject(
 
 function sortProjects(projects: Project[]): Project[] {
   return projects.sort((a, b) => {
+    // Manual projects with priority first
     if (a.priority !== b.priority) {
       return b.priority - a.priority;
     }
 
-    const { sortBy, sortOrder } = projectsConfig;
-
-    let comparison = 0;
-
-    switch (sortBy) {
-      case 'stars':
-        comparison = b.stars - a.stars;
-        break;
-      case 'updated':
-        comparison = new Date(b.updated).getTime() - new Date(a.updated).getTime();
-        break;
-      case 'created':
-        comparison = new Date(b.created).getTime() - new Date(a.created).getTime();
-        break;
-      case 'name':
-        comparison = a.title.localeCompare(b.title);
-        break;
+    // Active projects before maintenance/archived
+    const statusOrder = { active: 0, maintenance: 1, archived: 2 };
+    if (statusOrder[a.status] !== statusOrder[b.status]) {
+      return statusOrder[a.status] - statusOrder[b.status];
     }
 
-    return sortOrder === 'asc' ? -comparison : comparison;
+    // Then by last push (most recently updated)
+    const pushA = new Date(a.pushed).getTime();
+    const pushB = new Date(b.pushed).getTime();
+    if (pushB !== pushA) {
+      return pushB - pushA;
+    }
+
+    // Finally by stars
+    return b.stars - a.stars;
   });
 }
 

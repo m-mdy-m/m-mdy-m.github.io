@@ -1,0 +1,133 @@
+---
+import BaseLayout from '@layouts/Layout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import { getAllDockerImagesFormatted } from '@services/images.service';
+
+const images = await getAllDockerImagesFormatted();
+---
+
+<BaseLayout title="Docker Images | Genix">
+  <TerminalWindow command="ls docker">
+    <div class="space-y-8">
+      <!-- Images List (minimal & clean) -->
+      <div class="space-y-4">
+        {images.map(image => (
+          <article class="group rounded-lg border border-gray-900 bg-black/40 hover:border-gray-800 transition-colors">
+            <div class="p-4 space-y-3">
+              <!-- Header -->
+              <div class="flex items-start justify-between gap-4">
+                <a href={`/images/${image.name}`} class="flex-1 min-w-0">
+                  <h3 class="text-base text-gray-200 group-hover:text-white transition-colors font-medium truncate">
+                    {image.name}
+                  </h3>
+                </a>
+                <div class="flex items-center gap-1.5 text-xs text-gray-400 shrink-0">
+                  <span>⬇️</span>
+                  <span>{image.pullsFormatted}</span>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">
+                {image.description || 'No description available'}
+              </p>
+
+              <!-- Meta row -->
+              <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                <span class="flex items-center gap-1">
+                  <span>⬇️</span>
+                  <span>{image.pullsFormatted} pulls</span>
+                </span>
+                {image.star_count > 0 && (
+                  <span class="flex items-center gap-1">
+                    <span>⭐</span>
+                    <span>{image.starsFormatted}</span>
+                  </span>
+                )}
+                <span class="text-gray-600">·</span>
+                <span>
+                  Updated {new Date(image.last_updated).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+              </div>
+
+              <!-- Repository (Docker Hub path) -->
+              <div class="flex items-center gap-2 text-xs text-gray-500">
+                <span class="px-2 py-0.5 rounded bg-gray-900/60 border border-gray-800 font-mono truncate">
+                  {image.full_name}
+                </span>
+                <span class="text-gray-600">on Docker Hub</span>
+              </div>
+
+              <!-- Actions (minimal) -->
+              <div class="flex items-center gap-4 text-xs pt-1">
+                <a 
+                  href={`/images/${image.name}`}
+                  class="text-gray-500 hover:text-gray-300 transition-colors">
+                  details
+                </a>
+                <a 
+                  href={`https://hub.docker.com/r/${image.full_name}`}
+                  target="_blank"
+                  rel="noopener"
+                  class="text-gray-500 hover:text-gray-300 transition-colors">
+                  hub
+                </a>
+                <button 
+                  class="text-gray-500 hover:text-gray-300 transition-colors"
+                  data-copy={`docker pull ${image.full_name}:latest`}
+                >
+                  pull
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      {images.length === 0 && (
+        <div class="text-center py-8 border border-gray-900 rounded-lg">
+          <p class="text-gray-500 mb-2">No Docker images found.</p>
+          <p class="text-sm text-gray-600">
+            Images will appear here when synced from Docker Hub.
+          </p>
+        </div>
+      )}
+    </div>
+  </TerminalWindow>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-copy]');
+    if (!btn) return;
+
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copy);
+      const original = btn.textContent;
+      btn.textContent = 'copied';
+      btn.classList.add('text-green-400');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('text-green-400');
+      }, 1200);
+    } catch (err) {
+      console.error('copy failed', err);
+    }
+  });
+</script>
+
+<style>
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+  }
+</style>

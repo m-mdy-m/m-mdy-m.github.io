@@ -4,144 +4,99 @@ import TerminalWindow from '@components/TerminalWindow.astro';
 import { getArticlesGroupedByCategory } from '@services/articles.service';
 
 const groupedArticles = await getArticlesGroupedByCategory();
-
 const categories = Object.keys(groupedArticles).sort();
-
-const platformIcons = {
-  devto: '📝',
-  medium: '📰',
-  manual: '✍️'
-};
 ---
 
 <BaseLayout title="Articles | Genix">
   <TerminalWindow command="ls articles">
-    <div class="space-y-10">
+    <div class="space-y-8">
       <!-- Header -->
       <div class="space-y-2 pb-6 border-b border-gray-800">
         <h1 class="text-2xl text-white font-bold">Technical Articles</h1>
-        <p class="text-base text-gray-200 leading-relaxed">
-          Deep dives into computer science fundamentals, software architecture, and programming concepts.
+        <p class="text-gray-300 leading-relaxed">
+          Deep dives into computer science, algorithms, and software architecture.
         </p>
-        <p class="text-sm text-gray-400 pt-2">
-          Synced from <a href="https://dev.to/m__mdy__m" target="_blank" class="text-gray-300 hover:text-white">Dev.to</a> and 
-          <a href="https://medium.com/@m-mdy-m" target="_blank" class="text-gray-300 hover:text-white">Medium</a>
-        </p>
+        <div class="flex gap-2 text-sm text-gray-500 pt-2">
+          <span>Synced from</span>
+          <a href="https://dev.to/m__mdy__m" target="_blank" class="text-gray-400 hover:text-white">Dev.to</a>
+          <span>and</span>
+          <a href="https://medium.com/@m-mdy-m" target="_blank" class="text-gray-400 hover:text-white">Medium</a>
+        </div>
       </div>
 
       <!-- Articles by Category -->
       {categories.map(category => {
-        const categoryArticles = groupedArticles[category];
+        const articles = groupedArticles[category];
         return (
-          <div class="space-y-5">
-            <div class="flex items-baseline gap-3 pb-3 border-b border-gray-900">
-              <span class="text-gray-600">▶</span>
-              <h2 class="text-lg text-gray-200 font-semibold tracking-wide">
-                {category}
-              </h2>
-              <span class="text-sm text-gray-600">({categoryArticles.length})</span>
+          <section class="space-y-4">
+            <div class="flex items-center gap-3 pb-2 border-b border-gray-900">
+              <h2 class="text-lg text-gray-300 font-semibold">{category}</h2>
+              <span class="text-sm text-gray-600">({articles.length})</span>
             </div>
             
-            <div class="space-y-6">
-              {categoryArticles.map((article, idx) => (
-                <article 
-                  class="group space-y-3 animate-fade-in" 
-                  style={`animation-delay: ${idx * 50}ms`}>
-                  
-                  {/* Cover Image */}
-                  {article.coverImage && (
-                    <a 
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener"
-                      class="block rounded-lg overflow-hidden border border-gray-900 hover:border-gray-800 transition-colors">
-                      <img 
-                        src={article.coverImage}
-                        alt={article.title}
-                        class="w-full h-48 object-cover"
-                        loading="lazy"
-                      />
-                    </a>
-                  )}
-                  
-                  <a 
-                    href={article.url}
-                    target="_blank"
-                    rel="noopener"
-                    class="block space-y-2">
+            <div class="grid gap-4">
+              {articles.map(article => (
+                <article class="group p-4 rounded border border-gray-900 hover:border-gray-800 transition-colors bg-black/40">
+                  <a href={article.url} target="_blank" rel="noopener" class="block space-y-3">
+                    {/* Cover Image */}
+                    {article.coverImage && (
+                      <div class="aspect-video w-full overflow-hidden rounded bg-gray-950">
+                        <img 
+                          src={article.coverImage}
+                          alt={article.title}
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
                     
-                    {/* Title & Platform */}
-                    <div class="flex items-start gap-2">
-                      <span class="text-base mt-0.5">{platformIcons[article.platform]}</span>
-                      <h3 class="text-lg text-gray-100 group-hover:text-white transition-colors font-medium flex-1">
+                    {/* Content */}
+                    <div class="space-y-2">
+                      <h3 class="text-base text-gray-200 group-hover:text-white transition-colors font-medium leading-snug">
                         {article.title}
                       </h3>
+                      
+                      <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">
+                        {article.description}
+                      </p>
                     </div>
                     
-                    {/* Description */}
-                    <p class="text-base text-gray-200 leading-relaxed">
-                      {article.description}
-                    </p>
+                    {/* Meta */}
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                      <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span>·</span>
+                      <span>{article.readingTime} min read</span>
+                      {article.reactions > 0 && (
+                        <>
+                          <span>·</span>
+                          <span>{article.reactions} reactions</span>
+                        </>
+                      )}
+                      <span>·</span>
+                      <span class="text-gray-600">{article.platform === 'devto' ? 'Dev.to' : 'Medium'}</span>
+                    </div>
+                    
+                    {/* Tags */}
+                    {article.tags.length > 0 && (
+                      <div class="flex flex-wrap gap-1.5">
+                        {article.tags.slice(0, 4).map(tag => (
+                          <span class="text-xs text-gray-500 bg-gray-950 px-2 py-0.5 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </a>
-                  
-                  {/* Meta Info */}
-                  <div class="flex flex-wrap items-center gap-4 text-sm">
-                    <span class="text-gray-400">
-                      {new Date(article.publishedAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </span>
-                    
-                    <span class="text-gray-400">
-                      ⏱ {article.readingTime} min read
-                    </span>
-                    
-                    {article.reactions > 0 && (
-                      <span class="text-gray-400">
-                        ❤️ {article.reactions}
-                      </span>
-                    )}
-                    
-                    {article.comments > 0 && (
-                      <span class="text-gray-400">
-                        💬 {article.comments}
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Tags */}
-                  {article.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-2">
-                      {article.tags.slice(0, 5).map(tag => (
-                        <span class="text-xs text-gray-400 bg-gray-950 px-2.5 py-1 rounded border border-gray-900">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {/* Read More Link */}
-                  <div class="pt-1">
-                    <a 
-                      href={article.url} 
-                      target="_blank" 
-                      rel="noopener"
-                      class="text-gray-400 hover:text-gray-200 transition-colors text-sm">
-                      [read on {article.platform === 'devto' ? 'Dev.to' : 'Medium'}] →
-                    </a>
-                  </div>
                 </article>
               ))}
             </div>
-          </div>
+          </section>
         );
       })}
 
       {categories.length === 0 && (
-        <div class="text-center py-16">
-          <p class="text-gray-400">No articles found.</p>
+        <div class="text-center py-16 text-gray-500">
+          <p>No articles found.</p>
         </div>
       )}
     </div>
@@ -149,19 +104,10 @@ const platformIcons = {
 </BaseLayout>
 
 <style>
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .animate-fade-in {
-    animation: fade-in 0.5s ease-out forwards;
-    opacity: 0;
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 </style>

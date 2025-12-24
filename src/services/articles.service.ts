@@ -20,7 +20,7 @@ export interface Article {
   readingTime: number;
   reactions: number;
   comments: number;
-  content?: string; 
+  content?: string;
   platform: 'devto' | 'medium' | 'manual';
   priority: number;
   source: 'auto' | 'manual';
@@ -34,9 +34,7 @@ interface CacheEntry {
 let articlesCache: CacheEntry | null = null;
 
 export async function getAllArticles(
-  options: {
-    forceRefresh?: boolean;
-  } = {}
+  options: { forceRefresh?: boolean } = {}
 ): Promise<Article[]> {
   const { forceRefresh = false } = options;
 
@@ -49,6 +47,7 @@ export async function getAllArticles(
 
   const allArticles: Article[] = [];
 
+
   for (const source of articlesConfig.sources) {
     if (!source.autoFetch) continue;
 
@@ -60,12 +59,14 @@ export async function getAllArticles(
       allArticles.push(...mediumArticles.map(convertMediumArticle));
     }
   }
+
+
   for (const manual of articlesConfig.manualArticles) {
     const article = await processManualArticle(manual);
-    if (article) {
-      allArticles.push(article);
-    }
+    if (article) allArticles.push(article);
   }
+
+
   const sortedArticles = sortArticles(allArticles);
 
   articlesCache = {
@@ -77,12 +78,13 @@ export async function getAllArticles(
 }
 
 function convertDevToArticle(article: DevToArticle): Article {
+
   const category = articlesConfig.categories.find(cat =>
     article.tag_list.some(tag => 
       tag.toLowerCase().includes(cat.toLowerCase()) ||
       cat.toLowerCase().includes(tag.toLowerCase())
     )
-  );
+  ) || 'Miscellaneous';
 
   return {
     id: `devto-${article.id}`,
@@ -102,6 +104,7 @@ function convertDevToArticle(article: DevToArticle): Article {
     source: 'auto'
   };
 }
+
 function convertMediumArticle(article: MediumArticle): Article {
   return {
     id: article.id,
@@ -110,6 +113,7 @@ function convertMediumArticle(article: MediumArticle): Article {
     url: article.url,
     coverImage: null,
     publishedAt: article.published_at,
+    category: 'Miscellaneous',
     tags: [],
     readingTime: article.reading_time,
     reactions: article.claps,
@@ -120,9 +124,7 @@ function convertMediumArticle(article: MediumArticle): Article {
   };
 }
 
-async function processManualArticle(
-  manual: ManualArticle
-): Promise<Article | null> {
+async function processManualArticle(manual: ManualArticle): Promise<Article | null> {
   try {
     const { platform, url } = parseArticleUrl(manual.url);
 
@@ -140,7 +142,6 @@ async function processManualArticle(
         priority: manual.priority || 0,
         source: 'manual'
       };
-
     } else if (platform === 'medium') {
       const article = await getMediumArticleByUrl(url);
       if (!article) return null;
@@ -152,7 +153,7 @@ async function processManualArticle(
         url: manual.url,
         coverImage: null,
         publishedAt: article.published_at,
-        category: manual.category,
+        category: manual.category || 'Miscellaneous',
         tags: manual.tags || [],
         readingTime: Math.ceil(article.content.split(/\s+/).length / 200),
         reactions: 0,
@@ -173,56 +174,42 @@ async function processManualArticle(
 
 function sortArticles(articles: Article[]): Article[] {
   return articles.sort((a, b) => {
+  
     if (a.priority !== b.priority) {
       return b.priority - a.priority;
     }
 
-    const { sortBy, sortOrder } = articlesConfig;
-
-    let comparison = 0;
-
-    switch (sortBy) {
-      case 'date':
-        comparison = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-        break;
-      case 'reactions':
-        comparison = b.reactions - a.reactions;
-        break;
-      case 'title':
-        comparison = a.title.localeCompare(b.title);
-        break;
+  
+    const dateA = new Date(a.publishedAt).getTime();
+    const dateB = new Date(b.publishedAt).getTime();
+    
+    if (dateB !== dateA) {
+      return dateB - dateA;
     }
 
-    return sortOrder === 'asc' ? -comparison : comparison;
+  
+    return b.reactions - a.reactions;
   });
 }
 
-export async function getArticlesByCategory(
-  category: string
-): Promise<Article[]> {
+export async function getArticlesByCategory(category: string): Promise<Article[]> {
   const articles = await getAllArticles();
   return articles.filter(a => a.category === category);
 }
 
-export async function getArticlesByTag(
-  tag: string
-): Promise<Article[]> {
+export async function getArticlesByTag(tag: string): Promise<Article[]> {
   const articles = await getAllArticles();
   return articles.filter(a => 
     a.tags.some(t => t.toLowerCase() === tag.toLowerCase())
   );
 }
 
-export async function getArticleById(
-  id: string
-): Promise<Article | null> {
+export async function getArticleById(id: string): Promise<Article | null> {
   const articles = await getAllArticles();
   return articles.find(a => a.id === id) || null;
 }
 
-export async function getArticlesGroupedByCategory(): Promise<
-  Record<string, Article[]>
-> {
+export async function getArticlesGroupedByCategory(): Promise<Record<string, Article[]>> {
   const articles = await getAllArticles();
   
   const grouped: Record<string, Article[]> = {};
@@ -235,7 +222,26 @@ export async function getArticlesGroupedByCategory(): Promise<
     grouped[category].push(article);
   }
   
-  return grouped;
+
+  const sortedGrouped: Record<string, Article[]> = {};
+  const predefinedCategories = articlesConfig.categories;
+  
+
+  predefinedCategories.forEach(cat => {
+    if (grouped[cat]) {
+      sortedGrouped[cat] = grouped[cat];
+    }
+  });
+  
+
+  Object.keys(grouped)
+    .filter(cat => !predefinedCategories.includes(cat))
+    .sort()
+    .forEach(cat => {
+      sortedGrouped[cat] = grouped[cat];
+    });
+  
+  return sortedGrouped;
 }
 
 export function clearArticlesCache(): void {

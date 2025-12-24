@@ -1,0 +1,292 @@
+---
+import ArticleLayout from '@layouts/ArticleLayout.astro';
+import TerminalWindow from '@components/TerminalWindow.astro';
+import { getAllDockerImages, getDockerImage } from '@services/images.service';
+import { formatBytes, formatNumber } from '@utils/docker-api';
+
+export async function getStaticPaths() {
+  const images = await getAllDockerImages();
+  
+  return images.map(image => ({
+    params: { id: image.name },
+    props: { imageName: image.name },
+  }));
+}
+
+const { imageName } = Astro.props;
+const image = await getDockerImage(imageName);
+
+if (!image) {
+  return Astro.redirect('/images');
+}
+
+// Sort tags by date (newest first)
+const sortedTags = [...image.tags]
+  .sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime());
+
+// Prepare a safe JSON string for client usage
+const __TAGS_JSON = JSON.stringify(sortedTags ?? []);
+const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
+---
+
+<ArticleLayout 
+  title={`${image.name} | Docker Images | Genix`}
+  description={image.description}
+  backLink="/images"
+  backText="back to docker images">
+
+  <TerminalWindow command={`docker images ${image.name}`}>
+    <div class="space-y-8">
+      <!-- Header -->
+      <div class="space-y-3 pb-6 border-b border-gray-800">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-1">
+            <h1 class="text-xl text-gray-300 font-mono">{image.full_name}</h1>
+            <p class="text-gray-400 mt-1">{image.description}</p>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-gray-500">
+            <span class="flex items-center gap-1">
+              <span>⬇️</span>
+              <span>{formatNumber(image.pull_count)}</span>
+            </span>
+            {image.star_count > 0 && (
+              <span class="flex items-center gap-1">
+                <span>⭐</span>
+                <span>{formatNumber(image.star_count)}</span>
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Tags Section -->
+      <section class="space-y-4">
+        <h2 class="text-lg text-gray-300 font-medium flex items-center gap-2">
+          <span class="text-blue-500">🏷️</span>
+          Available Tags
+          <span class="text-sm text-gray-500">({image.tags.length})</span>
+        </h2>
+
+        <div class="space-y-4">
+          <!-- Custom Tag Selector (compact & simple) -->
+          <div class="space-y-2">
+            <label for="tagDropdown" class="text-sm text-gray-400">Select Tag:</label>
+
+            <div
+              id="tagDropdown"
+              class="relative inline-block"
+              data-tags={__TAGS_JSON}
+              data-default-tag={__DEFAULT_TAG}
+            >
+              <button
+                id="tagToggle"
+                class="w-48 text-left bg-gray-900/30 backdrop-blur-sm border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 flex items-center justify-between gap-2 hover:border-gray-600/60 transition-all"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                type="button"
+              >
+                <span id="tagSelected" class="truncate">{__DEFAULT_TAG}</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <ul
+                id="tagList"
+                class="absolute z-50 mt-2 w-48 max-h-52 overflow-auto rounded-md border border-gray-700/60 bg-gray-900/40 backdrop-blur-sm py-1 shadow-lg hidden"
+                role="listbox"
+                tabindex="-1"
+                aria-labelledby="tagToggle"
+              >
+                {sortedTags.map(tag => (
+                  <li
+                    class="px-3 py-2 text-sm text-gray-300 hover:bg-gray-800/60 cursor-pointer truncate"
+                    data-tag={tag.name}
+                    role="option"
+                    aria-selected={tag.name === __DEFAULT_TAG}
+                  >
+                    {tag.name} <span class="text-xs text-gray-500">({formatBytes(tag.full_size)})</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <!-- Command Box (compact glass style) -->
+          <div class="space-y-2">
+            <div class="text-sm text-gray-400">Command:</div>
+            <div class="relative">
+              <div
+                id="commandBox"
+                data-full-name={image.full_name}
+                data-default-tag={__DEFAULT_TAG}
+                class="mx-auto max-w-[420px] w-full flex items-center justify-between bg-gray-900/30 backdrop-blur-sm border border-gray-700/50 rounded-lg px-3 py-2.5 gap-2 hover:border-gray-600/50 transition-all"
+              >
+                <code
+                  class="text-sm text-gray-300 font-mono whitespace-nowrap overflow-x-auto px-2 flex-1 max-w-[320px]"
+                  id="pullCommand"
+                >
+                  docker pull {image.full_name}:{__DEFAULT_TAG}
+                </code>
+
+                <button
+                  id="copyButton"
+                  class="ml-3 text-xs text-gray-300 hover:text-white transition-colors px-2 py-1 rounded-md bg-gray-800/30 hover:bg-gray-700/30 border border-gray-700/30 hover:border-gray-600/40 flex items-center gap-1"
+                  title="Copy to clipboard"
+                  type="button"
+                >
+                  <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                  </svg>
+                  <span id="copyText">Copy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Links -->
+      <section class="space-y-4 pt-6 border-t border-gray-800/50">
+        <h3 class="text-base text-gray-400">Links</h3>
+        <div class="flex flex-wrap gap-3">
+           <a 
+            href={image.url}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 px-3 py-2 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors bg-gray-900/30 backdrop-blur-sm"
+          >
+            <span class="text-blue-500">🌐</span>
+            Docker Hub Page
+          </a>
+          <a 
+            href="/images"
+            class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-200 px-4 py-2.5 rounded-lg border border-gray-700/50 hover:border-gray-600/50 bg-gray-900/30 backdrop-blur-sm hover:bg-gray-800/30 transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            All Images
+          </a>
+        </div>
+      </section>
+    </div>
+  </TerminalWindow>
+</ArticleLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Elements
+    const dropdown = document.getElementById('tagDropdown');
+    const toggle = document.getElementById('tagToggle');
+    const list = document.getElementById('tagList');
+    const selectedEl = document.getElementById('tagSelected');
+    const commandElement = document.getElementById('pullCommand');
+    const commandBox = document.getElementById('commandBox');
+    const copyButton = document.getElementById('copyButton');
+    const copyText = document.getElementById('copyText');
+
+    const imageFullName = commandBox?.dataset?.fullName || '';
+    const defaultTag = dropdown?.dataset?.defaultTag || 'latest';
+
+    // Parse tags from server
+    let tags = [];
+    try {
+      tags = JSON.parse(dropdown?.dataset?.tags || '[]');
+    } catch (e) { tags = []; }
+
+    // Current selected tag
+    let currentTag = defaultTag || (tags[0]?.name || 'latest');
+
+    function updateCommand() {
+      commandElement.textContent = `docker pull ${imageFullName}:${currentTag}`;
+    }
+
+    // Toggle open/close
+    function openList() {
+      list.classList.remove('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+    function closeList() {
+      list.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    // Click handlers for tag list
+    list.addEventListener('click', (e) => {
+      const li = e.target.closest('li[data-tag]');
+      if (!li) return;
+      const tag = li.dataset.tag;
+      currentTag = tag === 'latest' ? (dropdown.dataset.defaultTag || 'latest') : tag;
+      selectedEl.textContent = currentTag;
+
+      // update aria selections
+      [...list.querySelectorAll('li')].forEach(node => node.setAttribute('aria-selected', node.dataset.tag === currentTag));
+
+      updateCommand();
+      closeList();
+    });
+
+    // Toggle button
+    toggle.addEventListener('click', () => {
+      if (list.classList.contains('hidden')) openList(); else closeList();
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) closeList();
+    });
+
+    // Keyboard support (Enter/Space to open, Esc to close)
+    toggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle.click();
+      } else if (e.key === 'Escape') {
+        closeList();
+      }
+    });
+
+    // Copy logic with visual feedback
+    async function copyCommand() {
+      const command = commandElement.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(command);
+        copyText.textContent = 'Copied!';
+        copyButton.classList.add('text-green-400');
+        setTimeout(() => {
+          copyText.textContent = 'Copy';
+          copyButton.classList.remove('text-green-400');
+        }, 1400);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        copyText.textContent = 'Error';
+        setTimeout(() => (copyText.textContent = 'Copy'), 1200);
+      }
+    }
+
+    copyButton.addEventListener('click', copyCommand);
+
+    // Init
+    selectedEl.textContent = currentTag;
+    updateCommand();
+
+  });
+</script>
+
+<style is:global>
+  /* Compact command box tweaks */
+  #commandBox { box-shadow: none; }
+  #pullCommand { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: -0.01em; }
+  #pullCommand::-webkit-scrollbar { height: 6px; }
+  #pullCommand::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
+
+  /* Make the dropdown and command box look glassy and compact */
+  .backdrop-blur-sm { backdrop-filter: blur(8px); }
+
+  /* small screens: keep things tidy */
+  @media (max-width: 640px) {
+    #commandBox { max-width: 100%; padding-left: 0.75rem; padding-right: 0.75rem; }
+    #tagToggle, #tagList { width: 100%; }
+  }
+</style>
