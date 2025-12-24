@@ -1,78 +1,101 @@
 ---
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
+
+const SO_USER_ID = '19394098';
+const SO_API = 'https://api.stackexchange.com/2.3';
+
+async function getStackOverflowSignals() {
+  try {
+    const profileRes = await fetch(`${SO_API}/users/${SO_USER_ID}?site=stackoverflow&filter=!-*jbN0CeyJHb`);
+    const profileJson = await profileRes.json();
+    const user = profileJson.items?.[0];
+
+    const answersRes = await fetch(`${SO_API}/users/${SO_USER_ID}/answers?order=desc&sort=votes&site=stackoverflow&filter=!9_bDDxJY5`);
+    const answersJson = await answersRes.json();
+    const topAnswers = answersJson.items?.slice(0, 3) || [];
+
+    const tagsRes = await fetch(`${SO_API}/users/${SO_USER_ID}/top-tags?site=stackoverflow`);
+    const tagsJson = await tagsRes.json();
+    const topTags = tagsJson.items?.slice(0, 3) || [];
+
+    return { user, topAnswers, topTags };
+  } catch (e) {
+    return { user: null, topAnswers: [], topTags: [] };
+  }
+}
+
+const so = await getStackOverflowSignals();
 ---
 
 <BaseLayout title="Genix">
   <TerminalWindow>
     <div class="space-y-6">
-      <div class="space-y-1">
-        <p class="text-xs text-gray-600">
-          Type <span class="text-gray-500">help</span> to see available commands
-        </p>
-      </div>
+
+      <!-- Stack Overflow Highlights -->
+      {so.user && (
+        <div class="flex flex-col gap-3 mb-6">
+          <div class="flex items-center gap-4">
+            <a href={`https://stackoverflow.com/users/${SO_USER_ID}`} target="_blank" rel="noopener">
+              <img src={so.user.profile_image} alt="StackOverflow avatar" class="w-12 h-12 rounded-full border-1 border-gray-500"/>
+            </a>
+            <div class="text-sm text-gray-100">
+              <div class="font-semibold truncate max-w-xs">{so.user.display_name}</div>
+              <div class="mt-1 text-gray-300 text-xs flex flex-wrap gap-2">
+                <span>{so.user.reputation.toLocaleString()} reputation</span>
+                {so.user.badge_counts && (
+                  <>
+                    {so.user.badge_counts.gold > 0 && <span class="text-yellow-400">Gold: {so.user.badge_counts.gold}</span>}
+                    {so.user.badge_counts.silver > 0 && <span class="text-gray-300">Silver: {so.user.badge_counts.silver}</span>}
+                    {so.user.badge_counts.bronze > 0 && <span class="text-yellow-900">Bronze: {so.user.badge_counts.bronze}</span>}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div class="space-y-2">
-        <div class="text-gray-600 text-xs uppercase tracking-wider">Quick Start</div>
-        <div class="space-y-1 text-sm">
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">whoami</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">about me</span>
+        <div class="space-y-4 text-sm text-gray-100">
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">whoami</code><span>—</span><span>about me</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">ls</code><span>—</span><span>list contents</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">cd articles</code><span>—</span><span>technical articles</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">cd thoughts</code><span>—</span><span>personal reflections</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">cd projects</code><span>—</span><span>open source projects</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">cd images</code><span>—</span><span>docker images</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">cd books</code><span>—</span><span>published books</span></div>
+          <div class="flex gap-2 items-center"><span class="font-bold text-gray-400">→</span><code class="text-gray-300">tree</code><span>—</span><span>view structure</span></div>
+        </div>
+      </div>
+
+    <!-- Footer with contact and about links -->
+      <div class="pt-4 border-t border-gray-800">
+        <div class="flex items-center justify-between text-xs">
+          <div class="text-gray-400">
+            <kbd class="px-1.5 py-0.5 bg-gray-900 border border-gray-700 rounded mr-1">↑↓</kbd> navigation
+            <span class="mx-2 text-gray-600">•</span>
+            <kbd class="px-1.5 py-0.5 bg-gray-900 border border-gray-700 rounded mr-1">Tab</kbd> autocomplete
           </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">ls</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">list contents</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">cd articles</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">technical articles</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">cd thoughts</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">personal reflections</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">cd projects</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">open source projects</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">cd images</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">docker images</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">cd books</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">published books</span>
-          </div>
-          <div class="flex gap-2">
-            <span class="text-gray-700">→</span>
-            <code class="text-gray-500">tree</code>
-            <span class="text-gray-800">—</span>
-            <span class="text-gray-600">view structure</span>
+          
+          <div class="flex items-center gap-3">
+            <a href="/contact" class="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+              contact
+            </a>
+            <span class="text-gray-600">|</span>
+            <a href="/about" class="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+              about
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="pt-3 border-t border-gray-900">
-        <p class="text-xs text-gray-700">
-          <kbd class="px-1 py-0.5 bg-gray-950 border border-gray-900 rounded text-gray-600">↑↓</kbd> history
-          <span class="mx-2 text-gray-900">•</span>
-          <kbd class="px-1 py-0.5 bg-gray-950 border border-gray-900 rounded text-gray-600">Tab</kbd> completion
-        </p>
-      </div>
     </div>
   </TerminalWindow>
 </BaseLayout>
+
+<style>
+  a { text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  kbd { font-family: monospace; }
+</style>
