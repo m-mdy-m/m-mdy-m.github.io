@@ -1,0 +1,188 @@
+<style is:global>
+  .article-content {
+    color: var(--text-primary, #f5f5f5);
+    line-height: 1.8;
+  }
+  
+  .article-content :global(h1),
+  .article-content :global(h2),
+  .article-content :global(h3),
+  .article-content :global(h4),
+  .article-content :global(h5),
+  .article-content :global(h6) {
+    color: var(--heading-primary, #ffffff);
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  
+  .article-content :global(h1) { 
+    font-size: 2.25rem; 
+    line-height: 1.2; 
+  }
+  
+  .article-content :global(h2) { 
+    font-size: 2rem; 
+    line-height: 1.3; 
+  }
+  
+  .article-content :global(h3) { 
+    font-size: 1.625rem; 
+    line-height: 1.4; 
+  }
+  
+  .article-content :global(h4) { 
+    font-size: 1.375rem; 
+    line-height: 1.5; 
+  }
+  
+  .article-content :global(p) {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary, #f5f5f5);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+  
+  .article-content :global(a) {
+    color: var(--link-default, #d0d0d0);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  
+  .article-content :global(a:hover) { 
+    color: var(--link-hover, #ffffff); 
+  }
+  
+  .article-content :global(code) {
+    color: var(--code-text, #f5f5f5);
+    background: var(--code-bg, rgba(255, 255, 255, 0.08));
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    font-family: 'IBM Plex Mono', Consolas, Monaco, monospace;
+  }
+  
+  .article-content :global(pre) {
+    background: var(--bg-code-block, rgba(0, 0, 0, 0.6));
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.15));
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+  
+  .article-content :global(pre code) {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: var(--text-primary, #f5f5f5);
+    font-size: 0.9375rem;
+  }
+  
+  .article-content :global(blockquote) {
+    border-left: 4px solid var(--border-default, #666);
+    padding-left: 1.5rem;
+    color: var(--text-muted, #b8b8b8);
+    font-style: italic;
+    margin: 2rem 0;
+  }
+  
+  .article-content :global(blockquote p) {
+    color: var(--text-muted, #b8b8b8);
+  }
+  
+  .article-content :global(ul),
+  .article-content :global(ol) {
+    color: var(--text-secondary, #e0e0e0);
+    padding-left: 1.75rem;
+    margin: 1.25rem 0;
+  }
+  
+  .article-content :global(li) { 
+    margin: 0.625rem 0; 
+    line-height: 1.7;
+  }
+  
+  .article-content :global(li p) {
+    margin: 0.5rem 0;
+  }
+  
+  .article-content :global(strong) { 
+    color: var(--heading-secondary, #ffffff); 
+    font-weight: 600; 
+  }
+  
+  .article-content :global(em) { 
+    color: var(--text-secondary, #f0f0f0); 
+    font-style: italic; 
+  }
+  
+  .article-content :global(hr) { 
+    border-color: var(--border-subtle, #444); 
+    margin: 3rem 0; 
+  }
+  
+  .article-content :global(img) {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.15));
+    margin: 2rem 0;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .article-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+  }
+
+  .article-content :global(th),
+  .article-content :global(td) {
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.15));
+    padding: 0.75rem;
+    text-align: left;
+    color: var(--text-secondary, #e0e0e0);
+  }
+
+  .article-content :global(th) {
+    background: rgba(255, 255, 255, 0.08);
+    font-weight: 600;
+    color: var(--heading-secondary, #ffffff);
+  }
+  
+  .article-content :global(ul input[type="checkbox"]) {
+    margin-right: 0.5rem;
+  }
+  
+  .article-content :global(details) {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
+    border-radius: 0.5rem;
+  }
+  
+  .article-content :global(summary) {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--heading-secondary, #f5f5f5);
+  }
+  
+  .article-content :global(kbd) {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.2));
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875em;
+  }
+  
+  .article-content :global(mark) {
+    background: rgba(255, 255, 0, 0.2);
+    color: var(--text-primary, #f5f5f5);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.125rem;
+  }
+</style>
