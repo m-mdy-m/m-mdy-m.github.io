@@ -1,10 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/Layout.astro';
 import TerminalWindow from '@components/TerminalWindow.astro';
+import { getArticlesGroupedByCategory } from '@services/articles.service';
 
-const articles = await getCollection('articles');
-const categories = Array.from(new Set(articles.map(a => a.data.category))).sort();
+const groupedArticles = await getArticlesGroupedByCategory();
+
+const categories = Object.keys(groupedArticles).sort();
+
+const platformIcons = {
+  devto: '📝',
+  medium: '📰',
+  manual: '✍️'
+};
 ---
 
 <BaseLayout title="Articles | Genix">
@@ -13,14 +20,18 @@ const categories = Array.from(new Set(articles.map(a => a.data.category))).sort(
       <!-- Header -->
       <div class="space-y-2 pb-6 border-b border-gray-800">
         <h1 class="text-2xl text-white font-bold">Technical Articles</h1>
-        <p class="text-base text-gray-300 leading-relaxed">
+        <p class="text-base text-gray-200 leading-relaxed">
           Deep dives into computer science fundamentals, software architecture, and programming concepts.
+        </p>
+        <p class="text-sm text-gray-400 pt-2">
+          Synced from <a href="https://dev.to/m__mdy__m" target="_blank" class="text-gray-300 hover:text-white">Dev.to</a> and 
+          <a href="https://medium.com/@m-mdy-m" target="_blank" class="text-gray-300 hover:text-white">Medium</a>
         </p>
       </div>
 
-      <!-- Categories -->
+      <!-- Articles by Category -->
       {categories.map(category => {
-        const categoryArticles = articles.filter(a => a.data.category === category);
+        const categoryArticles = groupedArticles[category];
         return (
           <div class="space-y-5">
             <div class="flex items-baseline gap-3 pb-3 border-b border-gray-900">
@@ -36,23 +47,74 @@ const categories = Array.from(new Set(articles.map(a => a.data.category))).sort(
                 <article 
                   class="group space-y-3 animate-fade-in" 
                   style={`animation-delay: ${idx * 50}ms`}>
+                  
+                  {/* Cover Image */}
+                  {article.coverImage && (
+                    <a 
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener"
+                      class="block rounded-lg overflow-hidden border border-gray-900 hover:border-gray-800 transition-colors">
+                      <img 
+                        src={article.coverImage}
+                        alt={article.title}
+                        class="w-full h-48 object-cover"
+                        loading="lazy"
+                      />
+                    </a>
+                  )}
+                  
                   <a 
-                    href={article.data.links ? Object.values(article.data.links)[0] : `/articles/${article.slug}`}
-                    target={article.data.links ? "_blank" : undefined}
-                    rel={article.data.links ? "noopener" : undefined}
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener"
                     class="block space-y-2">
-                    <h3 class="text-lg text-gray-100 group-hover:text-white transition-colors font-medium">
-                      {article.data.title}
-                    </h3>
                     
-                    <p class="text-base text-gray-300 leading-relaxed">
-                      {article.data.description}
+                    {/* Title & Platform */}
+                    <div class="flex items-start gap-2">
+                      <span class="text-base mt-0.5">{platformIcons[article.platform]}</span>
+                      <h3 class="text-lg text-gray-100 group-hover:text-white transition-colors font-medium flex-1">
+                        {article.title}
+                      </h3>
+                    </div>
+                    
+                    {/* Description */}
+                    <p class="text-base text-gray-200 leading-relaxed">
+                      {article.description}
                     </p>
                   </a>
                   
-                  {article.data.tags.length > 0 && (
+                  {/* Meta Info */}
+                  <div class="flex flex-wrap items-center gap-4 text-sm">
+                    <span class="text-gray-400">
+                      {new Date(article.publishedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </span>
+                    
+                    <span class="text-gray-400">
+                      ⏱ {article.readingTime} min read
+                    </span>
+                    
+                    {article.reactions > 0 && (
+                      <span class="text-gray-400">
+                        ❤️ {article.reactions}
+                      </span>
+                    )}
+                    
+                    {article.comments > 0 && (
+                      <span class="text-gray-400">
+                        💬 {article.comments}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Tags */}
+                  {article.tags.length > 0 && (
                     <div class="flex flex-wrap gap-2">
-                      {article.data.tags.map(tag => (
+                      {article.tags.slice(0, 5).map(tag => (
                         <span class="text-xs text-gray-400 bg-gray-950 px-2.5 py-1 rounded border border-gray-900">
                           {tag}
                         </span>
@@ -60,19 +122,16 @@ const categories = Array.from(new Set(articles.map(a => a.data.category))).sort(
                     </div>
                   )}
                   
-                  {article.data.links && (
-                    <div class="flex gap-3 text-sm pt-1">
-                      {Object.entries(article.data.links).map(([platform, url]) => (
-                        <a 
-                          href={url} 
-                          target="_blank" 
-                          rel="noopener"
-                          class="text-gray-400 hover:text-gray-200 transition-colors">
-                          [read on {platform}]
-                        </a>
-                      ))}
-                    </div>
-                  )}
+                  {/* Read More Link */}
+                  <div class="pt-1">
+                    <a 
+                      href={article.url} 
+                      target="_blank" 
+                      rel="noopener"
+                      class="text-gray-400 hover:text-gray-200 transition-colors text-sm">
+                      [read on {article.platform === 'devto' ? 'Dev.to' : 'Medium'}] →
+                    </a>
+                  </div>
                 </article>
               ))}
             </div>
@@ -80,7 +139,7 @@ const categories = Array.from(new Set(articles.map(a => a.data.category))).sort(
         );
       })}
 
-      {articles.length === 0 && (
+      {categories.length === 0 && (
         <div class="text-center py-16">
           <p class="text-gray-400">No articles found.</p>
         </div>
