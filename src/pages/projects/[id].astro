@@ -9,7 +9,7 @@ export async function getStaticPaths() {
   const projects = await getAllProjects();
   
   return projects.map(project => ({
-    params: { id: project.id },
+    params: { id: project.slug },
     props: { project },
   }));
 }
@@ -172,7 +172,6 @@ const status = statusConfig[project.status];
   </article>
 </ArticleLayout>
 
-<!-- Highlight.js theme -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
 
 <style>
@@ -183,7 +182,6 @@ const status = statusConfig[project.status];
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  /* Better link visibility in README content */
   .article-content :global(a) {
     color: #d0d0d0;
     text-decoration: underline;
@@ -197,7 +195,6 @@ const status = statusConfig[project.status];
     text-decoration-color: rgba(255, 255, 255, 0.6);
   }
   
-  /* Better image display */
   .article-content :global(img) {
     border-radius: 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.1);

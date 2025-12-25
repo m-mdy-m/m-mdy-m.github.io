@@ -1,83 +1,145 @@
 ---
-import BaseLayout from '@layouts/Layout.astro';
-import TerminalWindow from '@components/TerminalWindow.astro';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
 ---
 
-<BaseLayout title="Contact | Genix">
-  <TerminalWindow command="cat contact.md">
-    <div class="space-y-6">
-      <!-- Primary Contact -->
-      <div class="space-y-3">
-        <div class="text-gray-600 text-xs uppercase tracking-wider">Primary</div>
-        
-        <div class="space-y-4">
-          <div class="space-y-1">
-            <div class="text-gray-400 text-sm">Email</div>
-            <a href="mailto:bitsgenix@gmail.com" 
-               class="text-gray-500 hover:text-gray-300 transition text-sm">
-              bitsgenix@gmail.com
-            </a>
-            <p class="text-xs text-gray-600">
-              Response: 24-48 hours
-            </p>
-          </div>
+<ArticleLayout 
+  title="Contact | Genix"
+  description="Get in touch for discussions on systems design, algorithms, or the philosophy of software."
+  showBackButton={true}
+  backLink="/"
+  backText="back to terminal">
+  
+  <article class="article-content space-y-10">
+    <!-- Introduction -->
+    <section class="space-y-4">
+      <h1>Contact</h1>
+      <p class="text-xl text-gray-300 leading-relaxed">
+        I'm always interested in discussing systems design, algorithms, distributed architectures, 
+        or the philosophical underpinnings of computation.
+      </p>
+    </section>
 
-          <div class="space-y-1">
-            <div class="text-gray-400 text-sm">GitHub</div>
-            <a href="https://github.com/m-mdy-m" 
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-gray-500 hover:text-gray-300 transition text-sm">
-              github.com/m-mdy-m
-            </a>
-            <p class="text-xs text-gray-600">
-              Issues, PRs, discussions
-            </p>
-          </div>
+    <!-- Primary Contact Methods -->
+    <section class="space-y-6">
+      <h2>Get in Touch</h2>
+      
+      <div class="space-y-5">
+        <div class="space-y-2">
+          <h3 class="text-lg text-gray-300">Email</h3>
+          <a 
+            href="mailto:bitsgenix@gmail.com" 
+            class="text-gray-400 hover:text-white transition-colors text-base">
+            bitsgenix@gmail.com
+          </a>
+          <p class="text-sm text-gray-500">
+            Best for: Technical discussions, collaboration proposals, feedback
+          </p>
+          <p class="text-sm text-gray-500">
+            Response time: Usually within 24-48 hours
+          </p>
+        </div>
 
-          <div class="space-y-1">
-            <div class="text-gray-400 text-sm">Dev.to</div>
-            <a href="https://dev.to/m__mdy__m" 
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-gray-500 hover:text-gray-300 transition text-sm">
-              dev.to/m__mdy__m
-            </a>
-            <p class="text-xs text-gray-600">
-              Article comments
-            </p>
-          </div>
+        <div class="space-y-2">
+          <h3 class="text-lg text-gray-300">GitHub</h3>
+          <a 
+            href="https://github.com/m-mdy-m" 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-gray-400 hover:text-white transition-colors text-base">
+            github.com/m-mdy-m
+          </a>
+          <p class="text-sm text-gray-500">
+            Best for: Code reviews, bug reports, pull requests, project discussions
+          </p>
+        </div>
 
-          <div class="space-y-1">
-            <div class="text-gray-400 text-sm">Medium</div>
-            <a href="https://medium.com/@m-mdy-m" 
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-gray-500 hover:text-gray-300 transition text-sm">
-              medium.com/@m-mdy-m
-            </a>
-            <p class="text-xs text-gray-600">
-              Reading & responses
-            </p>
-          </div>
+        <div class="space-y-2">
+          <h3 class="text-lg text-gray-300">Dev.to</h3>
+          <a 
+            href="https://dev.to/m__mdy__m" 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-gray-400 hover:text-white transition-colors text-base">
+            dev.to/m__mdy__m
+          </a>
+          <p class="text-sm text-gray-500">
+            Best for: Article comments, technical discussions, community engagement
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-lg text-gray-300">Medium</h3>
+          <a 
+            href="https://medium.com/@m-mdy-m" 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-gray-400 hover:text-white transition-colors text-base">
+            medium.com/@m-mdy-m
+          </a>
+          <p class="text-sm text-gray-500">
+            Best for: In-depth technical writing, algorithm analysis discussions
+          </p>
         </div>
       </div>
+    </section>
 
-      <!-- CLI Commands -->
-      <div class="space-y-2">
-        <div class="text-gray-600 text-xs uppercase tracking-wider">Via Terminal</div>
-        <div class="space-y-1 text-xs text-gray-600 font-mono">
-          <div>$ whoami <span class="text-gray-800"># view profile</span></div>
-          <div>$ github <span class="text-gray-800"># open github</span></div>
-        </div>
-      </div>
+    <!-- What I'm Open To -->
+    <section class="space-y-6">
+      <h2>What I'm Open To</h2>
+      
+      <ul class="space-y-3 text-gray-300">
+        <li>
+          <strong>Technical Discussions:</strong> Event-driven architectures, data structures, 
+          algorithm analysis, distributed systems design
+        </li>
+        <li>
+          <strong>Collaboration:</strong> Open source contributions, research projects, 
+          technical writing collaborations
+        </li>
+        <li>
+          <strong>Feedback:</strong> On GLAND, ARLIZ, or any of my other projects and writings
+        </li>
+        <li>
+          <strong>Speaking:</strong> Podcasts, conference talks, technical workshops 
+          (within my areas of expertise)
+        </li>
+        <li>
+          <strong>Mentoring:</strong> Limited availability for mentoring developers interested 
+          in systems programming or algorithm analysis
+        </li>
+      </ul>
+    </section>
 
-      <!-- Footer -->
-      <div class="pt-4 border-t border-gray-900">
-        <p class="text-xs text-gray-700">
-          Last updated: January 2025
-        </p>
-      </div>
-    </div>
-  </TerminalWindow>
-</BaseLayout>
+    <!-- Response Expectations -->
+    <section class="space-y-6">
+      <h2>Response Expectations</h2>
+      
+      <p>
+        I aim to respond to all genuine inquiries, but please understand:
+      </p>
+      
+      <ul class="space-y-2 text-gray-300">
+        <li>
+          <strong>Email:</strong> Typically 24-48 hours for most messages. 
+          Complex technical questions may take longer.
+        </li>
+        <li>
+          <strong>GitHub:</strong> I try to respond to issues and PRs within a few days, 
+          though urgent bugs get priority.
+        </li>
+        <li>
+          <strong>Social Platforms:</strong> I check Dev.to and Medium periodically. 
+          For urgent matters, email is better.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Note -->
+    <section class="pt-6 border-t border-gray-900">
+      <p class="text-sm text-gray-500 italic">
+        Note: I don't do unsolicited recruitment, cryptocurrency pitches, or generic marketing. 
+        Please keep communications relevant to my work or interests.
+      </p>
+    </section>
+  </article>
+</ArticleLayout>

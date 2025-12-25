@@ -1,211 +1,145 @@
 ---
-import BaseLayout from '@layouts/Layout.astro';
-import TerminalWindow from '@components/TerminalWindow.astro';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
 ---
 
-<BaseLayout title="About | Genix">
-  <TerminalWindow command="cat about.md">
-    <div class="space-y-10">
-      {/* Header */}
-      <div class="space-y-4 pb-8 border-b border-gray-800">
-        <h1 class="text-2xl text-white font-bold">Genix</h1>
-        <p class="text-gray-300 text-base leading-relaxed">
-          I build systems that trade simplicity for scale, and question abstractions until they fall apart.
-          Most of my work lives somewhere between distributed messaging, event-driven architectures, and the philosophy of arrays.
-          I like tools that do one thing well — and refuse to quit.
-        </p>
-        <p class="text-gray-400 text-sm italic">
-          Still learning. Still breaking my own designs.
-        </p>
-      </div>
+<ArticleLayout 
+  title="About | Genix"
+  description="A builder of systems, writer of code, and questioner of abstractions."
+  showBackButton={true}
+  backLink="/"
+  backText="back to terminal">
+  
+  <article class="article-content space-y-12">
+    <!-- Introduction -->
+    <section class="space-y-6">
+      <h1>Genix</h1>
+      <p class="text-xl text-gray-300 leading-relaxed">
+        I build systems that trade simplicity for scale, and question abstractions until they fall apart.
+        Most of my work lives somewhere between distributed messaging, event-driven architectures, and the philosophy of arrays.
+      </p>
+      <p class="text-lg text-gray-400">
+        Still learning. Still breaking my own designs.
+      </p>
+    </section>
 
-      {/* Stack */}
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600">▶</span>
-          <h2 class="text-gray-300 text-sm uppercase tracking-wider font-bold">Stack</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-2">
-            <h3 class="text-white text-base font-semibold">Daily</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">TypeScript</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Node.js</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Bun</span>
-            </div>
-          </div>
-          
-          <div class="space-y-2">
-            <h3 class="text-white text-base font-semibold">Data</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">PostgreSQL</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">MongoDB</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Redis</span>
-            </div>
-          </div>
-          
-          <div class="space-y-2">
-            <h3 class="text-white text-base font-semibold">Systems</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Linux</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Docker</span>
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">i3wm</span>
-            </div>
-          </div>
-          
-          <div class="space-y-2">
-            <h3 class="text-white text-base font-semibold">Editor</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-sm text-gray-300 bg-gray-900/50 px-3 py-1.5 rounded border border-gray-800">Vim</span>
-              <span class="text-xs text-gray-500 bg-gray-900/30 px-2 py-1 rounded">VEX config</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- What I Build -->
+    <section class="space-y-6">
+      <h2>What I Build</h2>
+      <p>
+        I write code that solves problems—sometimes elegantly, sometimes through brute force iteration.
+        My focus areas include:
+      </p>
+      <ul class="space-y-3">
+        <li><strong>Event-Driven Architecture:</strong> Building systems where components communicate through events rather than direct calls. My GLAND framework embodies this philosophy.</li>
+        <li><strong>Data Structures:</strong> Not just using them, but understanding why they exist. ARLIZ is my attempt to document that journey from first principles.</li>
+        <li><strong>Distributed Systems:</strong> How do we build reliable software when everything can fail? This question drives much of my research.</li>
+        <li><strong>Developer Tooling:</strong> From Vim configs to CLI tools, I believe good tools amplify good thinking.</li>
+      </ul>
+    </section>
 
-      {/* Current Focus */}
-      <div class="space-y-4 pb-8 border-b border-gray-800">
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600">▶</span>
-          <h2 class="text-gray-300 text-sm uppercase tracking-wider font-bold">Currently</h2>
-        </div>
-        <div class="space-y-3">
-          <div class="flex items-start gap-3">
-            <span class="text-green-400 text-sm mt-1">●</span>
-            <div>
-              <div class="text-gray-200 text-base">Writing ARLIZ</div>
-              <p class="text-gray-500 text-sm mt-1">
-                A book exploring data structures from their historical origins
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-green-400 text-sm mt-1">●</span>
-            <div>
-              <div class="text-gray-200 text-base">Building GLAND</div>
-              <p class="text-gray-500 text-sm mt-1">
-                An event-driven architecture for JavaScript systems
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-yellow-400 text-sm mt-1">◐</span>
-            <div>
-              <div class="text-gray-200 text-base">Studying Algorithm Analysis</div>
-              <p class="text-gray-500 text-sm mt-1">
-                Deepening understanding of complexity theory and formal methods
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Philosophy -->
+    <section class="space-y-6">
+      <h2>Philosophy</h2>
+      <p>
+        I'm fascinated by the intersection of philosophy and computation.
+        How do we know what we know? What makes a proof convincing?
+        Why do abstractions work—until they don't?
+      </p>
+      <p>
+        <strong>Writing is thinking.</strong> That's why I write books, articles, and documentation.
+        Not to teach—to learn. Every explanation forces clarity. Every attempt to
+        simplify reveals what I don't understand.
+      </p>
+      <p>
+        <strong>Systems over solutions.</strong> How components interact matters more than what they do
+        individually. Emergence is more interesting than implementation. Architecture
+        outlasts code.
+      </p>
+    </section>
 
-      {/* Philosophy */}
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600">▶</span>
-          <h2 class="text-gray-300 text-sm uppercase tracking-wider font-bold">Philosophy</h2>
-        </div>
-        <div class="space-y-4 text-gray-300 text-base leading-relaxed">
-          <p>
-            I'm fascinated by the intersection of philosophy and computation.
-            How do we know what we know? What makes a proof convincing?
-            Why do abstractions work—until they don't?
-          </p>
-          <p>
-            Writing is thinking. That's why I write books, articles, and documentation.
-            Not to teach—to learn. Every explanation forces clarity. Every attempt to
-            simplify reveals what I don't understand.
-          </p>
-          <p>
-            Systems over solutions. How components interact matters more than what they do
-            individually. Emergence is more interesting than implementation. Architecture
-            outlasts code.
-          </p>
-        </div>
-      </div>
+    <!-- Current Work -->
+    <section class="space-y-6">
+      <h2>Current Focus</h2>
+      <ul class="space-y-4">
+        <li>
+          <strong>Writing ARLIZ</strong> — A book exploring data structures from their historical origins.
+          Not just "how to implement a tree" but "why did trees emerge as a useful abstraction?"
+        </li>
+        <li>
+          <strong>Building GLAND</strong> — An event-driven architecture for JavaScript systems.
+          Modular, protocol-agnostic, built for scale.
+        </li>
+        <li>
+          <strong>Algorithm Analysis</strong> — Deepening understanding of complexity theory and formal methods.
+          Currently working through MATHESIS, my book on mathematical foundations.
+        </li>
+      </ul>
+    </section>
 
-      {/* Random Facts */}
-      <div class="space-y-4 pb-8 border-b border-gray-800">
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600">▶</span>
-          <h2 class="text-gray-300 text-sm uppercase tracking-wider font-bold">Random</h2>
+    <!-- Tech Stack -->
+    <section class="space-y-6">
+      <h2>Tools & Technologies</h2>
+      <p>What I work with daily:</p>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg text-gray-300 mb-3">Languages</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>TypeScript / JavaScript</li>
+            <li>Node.js / Bun</li>
+            <li>Occasionally: Python, Go</li>
+          </ul>
         </div>
-        <div class="space-y-2 text-sm">
-          <div class="flex items-start gap-3">
-            <span class="text-gray-500 mt-0.5">→</span>
-            <span class="text-gray-300">I've read more about data structures than implemented them</span>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-gray-500 mt-0.5">→</span>
-            <span class="text-gray-300">My GitHub contributions look like a heartbeat monitor</span>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-gray-500 mt-0.5">→</span>
-            <span class="text-gray-300">I debug by writing—if I can't explain it, I don't understand it</span>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-gray-500 mt-0.5">→</span>
-            <span class="text-gray-300">Terminal first, GUI second (or never)</span>
-          </div>
+        
+        <div>
+          <h3 class="text-lg text-gray-300 mb-3">Infrastructure</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>PostgreSQL, MongoDB, Redis</li>
+            <li>Docker & container orchestration</li>
+            <li>Linux (Void, primarily)</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg text-gray-300 mb-3">Environment</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>Vim (with custom VEX config)</li>
+            <li>i3 window manager</li>
+            <li>Terminal-first workflow</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg text-gray-300 mb-3">Writing</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>LaTeX for technical books</li>
+            <li>Markdown for documentation</li>
+            <li>Astro for web content</li>
+          </ul>
         </div>
       </div>
+    </section>
 
-      {/* Contact */}
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600">▶</span>
-          <h2 class="text-gray-300 text-sm uppercase tracking-wider font-bold">Contact</h2>
-        </div>
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="text-gray-500 text-lg">📬</span>
-            <a href="mailto:bitsgenix@gmail.com" 
-               class="text-gray-300 hover:text-white transition-colors">
-              bitsgenix@gmail.com
-            </a>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="text-gray-500 text-lg">🐙</span>
-            <a href="https://github.com/m-mdy-m" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="text-gray-300 hover:text-white transition-colors">
-              github.com/m-mdy-m
-            </a>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="text-gray-500 text-lg">📝</span>
-            <a href="https://dev.to/m__mdy__m" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="text-gray-300 hover:text-white transition-colors">
-              dev.to/m__mdy__m
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div class="pt-6 border-t border-gray-800">
-        <div class="flex flex-wrap gap-3 text-xs">
-          <a href="/articles" class="text-gray-500 hover:text-gray-300 transition-colors">
-            [articles]
-          </a>
-          <a href="/thoughts" class="text-gray-500 hover:text-gray-300 transition-colors">
-            [thoughts]
-          </a>
-          <a href="/projects" class="text-gray-500 hover:text-gray-300 transition-colors">
-            [projects]
-          </a>
-          <a href="/books" class="text-gray-500 hover:text-gray-300 transition-colors">
-            [books]
-          </a>
-          <a href="/contact" class="text-gray-500 hover:text-gray-300 transition-colors">
-            [contact]
-          </a>
-        </div>
-      </div>
-    </div>
-  </TerminalWindow>
-</BaseLayout>
+    <!-- Contact -->
+    <section class="space-y-6">
+      <h2>Get in Touch</h2>
+      <p>
+        I'm always interested in discussing systems design, algorithms, or the philosophy of software.
+      </p>
+      <ul class="space-y-3">
+        <li>
+          <strong>Email:</strong> <a href="mailto:bitsgenix@gmail.com">bitsgenix@gmail.com</a>
+        </li>
+        <li>
+          <strong>GitHub:</strong> <a href="https://github.com/m-mdy-m" target="_blank" rel="noopener">github.com/m-mdy-m</a>
+        </li>
+        <li>
+          <strong>Dev.to:</strong> <a href="https://dev.to/m__mdy__m" target="_blank" rel="noopener">dev.to/m__mdy__m</a>
+        </li>
+        <li>
+          <strong>Medium:</strong> <a href="https://medium.com/@m-mdy-m" target="_blank" rel="noopener">medium.com/@m-mdy-m</a>
+        </li>
+      </ul>
+    </section>
+  </article>
+</ArticleLayout>

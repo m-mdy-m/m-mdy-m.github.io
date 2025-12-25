@@ -24,7 +24,6 @@ if (!image) {
 const sortedTags = [...image.tags]
   .sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime());
 
-// Prepare a safe JSON string for client usage
 const __TAGS_JSON = JSON.stringify(sortedTags ?? []);
 const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
 ---
@@ -68,7 +67,7 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
         </h2>
 
         <div class="space-y-4">
-          <!-- Custom Tag Selector (compact & simple) -->
+          <!-- Tag Selector -->
           <div class="space-y-2">
             <label for="tagDropdown" class="text-sm text-gray-400">Select Tag:</label>
 
@@ -112,7 +111,7 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
             </div>
           </div>
 
-          <!-- Command Box (compact glass style) -->
+          <!-- Command Box -->
           <div class="space-y-2">
             <div class="text-sm text-gray-400">Command:</div>
             <div class="relative">
@@ -176,7 +175,6 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    // Elements
     const dropdown = document.getElementById('tagDropdown');
     const toggle = document.getElementById('tagToggle');
     const list = document.getElementById('tagList');
@@ -189,39 +187,40 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
     const imageFullName = commandBox?.dataset?.fullName || '';
     const defaultTag = dropdown?.dataset?.defaultTag || 'latest';
 
-    // Parse tags from server
     let tags = [];
     try {
       tags = JSON.parse(dropdown?.dataset?.tags || '[]');
     } catch (e) { tags = []; }
 
-    // Current selected tag
-    let currentTag = defaultTag || (tags[0]?.name || 'latest');
+    let currentTag = defaultTag;
 
     function updateCommand() {
       commandElement.textContent = `docker pull ${imageFullName}:${currentTag}`;
     }
 
-    // Toggle open/close
     function openList() {
       list.classList.remove('hidden');
       toggle.setAttribute('aria-expanded', 'true');
     }
+    
     function closeList() {
       list.classList.add('hidden');
       toggle.setAttribute('aria-expanded', 'false');
     }
 
-    // Click handlers for tag list
+    // Tag selection
     list.addEventListener('click', (e) => {
       const li = e.target.closest('li[data-tag]');
       if (!li) return;
+      
       const tag = li.dataset.tag;
-      currentTag = tag === 'latest' ? (dropdown.dataset.defaultTag || 'latest') : tag;
+      currentTag = tag;
       selectedEl.textContent = currentTag;
 
-      // update aria selections
-      [...list.querySelectorAll('li')].forEach(node => node.setAttribute('aria-selected', node.dataset.tag === currentTag));
+      // Update aria selections
+      [...list.querySelectorAll('li')].forEach(node => 
+        node.setAttribute('aria-selected', node.dataset.tag === currentTag)
+      );
 
       updateCommand();
       closeList();
@@ -229,7 +228,8 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
 
     // Toggle button
     toggle.addEventListener('click', () => {
-      if (list.classList.contains('hidden')) openList(); else closeList();
+      if (list.classList.contains('hidden')) openList(); 
+      else closeList();
     });
 
     // Close when clicking outside
@@ -237,7 +237,7 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
       if (!dropdown.contains(e.target)) closeList();
     });
 
-    // Keyboard support (Enter/Space to open, Esc to close)
+    // Keyboard support
     toggle.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -247,7 +247,7 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
       }
     });
 
-    // Copy logic with visual feedback
+    // Copy command
     async function copyCommand() {
       const command = commandElement.textContent.trim();
       try {
@@ -267,26 +267,32 @@ const __DEFAULT_TAG = sortedTags[0]?.name ?? 'latest';
 
     copyButton.addEventListener('click', copyCommand);
 
-    // Init
+    // Initialize
     selectedEl.textContent = currentTag;
     updateCommand();
-
   });
 </script>
 
 <style is:global>
-  /* Compact command box tweaks */
   #commandBox { box-shadow: none; }
-  #pullCommand { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: -0.01em; }
+  #pullCommand { 
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; 
+    letter-spacing: -0.01em; 
+  }
   #pullCommand::-webkit-scrollbar { height: 6px; }
-  #pullCommand::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
+  #pullCommand::-webkit-scrollbar-thumb { 
+    background: rgba(255,255,255,0.06); 
+    border-radius: 6px; 
+  }
 
-  /* Make the dropdown and command box look glassy and compact */
   .backdrop-blur-sm { backdrop-filter: blur(8px); }
 
-  /* small screens: keep things tidy */
   @media (max-width: 640px) {
-    #commandBox { max-width: 100%; padding-left: 0.75rem; padding-right: 0.75rem; }
+    #commandBox { 
+      max-width: 100%; 
+      padding-left: 0.75rem; 
+      padding-right: 0.75rem; 
+    }
     #tagToggle, #tagList { width: 100%; }
   }
 </style>

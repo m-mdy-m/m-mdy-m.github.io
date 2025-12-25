@@ -36,7 +36,7 @@ const archived = allProjects.filter(p => p.status === 'archived');
                 <div class="space-y-3">
                   {/* Header */}
                   <div class="flex items-start justify-between gap-4">
-                    <a href={`/projects/${project.id}`} class="flex-1">
+                    <a href={`/projects/${project.slug}`} class="flex-1">
                       <h3 class="text-base text-gray-200 group-hover:text-white transition-colors font-medium">
                         {project.title}
                       </h3>
@@ -97,7 +97,7 @@ const archived = allProjects.filter(p => p.status === 'archived');
                   {/* Links */}
                   <div class="flex gap-3 text-xs">
                     <a 
-                      href={`/projects/${project.id}`}
+                      href={`/projects/${project.slug}`}
                       class="text-gray-500 hover:text-gray-300">
                       [view details]
                     </a>
@@ -140,7 +140,7 @@ const archived = allProjects.filter(p => p.status === 'archived');
                 <span class="text-yellow-500 text-sm mt-0.5">◐</span>
                 <div class="flex-1 space-y-2">
                   <div class="flex items-start justify-between gap-4">
-                    <a href={`/projects/${project.id}`}>
+                    <a href={`/projects/${project.slug}`}>
                       <h3 class="text-sm text-gray-300 group-hover:text-gray-200 transition-colors">
                         {project.title}
                       </h3>
@@ -176,7 +176,7 @@ const archived = allProjects.filter(p => p.status === 'archived');
             {archived.map(project => (
               <article class="group flex items-center gap-2 text-sm">
                 <span class="text-gray-800">○</span>
-                <a href={`/projects/${project.id}`} class="text-gray-600 hover:text-gray-500 transition-colors">
+                <a href={`/projects/${project.slug}`} class="text-gray-600 hover:text-gray-500 transition-colors">
                   {project.title}
                 </a>
                 {project.language && (

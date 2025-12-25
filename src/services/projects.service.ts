@@ -13,6 +13,7 @@ import {
 
 export interface Project {
   id: string;
+  slug: string;
   title: string;
   description: string;
   repository: string;
@@ -44,6 +45,15 @@ interface CacheEntry {
 
 let projectsCache: CacheEntry | null = null;
 
+function createSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')  
+    .replace(/\s+/g, '-')    
+    .replace(/-+/g, '-');    
+}
+
 export async function getAllProjects(
   options: { forceRefresh?: boolean; token?: string } = {}
 ): Promise<Project[]> {
@@ -58,7 +68,6 @@ export async function getAllProjects(
 
   const allProjects: Project[] = [];
 
-  // Fetch from configured sources
   for (const source of projectsConfig.sources) {
     let repos: GitHubRepo[] = [];
 
@@ -89,7 +98,6 @@ export async function getAllProjects(
     }
   }
 
-  // Process manual projects
   for (const manualProject of projectsConfig.manualProjects) {
     const project = await processManualProject(manualProject, token);
     if (project) {
@@ -97,7 +105,6 @@ export async function getAllProjects(
     }
   }
 
-  // Sort projects
   const sortedProjects = sortProjects(allProjects);
 
   projectsCache = {
@@ -121,7 +128,6 @@ async function convertRepoToProject(
     const { readmeSource, customReadmePath, token } = options;
     const [owner, repoName] = repo.full_name.split('/');
 
-    // Determine README path
     let readmePath = 'README.md';
     if (readmeSource === 'docs') {
       readmePath = 'docs/README.md';
@@ -129,13 +135,11 @@ async function convertRepoToProject(
       readmePath = customReadmePath;
     }
 
-    // Fetch README and fix relative URLs
     let readme = await getReadme(owner, repoName, readmePath, token);
     if (readme) {
       readme = fixReadmeUrls(readme, owner, repoName, repo.default_branch);
     }
 
-    // Fetch releases
     const releasesData = await getReleases(owner, repoName, token);
     const releases = releasesData.map(r => ({
       tag: r.tag_name,
@@ -144,12 +148,10 @@ async function convertRepoToProject(
       url: r.html_url
     }));
 
-    // Get language color
     const languageColor = repo.language 
       ? await getLanguageColor(repo.language)
       : '#858585';
 
-    // Determine project status
     let status: 'active' | 'archived' | 'maintenance' = 'active';
     if (repo.archived) {
       status = 'archived';
@@ -163,6 +165,7 @@ async function convertRepoToProject(
 
     return {
       id: `github-${repo.id}`,
+      slug: createSlug(repo.name),
       title: repo.name,
       description: repo.description || 'No description available',
       repository: repo.html_url,
@@ -202,7 +205,6 @@ async function processManualProject(
     const repoData = await getRepo(owner, repo, token);
     if (!repoData) return null;
 
-    // Determine README path
     let readmePath = 'README.md';
     if (manualProject.readmeSource === 'docs') {
       readmePath = 'docs/README.md';
@@ -210,13 +212,11 @@ async function processManualProject(
       readmePath = manualProject.customReadmePath;
     }
 
-    // Fetch and fix README
     let readme = await getReadme(owner, repo, readmePath, token);
     if (readme) {
       readme = fixReadmeUrls(readme, owner, repo, repoData.default_branch);
     }
 
-    // Fetch releases
     const releasesData = await getReleases(owner, repo, token);
     const releases = releasesData.map(r => ({
       tag: r.tag_name,
@@ -231,6 +231,7 @@ async function processManualProject(
 
     return {
       id: `manual-${repoData.id}`,
+      slug: createSlug(manualProject.title || repoData.name),
       title: manualProject.title || repoData.name,
       description: manualProject.description || repoData.description || 'No description',
       repository: repoData.html_url,
@@ -257,27 +258,31 @@ async function processManualProject(
 
 function sortProjects(projects: Project[]): Project[] {
   return projects.sort((a, b) => {
-    // Manual projects with priority first
     if (a.priority !== b.priority) {
       return b.priority - a.priority;
     }
 
-    // Active projects before maintenance/archived
     const statusOrder = { active: 0, maintenance: 1, archived: 2 };
     if (statusOrder[a.status] !== statusOrder[b.status]) {
       return statusOrder[a.status] - statusOrder[b.status];
     }
 
-    // Then by last push (most recently updated)
     const pushA = new Date(a.pushed).getTime();
     const pushB = new Date(b.pushed).getTime();
     if (pushB !== pushA) {
       return pushB - pushA;
     }
 
-    // Finally by stars
     return b.stars - a.stars;
   });
+}
+
+export async function getProjectBySlug(
+  slug: string,
+  token?: string
+): Promise<Project | null> {
+  const projects = await getAllProjects({ token });
+  return projects.find(p => p.slug === slug) || null;
 }
 
 export async function getProjectById(

@@ -29,7 +29,6 @@ const statusConfig = {
   }
 };
 
-// Extract GitHub info
 function parseGitHub(url: string) {
   const match = url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
   if (!match) return null;
@@ -44,7 +43,7 @@ function parseGitHub(url: string) {
       <div class="space-y-3 pb-6 border-b border-gray-800">
         <h1 class="text-2xl text-white font-bold">Published Works</h1>
         <p class="text-base text-gray-300 leading-relaxed">
-          Technical books exploring computer science fundamentals from first principles. All freely available under MIT license.
+          Technical books exploring computer science fundamentals from first principles.
         </p>
       </div>
 
@@ -126,27 +125,11 @@ function parseGitHub(url: string) {
           );
         })}
       </div>
-
-      <!-- Footer -->
-      <div class="pt-6 border-t border-gray-900 space-y-3">
-        <div class="space-y-2 text-sm">
-          <p class="text-gray-400">
-            <span class="text-gray-300">📚 Philosophy:</span> All books are "living editions" — continuously updated as understanding deepens
-          </p>
-          <p class="text-gray-400">
-            <span class="text-gray-300">🔓 License:</span> MIT — free to read, share, and adapt
-          </p>
-          <p class="text-gray-400">
-            <span class="text-gray-300">💡 Contributing:</span> Found an error? Have a suggestion? Open an issue on GitHub
-          </p>
-        </div>
-      </div>
     </div>
   </TerminalWindow>
 </BaseLayout>
 
 <script>
-  // Fetch GitHub stats for books
   document.addEventListener('DOMContentLoaded', async () => {
     const articles = document.querySelectorAll('article[data-github-owner]');
     
