@@ -1,6 +1,5 @@
 ---
-import BaseLayout from '@layouts/Layout.astro';
-import TerminalWindow from '@components/TerminalWindow.astro';
+import ArticleLayout from '@layouts/ArticleLayout.astro';
 import { getShelfCatalog, getShelfStats } from '@services/shelf.service';
 
 const catalog = await getShelfCatalog();
@@ -8,21 +7,21 @@ const books = catalog.books;
 const stats = await getShelfStats(books);
 
 const statusOrder = ['reading', 'completed', 'paused', 'unread'];
-const statusConfig: Record<string, { label: string; color: string; icon: string }> = {
-  reading:   { label: 'Reading',   color: 'text-cyan-400',   icon: '▶' },
-  completed: { label: 'Completed', color: 'text-green-500',  icon: '✔' },
-  paused:    { label: 'Paused',    color: 'text-yellow-500', icon: '⏸' },
-  unread:    { label: 'Unread',    color: 'text-gray-500',   icon: '○' },
+const statusConfig: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
+  reading:   { label: 'Reading',   color: 'text-cyan-400',   bg: 'bg-cyan-950/60',   border: 'border-cyan-800',   icon: '▶' },
+  completed: { label: 'Completed', color: 'text-green-400',  bg: 'bg-green-950/60',  border: 'border-green-800',  icon: '✔' },
+  paused:    { label: 'Paused',    color: 'text-yellow-400', bg: 'bg-yellow-950/60', border: 'border-yellow-800', icon: '⏸' },
+  unread:    { label: 'Unread',    color: 'text-gray-500',   bg: 'bg-gray-900/60',   border: 'border-gray-800',   icon: '○' },
 };
 
-const levelConfig: Record<string, string> = {
-  beginner:     'bg-emerald-950 text-emerald-400 border-emerald-900',
-  intermediate: 'bg-blue-950 text-blue-400 border-blue-900',
-  advanced:     'bg-red-950 text-red-400 border-red-900',
-  general:      'bg-gray-900 text-gray-400 border-gray-800',
+const levelConfig: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  beginner:     { label: 'Beginner',     color: 'text-emerald-400', bg: 'bg-emerald-950/60', border: 'border-emerald-800' },
+  intermediate: { label: 'Intermediate', color: 'text-blue-400',    bg: 'bg-blue-950/60',    border: 'border-blue-800'    },
+  advanced:     { label: 'Advanced',     color: 'text-red-400',     bg: 'bg-red-950/60',     border: 'border-red-800'     },
+  general:      { label: 'General',      color: 'text-gray-400',    bg: 'bg-gray-900/60',    border: 'border-gray-700'    },
 };
 
-// Group books by category, sorted by category name
+// Group books by category
 const grouped: Record<string, typeof books> = {};
 for (const book of books) {
   const cat = book.category || 'uncategorized';
@@ -30,193 +29,329 @@ for (const book of books) {
   grouped[cat].push(book);
 }
 const categories = Object.keys(grouped).sort();
+
+// Total levels
+const allLevels = Array.from(new Set(books.map(b => b.level || 'general'))).sort();
+
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
 ---
 
-<BaseLayout title="Shelf | Genix">
-  <TerminalWindow command="shelf find">
-    <div class="space-y-8">
+<ArticleLayout
+  title="TechShelf | Genix"
+  description="A personal library catalog of books worth reading."
+  showBackButton={true}
+  backLink="/"
+  backText="back to terminal">
 
-      <!-- Header -->
-      <div class="space-y-3 pb-6 border-b border-gray-800">
-        <div class="flex items-start justify-between gap-4">
-          <div class="space-y-1">
-            <h1 class="text-2xl text-white font-bold">TechShelf</h1>
-            <p class="text-gray-300 text-sm leading-relaxed">
-              {catalog.meta.description}
-            </p>
-          </div>
-          <a
-            href="https://github.com/m-mdy-m/TechShelf"
-            target="_blank"
-            rel="noopener"
-            class="text-xs text-gray-500 hover:text-gray-300 transition-colors whitespace-nowrap pt-1">
-            [github]
-          </a>
+  <div class="shelf-root space-y-10">
+
+    <!-- ═══ HEADER ═══ -->
+    <header class="space-y-6 pb-8 border-b border-gray-800">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="space-y-1">
+          <h1 class="text-3xl font-bold text-white tracking-tight">TechShelf</h1>
+          <p class="text-gray-400 text-sm">{catalog.meta.description}</p>
+          {catalog.meta.last_updated && (
+            <p class="text-gray-700 text-xs font-mono">last updated {catalog.meta.last_updated}</p>
+          )}
         </div>
-
-        <!-- Stats row -->
-        {books.length > 0 && (
-          <div class="flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-500 pt-1 font-mono">
-            <span><span class="text-gray-300">{stats.total}</span> books</span>
-            {Object.entries(stats.byStatus).map(([s, n]) => {
-              const cfg = statusConfig[s];
-              return (
-                <span>
-                  <span class={cfg?.color ?? 'text-gray-400'}>{n}</span>{' '}
-                  {cfg?.label ?? s}
-                </span>
-              );
-            })}
-            {catalog.meta.last_updated && (
-              <span class="ml-auto text-gray-700">updated {catalog.meta.last_updated}</span>
-            )}
-          </div>
-        )}
+        <a
+          href="https://github.com/m-mdy-m/TechShelf"
+          target="_blank"
+          rel="noopener"
+          class="text-xs text-gray-500 hover:text-gray-300 transition-colors border border-gray-800 px-3 py-1.5 rounded font-mono">
+          [github →]
+        </a>
       </div>
 
-      <!-- Empty state -->
-      {books.length === 0 && (
-        <div class="text-center py-16 space-y-2">
-          <p class="text-gray-500">The catalog is empty.</p>
-          <a
-            href="https://github.com/m-mdy-m/TechShelf"
-            target="_blank"
-            rel="noopener"
-            class="text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            View on GitHub →
-          </a>
+      <!-- ── Stats grid ── -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <!-- Total -->
+        <div class="stat-card col-span-2 sm:col-span-3 lg:col-span-1 flex flex-col justify-center items-center py-4 rounded-lg border border-gray-800 bg-black/40">
+          <span class="text-3xl font-bold text-white tabular-nums">{stats.total}</span>
+          <span class="text-xs text-gray-500 mt-1 font-mono">total books</span>
         </div>
-      )}
 
-      <!-- Books by category -->
-      {categories.map(cat => {
-        const catBooks = grouped[cat];
+        <!-- Per status -->
+        {statusOrder.map(s => {
+          const count = stats.byStatus[s] || 0;
+          const cfg = statusConfig[s];
+          return (
+            <div class={`stat-card flex flex-col justify-center items-center py-4 rounded-lg border ${cfg.border} ${cfg.bg}`}>
+              <span class={`text-xl font-bold tabular-nums ${cfg.color}`}>{count}</span>
+              <span class={`text-xs mt-1 font-mono ${cfg.color} opacity-80`}>{cfg.label}</span>
+            </div>
+          );
+        })}
+
+        <!-- Categories count -->
+        <div class="stat-card flex flex-col justify-center items-center py-4 rounded-lg border border-gray-800 bg-black/40">
+          <span class="text-xl font-bold text-white tabular-nums">{categories.length}</span>
+          <span class="text-xs text-gray-500 mt-1 font-mono">categories</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══ FILTER / NAV BAR ═══ -->
+    <nav class="sticky top-[57px] z-20 -mx-6 px-6 py-3 bg-black/90 backdrop-blur-md border-b border-gray-900 space-y-3" id="shelf-nav">
+
+      <!-- Category chips -->
+      <div class="flex flex-wrap gap-2 items-center">
+        <span class="text-xs text-gray-600 font-mono mr-1 shrink-0">category:</span>
+        <button
+          data-filter-cat="all"
+          class="cat-chip active text-xs font-mono px-2.5 py-1 rounded border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 transition-all">
+          all ({books.length})
+        </button>
+        {categories.map(cat => (
+          <button
+            data-filter-cat={slugify(cat)}
+            class="cat-chip text-xs font-mono px-2.5 py-1 rounded border border-gray-800 text-gray-500 hover:text-gray-200 hover:border-gray-600 transition-all">
+            {cat.replace(/-/g, ' ')} ({grouped[cat].length})
+          </button>
+        ))}
+      </div>
+
+      <!-- Level chips -->
+      <div class="flex flex-wrap gap-2 items-center">
+        <span class="text-xs text-gray-600 font-mono mr-1 shrink-0">level:</span>
+        <button
+          data-filter-lvl="all"
+          class="lvl-chip active text-xs font-mono px-2.5 py-1 rounded border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 transition-all">
+          all
+        </button>
+        {Object.entries(levelConfig).map(([key, cfg]) => {
+          const count = books.filter(b => (b.level || 'general') === key).length;
+          if (count === 0) return null;
+          return (
+            <button
+              data-filter-lvl={key}
+              class={`lvl-chip text-xs font-mono px-2.5 py-1 rounded border ${cfg.border} ${cfg.color} opacity-70 hover:opacity-100 transition-all`}>
+              {cfg.label} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      <!-- Status chips -->
+      <div class="flex flex-wrap gap-2 items-center">
+        <span class="text-xs text-gray-600 font-mono mr-1 shrink-0">status:</span>
+        <button
+          data-filter-status="all"
+          class="status-chip active text-xs font-mono px-2.5 py-1 rounded border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 transition-all">
+          all
+        </button>
+        {statusOrder.map(s => {
+          const count = stats.byStatus[s] || 0;
+          if (count === 0) return null;
+          const cfg = statusConfig[s];
+          return (
+            <button
+              data-filter-status={s}
+              class={`status-chip text-xs font-mono px-2.5 py-1 rounded border ${cfg.border} ${cfg.color} opacity-70 hover:opacity-100 transition-all`}>
+              {cfg.icon} {cfg.label} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      <!-- Search -->
+      <div class="relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs font-mono pointer-events-none">›_</span>
+        <input
+          id="shelf-search"
+          type="text"
+          placeholder="search by title, author, tag..."
+          class="w-full bg-black/60 border border-gray-800 rounded text-sm text-gray-300 placeholder-gray-700 font-mono pl-8 pr-4 py-2 focus:outline-none focus:border-gray-600 transition-colors"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span id="search-count" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-600 font-mono hidden"></span>
+      </div>
+    </nav>
+
+    <!-- ═══ BOOKS GRID ═══ -->
+    <div id="shelf-empty" class="hidden text-center py-16 text-gray-500 font-mono text-sm">
+      no books match your filters.
+    </div>
+
+    <div id="shelf-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      {books.map((book, idx) => {
+        const sCfg = statusConfig[book.status ?? 'unread'];
+        const lKey  = book.level || 'general';
+        const lCfg  = levelConfig[lKey];
+        const catSlug = slugify(book.category || 'uncategorized');
+
         return (
-          <section class="space-y-4">
-            <!-- Category header -->
-            <div class="flex items-center gap-3 pb-2 border-b border-gray-900">
-              <span class="text-gray-600 text-xs font-mono">▶</span>
-              <h2 class="text-base text-gray-300 font-semibold capitalize tracking-wide">
-                {cat.replace(/-/g, ' ')}
-              </h2>
-              <span class="text-xs text-gray-700 font-mono">({catBooks.length})</span>
+          <article
+            class="book-card group flex flex-col rounded-xl border border-gray-900 bg-black/50 hover:border-gray-700 transition-all duration-200 overflow-hidden"
+            data-cat={catSlug}
+            data-level={lKey}
+            data-status={book.status || 'unread'}
+            data-title={book.title.toLowerCase()}
+            data-author={(book.author || []).join(' ').toLowerCase()}
+            data-tags={(book.tags || []).join(' ').toLowerCase()}
+            style={`animation-delay: ${(idx % 30) * 30}ms`}>
+
+            <!-- Card header bar (status colour) -->
+            <div class={`h-0.5 w-full ${sCfg.bg.replace('/60','')}`}></div>
+
+            <div class="flex flex-col flex-1 p-5 space-y-3">
+
+              <!-- Title + status badge -->
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="text-sm font-semibold text-gray-100 leading-snug group-hover:text-white transition-colors flex-1">
+                  {book.title}
+                </h3>
+                <span class={`shrink-0 text-xs font-mono px-2 py-0.5 rounded border ${sCfg.bg} ${sCfg.color} ${sCfg.border} flex items-center gap-1`}>
+                  {sCfg.icon}
+                </span>
+              </div>
+
+              <!-- Author + year -->
+              <p class="text-xs text-gray-500 font-mono">
+                {(book.author || []).join(', ')}
+                {book.year_published && (
+                  <span class="text-gray-700"> · {book.year_published}</span>
+                )}
+              </p>
+
+              <!-- Description -->
+              {book.description && (
+                <p class="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">
+                  {book.description}
+                </p>
+              )}
+
+              <!-- Why read (collapsible feel) -->
+              {book.why_read && (
+                <p class="text-xs text-gray-500 italic leading-relaxed border-l border-gray-800 pl-3 line-clamp-2">
+                  {book.why_read}
+                </p>
+              )}
+
+              <!-- Footer: level + tags + link -->
+              <div class="pt-2 flex flex-wrap items-center gap-1.5 border-t border-gray-900/80">
+                <!-- Level -->
+                <span class={`text-xs font-mono px-1.5 py-0.5 rounded border ${lCfg.bg} ${lCfg.color} ${lCfg.border}`}>
+                  {lCfg.label}
+                </span>
+
+                <!-- Tags (up to 3) -->
+                {(book.tags || []).slice(0, 3).map(tag => (
+                  <span class="text-xs text-gray-600 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-900 font-mono">
+                    {tag}
+                  </span>
+                ))}
+
+                {/* Read link (right-aligned) */}
+                {book.source?.online_url && (
+                  <a
+                    href={book.source.online_url}
+                    target="_blank"
+                    rel="noopener"
+                    class="ml-auto text-xs text-gray-600 hover:text-gray-300 transition-colors font-mono shrink-0">
+                    [read →]
+                  </a>
+                )}
+              </div>
+
+              <!-- Category pill at bottom -->
+              <div class="pt-0.5">
+                <span class="text-xs text-gray-700 font-mono capitalize">
+                  {book.subcategory ? `${book.category} / ${book.subcategory}` : book.category}
+                </span>
+              </div>
             </div>
-
-            <!-- Books list -->
-            <div class="space-y-3">
-              {catBooks.map((book, idx) => {
-                const sCfg = statusConfig[book.status ?? 'unread'];
-                const lClass = levelConfig[book.level ?? 'general'] ?? levelConfig.general;
-                return (
-                  <article
-                    class="group rounded border border-gray-900 bg-black/30 hover:border-gray-800 transition-colors duration-200 shelf-book"
-                    style={`animation-delay: ${idx * 40}ms`}>
-                    <div class="p-4 space-y-2">
-
-                      <!-- Title row -->
-                      <div class="flex items-start justify-between gap-4">
-                        <div class="flex-1 min-w-0">
-                          <h3 class="text-sm text-gray-200 font-medium leading-snug group-hover:text-white transition-colors">
-                            {book.title}
-                          </h3>
-                          <p class="text-xs text-gray-500 mt-0.5">
-                            {book.author.join(', ')}
-                            {book.year_published && (
-                              <span class="text-gray-700"> · {book.year_published}</span>
-                            )}
-                          </p>
-                        </div>
-
-                        <!-- Status badge -->
-                        <div class={`flex items-center gap-1.5 text-xs shrink-0 ${sCfg?.color ?? 'text-gray-500'}`}>
-                          <span class="font-mono">{sCfg?.icon ?? '○'}</span>
-                          <span class="hidden sm:inline">{sCfg?.label ?? book.status}</span>
-                        </div>
-                      </div>
-
-                      <!-- Description -->
-                      {book.description && (
-                        <p class="text-xs text-gray-400 leading-relaxed line-clamp-2">
-                          {book.description}
-                        </p>
-                      )}
-
-                      <!-- Meta row -->
-                      <div class="flex flex-wrap items-center gap-2 pt-0.5">
-                        {book.level && book.level !== 'general' && (
-                          <span class={`text-xs px-2 py-0.5 rounded border font-mono ${lClass}`}>
-                            {book.level}
-                          </span>
-                        )}
-
-                        {book.tags && book.tags.slice(0, 4).map(tag => (
-                          <span class="text-xs text-gray-600 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-900 font-mono">
-                            {tag}
-                          </span>
-                        ))}
-
-                        {book.subcategory && (
-                          <span class="text-xs text-gray-600 ml-auto font-mono">
-                            {book.subcategory}
-                          </span>
-                        )}
-                      </div>
-
-                      <!-- Why read / Source -->
-                      {(book.why_read || book.source?.online_url) && (
-                        <div class="flex items-start justify-between gap-4 pt-1 border-t border-gray-900/60">
-                          {book.why_read && (
-                            <p class="text-xs text-gray-500 italic leading-relaxed flex-1 line-clamp-1">
-                              {book.why_read}
-                            </p>
-                          )}
-                          {book.source?.online_url && (
-                            <a
-                              href={book.source.online_url}
-                              target="_blank"
-                              rel="noopener"
-                              class="text-xs text-gray-500 hover:text-gray-300 transition-colors shrink-0 font-mono">
-                              [read →]
-                            </a>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
+          </article>
         );
       })}
-
-      <!-- Footer note -->
-      {books.length > 0 && (
-        <div class="pt-4 border-t border-gray-900 flex items-center justify-between text-xs text-gray-700">
-          <span>synced from <a href="https://github.com/m-mdy-m/TechShelf" target="_blank" rel="noopener" class="hover:text-gray-500 transition-colors">github.com/m-mdy-m/TechShelf</a></span>
-          <span class="font-mono">{stats.total} total</span>
-        </div>
-      )}
-
     </div>
-  </TerminalWindow>
-</BaseLayout>
+
+    <!-- ═══ CATEGORY SECTIONS (grouped view, hidden by default) ═══ -->
+    <!-- This is the "jump to category" anchor section -->
+    <div id="cat-sections" class="hidden space-y-14 pt-4">
+      {categories.map(cat => (
+        <section id={`cat-${slugify(cat)}`} class="space-y-5">
+          <div class="flex items-center gap-3 pb-3 border-b border-gray-900">
+            <span class="text-gray-600 text-xs font-mono">▶</span>
+            <h2 class="text-lg font-semibold text-gray-200 capitalize tracking-wide">
+              {cat.replace(/-/g, ' ')}
+            </h2>
+            <span class="text-xs text-gray-700 font-mono">({grouped[cat].length})</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {grouped[cat].map(book => {
+              const sCfg = statusConfig[book.status ?? 'unread'];
+              const lKey  = book.level || 'general';
+              const lCfg  = levelConfig[lKey];
+              return (
+                <article class="book-card group flex flex-col rounded-xl border border-gray-900 bg-black/50 hover:border-gray-700 transition-all duration-200 overflow-hidden"
+                  data-cat={slugify(cat)}
+                  data-level={lKey}
+                  data-status={book.status || 'unread'}
+                  data-title={book.title.toLowerCase()}
+                  data-author={(book.author || []).join(' ').toLowerCase()}
+                  data-tags={(book.tags || []).join(' ').toLowerCase()}>
+                  <div class={`h-0.5 w-full ${sCfg.bg.replace('/60','')}`}></div>
+                  <div class="flex flex-col flex-1 p-5 space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                      <h3 class="text-sm font-semibold text-gray-100 leading-snug group-hover:text-white transition-colors flex-1">{book.title}</h3>
+                      <span class={`shrink-0 text-xs font-mono px-2 py-0.5 rounded border ${sCfg.bg} ${sCfg.color} ${sCfg.border} flex items-center gap-1`}>{sCfg.icon}</span>
+                    </div>
+                    <p class="text-xs text-gray-500 font-mono">{(book.author || []).join(', ')}{book.year_published && <span class="text-gray-700"> · {book.year_published}</span>}</p>
+                    {book.description && <p class="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">{book.description}</p>}
+                    <div class="pt-2 flex flex-wrap items-center gap-1.5 border-t border-gray-900/80">
+                      <span class={`text-xs font-mono px-1.5 py-0.5 rounded border ${lCfg.bg} ${lCfg.color} ${lCfg.border}`}>{lCfg.label}</span>
+                      {(book.tags || []).slice(0, 3).map(tag => (
+                        <span class="text-xs text-gray-600 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-900 font-mono">{tag}</span>
+                      ))}
+                      {book.source?.online_url && (
+                        <a href={book.source.online_url} target="_blank" rel="noopener" class="ml-auto text-xs text-gray-600 hover:text-gray-300 transition-colors font-mono shrink-0">[read →]</a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <!-- Footer -->
+    <footer class="pt-6 border-t border-gray-900 flex items-center justify-between text-xs text-gray-700 font-mono">
+      <span>synced from <a href="https://github.com/m-mdy-m/TechShelf" target="_blank" rel="noopener" class="hover:text-gray-500 transition-colors">github.com/m-mdy-m/TechShelf</a></span>
+      <span id="visible-count">{stats.total} shown</span>
+    </footer>
+  </div>
+</ArticleLayout>
 
 <style>
-  .shelf-book {
-    animation: shelf-fade-in 0.4s ease-out forwards;
+  /* ── Card entrance animation ── */
+  .book-card {
+    animation: card-in 0.35s ease-out both;
     opacity: 0;
   }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
 
-  @keyframes shelf-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* ── Active filter chip ── */
+  .cat-chip.active,
+  .lvl-chip.active,
+  .status-chip.active {
+    color: #ffffff;
+    border-color: #6b7280;
+    opacity: 1;
+  }
+
+  /* ── Hidden card during filter ── */
+  .book-card[data-hidden="true"] {
+    display: none;
   }
 
   .line-clamp-2 {
@@ -225,11 +360,111 @@ const categories = Object.keys(grouped).sort();
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  .line-clamp-1 {
+  .line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Sticky nav scroll shadow */
+  #shelf-nav {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.8);
+  }
+
+  /* Stat cards hover */
+  .stat-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
 </style>
+
+<script is:inline>
+  (function () {
+    const grid       = document.getElementById('shelf-grid');
+    const emptyMsg   = document.getElementById('shelf-empty');
+    const countEl    = document.getElementById('visible-count');
+    const searchEl   = document.getElementById('shelf-search');
+    const searchCnt  = document.getElementById('search-count');
+
+    let activeCat    = 'all';
+    let activeLvl    = 'all';
+    let activeStatus = 'all';
+    let searchTerm   = '';
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('#shelf-grid .book-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const matchCat    = activeCat    === 'all' || card.dataset.cat    === activeCat;
+        const matchLvl    = activeLvl    === 'all' || card.dataset.level  === activeLvl;
+        const matchStatus = activeStatus === 'all' || card.dataset.status === activeStatus;
+        const matchSearch = searchTerm   === ''    ||
+          card.dataset.title.includes(searchTerm)  ||
+          card.dataset.author.includes(searchTerm) ||
+          card.dataset.tags.includes(searchTerm);
+
+        const show = matchCat && matchLvl && matchStatus && matchSearch;
+        card.dataset.hidden = show ? 'false' : 'true';
+        if (show) visible++;
+      });
+
+      if (emptyMsg) emptyMsg.classList.toggle('hidden', visible > 0);
+      if (countEl)  countEl.textContent = visible + ' shown';
+      if (searchCnt) {
+        if (searchTerm) {
+          searchCnt.textContent = visible + ' found';
+          searchCnt.classList.remove('hidden');
+        } else {
+          searchCnt.classList.add('hidden');
+        }
+      }
+    }
+
+    // Category chips
+    document.querySelectorAll('.cat-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCat = btn.dataset.filterCat;
+        applyFilters();
+      });
+    });
+
+    // Level chips
+    document.querySelectorAll('.lvl-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lvl-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeLvl = btn.dataset.filterLvl;
+        applyFilters();
+      });
+    });
+
+    // Status chips
+    document.querySelectorAll('.status-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.status-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeStatus = btn.dataset.filterStatus;
+        applyFilters();
+      });
+    });
+
+    // Search
+    if (searchEl) {
+      let debounce;
+      searchEl.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          searchTerm = searchEl.value.toLowerCase().trim();
+          applyFilters();
+        }, 200);
+      });
+    }
+  })();
+</script>
