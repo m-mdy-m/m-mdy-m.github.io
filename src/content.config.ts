@@ -43,9 +43,23 @@ const booksCollection = defineCollection({
   }),
 });
 
+const papersCollection = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    abstract: z.string(),
+    keywords: z.array(z.string()).default([]),
+    style: z.enum(['academic', 'personal']).default('personal'),
+    status: z.enum(['draft', 'published']).default('published'),
+    repository: z.string().url(),
+    pdf: z.string().url().optional(),
+    date: z.string().optional(),
+  }),
+});
+
 export const collections = {
   thoughts: thoughtsCollection,
   projects: projectsCollection,
   articles: articlesCollection,
-  books: booksCollection,  
+  books: booksCollection,
+  papers: papersCollection,
 };

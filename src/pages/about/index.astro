@@ -14,11 +14,59 @@ import ArticleLayout from '@layouts/ArticleLayout.astro';
     <section class="space-y-6">
       <h1>Genix</h1>
       <p class="text-xl text-gray-300 leading-relaxed">
+        Backend engineer, open-source developer, and lifelong computer enthusiast from Iran —
+        currently finishing a Bachelor's in Computer Engineering, though the real education started
+        much earlier and never went through a syllabus.
+      </p>
+      <p class="text-lg text-gray-400">
         I build systems that trade simplicity for scale, and question abstractions until they fall apart.
-        Most of my work lives somewhere between distributed messaging, event-driven architectures, and the philosophy of arrays.
+        Most of my work lives somewhere between distributed messaging, event-driven architectures, and the
+        philosophy of arrays.
       </p>
       <p class="text-lg text-gray-400">
         Still learning. Still breaking my own designs.
+      </p>
+    </section>
+
+    <!-- Origin Story -->
+    <section class="space-y-6">
+      <h2>How I Got Here</h2>
+      <p>
+        Computers have been around since I was four — first as a source of curiosity and games, later as
+        a window into how technology actually works. Long before I wrote any software, I wrote stories;
+        at thirteen or fourteen I finished my first "book," a dinosaur story with no relation whatsoever
+        to programming. It didn't teach me anything technical, but it left behind a habit that turned out
+        to matter more: pursuing an idea simply because it was interesting, all the way to the end.
+      </p>
+      <p>
+        At nineteen, that childhood fascination with computers turned into something more deliberate.
+        University gave me a syllabus; curiosity gave me a different, mostly self-directed one. I started
+        a personal roadmap repository — <em>Algorithms &amp; Data Structures</em> — that began as study notes
+        and slowly became a learning journal and a map of computer science as I was discovering it,
+        one rabbit hole at a time.
+      </p>
+      <p>
+        That roadmap pulled me through a wider range of languages and paradigms than any course would have
+        assigned — Perl, Haskell, Ada, a bit of raw assembly, alongside the obvious C and C++. C and C++ in
+        particular pulled me toward the lower layers of computing: how abstractions actually emerge from
+        hardware, and how software ultimately talks to the machine underneath it. Most of my serious work
+        since — CLI tools, backend frameworks, validation systems, HTTP clients, file-tree explorers,
+        moderation services — has gravitated toward developer tooling and infrastructure, almost all of it
+        open source.
+      </p>
+      <p>
+        Then a deceptively simple question showed up:
+      </p>
+      <p class="text-center text-xl text-gray-300 italic py-2">
+        What is an array?
+      </p>
+      <p>
+        It looked trivial. It wasn't. Following it seriously turned a familiar programming topic into a
+        much longer inquiry — one that runs from high-level language syntax down through memory layout, CPU
+        caches, and transistor physics, then back up through SIMD, GPUs, and tensor cores, brushing against
+        the foundations of quantum computation along the way. <a href="/books">ARLIZ</a> is the written
+        record of that detour: an attempt to follow one simple question as far as it would go, and to
+        understand not just how arrays are used, but what they actually are.
       </p>
     </section>
 
@@ -31,7 +79,7 @@ import ArticleLayout from '@layouts/ArticleLayout.astro';
       </p>
       <ul class="space-y-3">
         <li><strong>Event-Driven Architecture:</strong> Building systems where components communicate through events rather than direct calls. My GLAND framework embodies this philosophy.</li>
-        <li><strong>Data Structures:</strong> Not just using them, but understanding why they exist. ARLIZ is my attempt to document that journey from first principles.</li>
+        <li><strong>Data Structures:</strong> Not just using them, but understanding why they exist. ARLIZ is my attempt to document that journey from a transistor to a tensor core.</li>
         <li><strong>Distributed Systems:</strong> How do we build reliable software when everything can fail? This question drives much of my research.</li>
         <li><strong>Developer Tooling:</strong> From Vim configs to CLI tools, I believe good tools amplify good thinking.</li>
       </ul>
@@ -46,7 +94,7 @@ import ArticleLayout from '@layouts/ArticleLayout.astro';
         Why do abstractions work—until they don't?
       </p>
       <p>
-        <strong>Writing is thinking.</strong> That's why I write books, articles, and documentation.
+        <strong>Writing is thinking.</strong> That's why I write books, papers, articles, and documentation.
         Not to teach—to learn. Every explanation forces clarity. Every attempt to
         simplify reveals what I don't understand.
       </p>
@@ -62,8 +110,13 @@ import ArticleLayout from '@layouts/ArticleLayout.astro';
       <h2>Current Focus</h2>
       <ul class="space-y-4">
         <li>
-          <strong>Writing ARLIZ</strong> — A book exploring data structures from their historical origins.
-          Not just "how to implement a tree" but "why did trees emerge as a useful abstraction?"
+          <strong>Writing ARLIZ</strong> — Three volumes tracing one question, "what is an array?",
+          from semiconductor physics up through CPU architecture to arrays themselves and where they
+          actually do work.
+        </li>
+        <li>
+          <strong>Writing short papers</strong> — Formal, focused write-ups for questions precise enough
+          to need a definition and a proof rather than a blog post. See <a href="/papers">papers</a>.
         </li>
         <li>
           <strong>Building GLAND</strong> — An event-driven architecture for JavaScript systems.

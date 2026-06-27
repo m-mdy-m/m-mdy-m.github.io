@@ -1,0 +1,115 @@
+---
+import ArticleLayout from '@layouts/ArticleLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('papers');
+
+  return papers.map(paper => {
+    const match = paper.data.repository.match(/\/papers\/tree\/main\/papers\/(.+)$/);
+    const slug = match ? match[1] : paper.id;
+    return {
+      params: { slug },
+      props: { paper },
+    };
+  });
+}
+
+const { paper } = Astro.props;
+const { Content } = await render(paper);
+
+const styleConfig: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  academic:  { label: 'Academic',  color: 'text-blue-400',  bg: 'bg-blue-950/40',  border: 'border-blue-900' },
+  personal:  { label: 'Personal',  color: 'text-purple-400', bg: 'bg-purple-950/40', border: 'border-purple-900' },
+};
+
+const style = styleConfig[paper.data.style];
+---
+
+<ArticleLayout
+  title={`${paper.data.title} | Genix`}
+  description={paper.data.abstract}
+  backLink="/papers"
+  backText="back to papers">
+
+  <article class="space-y-8">
+    <!-- Header -->
+    <header class="space-y-5 pb-6 border-b border-gray-800">
+      <div class="flex items-start justify-between gap-4">
+        <h1 class="text-3xl text-white font-bold leading-tight flex-1">
+          {paper.data.title}
+        </h1>
+        <div class={`flex items-center gap-1.5 text-sm px-3 py-1.5 rounded border ${style.bg} ${style.color} ${style.border} whitespace-nowrap`}>
+          <span>{style.label}</span>
+        </div>
+      </div>
+
+      {paper.data.date && (
+        <p class="text-sm text-gray-500">{paper.data.date}</p>
+      )}
+
+      <div class="border-l-2 border-gray-800 pl-4">
+        <p class="text-sm text-gray-400 leading-relaxed">
+          <span class="text-gray-600 font-semibold">Abstract — </span>
+          {paper.data.abstract}
+        </p>
+      </div>
+
+      {paper.data.keywords.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {paper.data.keywords.map(kw => (
+            <span class="text-sm text-gray-400 bg-gray-950 px-2.5 py-1 rounded border border-gray-900">
+              {kw}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div class="flex flex-wrap gap-4 text-sm">
+        <a
+          href={paper.data.repository}
+          target="_blank"
+          rel="noopener"
+          class="text-gray-400 hover:text-white transition-colors">
+          → View source on GitHub
+        </a>
+        {paper.data.pdf && (
+          <a
+            href={paper.data.pdf}
+            target="_blank"
+            rel="noopener"
+            class="text-gray-400 hover:text-white transition-colors">
+            → Download PDF
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="article-content prose prose-invert max-w-none">
+      <Content />
+    </div>
+
+    <!-- Footer -->
+    <footer class="pt-6 border-t border-gray-900">
+      <a href="/papers" class="inline-block text-gray-400 hover:text-white transition-colors">
+        ← All papers
+      </a>
+    </footer>
+  </article>
+</ArticleLayout>
+
+<style>
+  .article-content :global(a) {
+    color: #d0d0d0;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+    text-underline-offset: 2px;
+    transition: all 0.2s;
+  }
+
+  .article-content :global(a:hover) {
+    color: #ffffff;
+    text-decoration-color: rgba(255, 255, 255, 0.6);
+  }
+</style>
