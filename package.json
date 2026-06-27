@@ -36,12 +36,12 @@
       "prettier --write"
     ]
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@11.9.0",
   "dependencies": {
     "astro": "^5.1.8",
+    "highlight.js": "^11.9.0",
     "marked": "^12.0.0",
-    "marked-highlight": "^2.1.0",
-    "highlight.js": "^11.9.0"
+    "marked-highlight": "^2.1.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
